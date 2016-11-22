@@ -1,0 +1,83 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'gui.ui'
+#
+# Created by: PyQt5 UI code generator 5.7
+#
+# WARNING! All changes made in this file will be lost!
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+
+class Ui_Kaytest(object):
+    def setupUi(self, Kaytest):
+        Kaytest.setObjectName("Kaytest")
+        Kaytest.resize(462, 568)
+        self.centralwidget = QtWidgets.QWidget(Kaytest)
+        self.centralwidget.setObjectName("centralwidget")
+        self.input_box = QtWidgets.QTextEdit(self.centralwidget)
+        self.input_box.setGeometry(QtCore.QRect(10, 20, 441, 81))
+        self.input_box.setObjectName("input_box")
+        self.output_box = QtWidgets.QTextEdit(self.centralwidget)
+        self.output_box.setEnabled(True)
+        self.output_box.setGeometry(QtCore.QRect(10, 150, 441, 371))
+        self.output_box.viewport().setProperty("cursor", QtGui.QCursor(QtCore.Qt.ArrowCursor))
+        self.output_box.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.output_box.setAutoFillBackground(False)
+        self.output_box.setObjectName("output_box")
+        self.translate_button = QtWidgets.QPushButton(self.centralwidget)
+        self.translate_button.setGeometry(QtCore.QRect(100, 110, 75, 23))
+        self.translate_button.setObjectName("translate_button")
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label.setGeometry(QtCore.QRect(10, 0, 81, 21))
+        font = QtGui.QFont()
+        font.setFamily("微软雅黑")
+        font.setPointSize(12)
+        font.setBold(False)
+        font.setWeight(50)
+        self.label.setFont(font)
+        self.label.setObjectName("label")
+        self.label_3 = QtWidgets.QLabel(self.centralwidget)
+        self.label_3.setGeometry(QtCore.QRect(10, 130, 81, 21))
+        font = QtGui.QFont()
+        font.setFamily("微软雅黑")
+        font.setPointSize(12)
+        font.setBold(False)
+        font.setWeight(50)
+        self.label_3.setFont(font)
+        self.label_3.setObjectName("label_3")
+        self.clear_button = QtWidgets.QPushButton(self.centralwidget)
+        self.clear_button.setGeometry(QtCore.QRect(260, 110, 75, 23))
+        self.clear_button.setObjectName("clear_button")
+        self.label_5 = QtWidgets.QLabel(self.centralwidget)
+        self.label_5.setGeometry(QtCore.QRect(40, 520, 371, 31))
+        font = QtGui.QFont()
+        font.setFamily("微软雅黑")
+        font.setPointSize(10)
+        font.setBold(False)
+        font.setWeight(50)
+        self.label_5.setFont(font)
+        self.label_5.setObjectName("label_5")
+        Kaytest.setCentralWidget(self.centralwidget)
+        self.menubar = QtWidgets.QMenuBar(Kaytest)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 462, 23))
+        self.menubar.setObjectName("menubar")
+        Kaytest.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(Kaytest)
+        self.statusbar.setObjectName("statusbar")
+        Kaytest.setStatusBar(self.statusbar)
+
+        self.retranslateUi(Kaytest)
+        self.translate_button.clicked.connect(self.output_box.paste)
+        self.clear_button.clicked.connect(self.input_box.clear)
+        self.clear_button.clicked.connect(self.output_box.clear)
+        QtCore.QMetaObject.connectSlotsByName(Kaytest)
+
+    def retranslateUi(self, Kaytest):
+        _translate = QtCore.QCoreApplication.translate
+        Kaytest.setWindowTitle(_translate("Kaytest", "698解析工具V1.0 终端开发部内测版(2016.11.16)"))
+        self.translate_button.setText(_translate("Kaytest", "解析"))
+        self.label.setText(_translate("Kaytest", "输入报文："))
+        self.label_3.setText(_translate("Kaytest", "解析结果："))
+        self.clear_button.setText(_translate("Kaytest", "清空"))
+        self.label_5.setText(_translate("Kaytest", "Copyright(C), 2005-2020,Sanxing Medical & Electric Co.,Ltd."))
+
