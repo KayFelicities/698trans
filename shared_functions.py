@@ -1,4 +1,6 @@
+import os
 import config
+from config import pathname
 
 # 文字输出
 def output(text, newline = True):
@@ -179,7 +181,7 @@ def take_float64(data, add_text = ''):
     return offset
 
 
-def take_data_time(data, add_text = ''):
+def take_date_time(data, add_text = ''):
     offset = 0
     year = int(data[0]+data[1],16)
     month = int(data[2],16)
@@ -227,6 +229,20 @@ def take_OI(data, add_text = ''):
 
 def take_OAD(data, add_text = ''):
     offset = 0
+    file_path = os.path.join(pathname, '698DataIDConfig.ini')
+    file_handle = open(file_path, 'rb')
+    file_lines = file_handle.readlines()
+    file_handle.close()
+
+    OI = data[offset] + data[offset + 1]
+    oad_explain = ''
+    for OI_line in file_lines:
+        if OI_line.decode('utf-8')[0:4] == OI:
+            oad_explain = OI_line.decode('utf-8')[8:].split('=')[0].split('\n')[0]
+            break;
+    show_data_source(data, 4)
+    output(' —— OAD:' + oad_explain)
+    offset += 4
     return offset
 
 
@@ -242,6 +258,18 @@ def take_OMD(data, add_text = ''):
 
 def take_TI(data, add_text = ''):
     offset = 0
+    TI_uint = {
+        '00' : '秒',
+        '01' : '分',
+        '02' : '时',
+        '03' : '日',
+        '04' : '月',
+        '05' : '年',
+    }[data[offset]]
+    TI_value = int(data[offset + 1] + data[offset + 2], 16)
+    show_data_source(data[offset:], 3)
+    output(' —— 间隔时间:' + str(TI_value) + TI_uint)
+    offset = 3
     return offset
 
 
@@ -272,10 +300,10 @@ def take_RN(data, add_text = ''):
 def take_Region(data, add_text = ''):
     offset = 0
     uint = {
-        '00' : '前闭后开'，
-        '01' : '前开后闭'，
-        '02' : '前闭后闭'，
-        '03' : '前开后开'，
+        '00' : '前闭后开',
+        '01' : '前开后闭',
+        '02' : '前闭后闭',
+        '03' : '前开后开',
     }[data[offset]]
     show_data_source(data[offset:], 1)
     output(' —— ' + uint)
@@ -295,10 +323,43 @@ def take_RSD(data, add_text = ''):
     show_data_source(data[offset:], 1)
     selector = data[offset]
     output(' —— Selector' + selector)
-    if choice == '00':
+    offset += 1
+    if selector == '00':
         offset += take_NULL(data[offset:], '(不选择)')
-    elif choice == '01':
+    elif selector == '01':
         offset += take_OAD(data[offset:])
+        offset += take_Data(data[offset:], '(数值)')
+    elif selector == '02':
+        offset += take_OAD(data[offset:])
+        offset += take_Data(data[offset:], '(起始值)')
+        offset += take_Data(data[offset:], '(结束值)')
+        offset += take_Data(data[offset:], '(数据间隔)')
+    elif selector == '03':
+        selector2_count = int(data[offset], 16)
+        offset += 1
+        for count in range(selector2_count):
+            offset += take_OAD(data[offset:])
+            offset += take_Data(data[offset:], '(起始值)')
+            offset += take_Data(data[offset:], '(结束值)')
+            offset += take_Data(data[offset:], '(数据间隔)')
+    elif selector in ['04', '05']:
+        offset += take_date_time_s(data[offset:], '(采集启动时间)' if selector == '04' else '(采集存储时间)')
+        offset += take_MS(data[offset:], '(数值)')
+    elif selector in ['06', '07', '08']:
+        type_text = {
+            '06' : '(采集启动时间',
+            '07' : '(采集存储时间',
+            '08' : '(采集成功时间',
+        }[selector]
+        offset += take_date_time_s(data[offset:], type_text + '起始值)')
+        offset += take_date_time_s(data[offset:], type_text + '结束值)')
+        offset += take_TI(data[offset:])
+        offset += take_MS(data[offset:])
+    elif selector == '09':
+        offset += take_unsigned(data[offset:], '(上第n次记录)')
+    elif selector == '0A':
+        offset += take_unsigned(data[offset:], '(上n条记录)')
+        offset += take_MS(data[offset:])
     return offset
 
 

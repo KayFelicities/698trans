@@ -1,5 +1,5 @@
 ﻿from shared_functions import *
-from shared_functions import take_data_time
+from shared_functions import take_date_time
 
 def link_request(offset,*data_in):
     apdu_len = 2
@@ -17,7 +17,7 @@ def link_request(offset,*data_in):
     cycle_time = str(int(data_in[offset+apdu_len]+data_in[offset+apdu_len+1],16))
     output(data_in[offset+apdu_len]+' '+data_in[offset+apdu_len+1]+' —— 心跳周期:'+cycle_time+'s')
     apdu_len += 2
-    apdu_len += take_data_time(data_in[offset + apdu_len : offset + apdu_len + 10], '(请求时间)')
+    apdu_len += take_date_time(data_in[offset + apdu_len : offset + apdu_len + 10], '(请求时间)')
     return apdu_len
 
 
@@ -122,9 +122,9 @@ def link_response(offset,*data_in):
     else :
         output(data_in[offset+apdu_len]+' —— 结果Result：不可信')
     apdu_len += 1
-    apdu_len += take_data_time(data_in[offset + apdu_len : offset + apdu_len + 10], '(请求时间)')
-    apdu_len += take_data_time(data_in[offset + apdu_len : offset + apdu_len + 10], '(收到时间)')
-    apdu_len += take_data_time(data_in[offset + apdu_len : offset + apdu_len + 10], '(响应时间)')
+    apdu_len += take_date_time(data_in[offset + apdu_len : offset + apdu_len + 10], '(请求时间)')
+    apdu_len += take_date_time(data_in[offset + apdu_len : offset + apdu_len + 10], '(收到时间)')
+    apdu_len += take_date_time(data_in[offset + apdu_len : offset + apdu_len + 10], '(响应时间)')
     return apdu_len
 
 
