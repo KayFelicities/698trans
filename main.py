@@ -63,39 +63,37 @@ def my_translate(input_text):
     offset += lShowFenZen(offset, *data_in)  # 分帧
     # 解应用层
     show_service_type(offset, *data_in)
-    apdu_len = 0
     if data_in[offset] in ['01', '02', '03', '81', '82', '83', '84']:
-        apdu_len = connect_service(offset, *data_in)  # 连接管理
+        offset += connect_service(offset, *data_in)  # 连接管理
 
     elif data_in[offset] in ['10', '90']:
         print('data_in[offset]', data_in[offset])
         if data_in[offset] == '10':
             offset += 1
-            apdu_len = security_request(offset, *data_in)
+            offset += security_request(offset, *data_in)
         elif data_in[offset] == '90':
             offset += 1
-            apdu_len = security_response(offset, *data_in)
+            offset += security_response(offset, *data_in)
     else:
         server_type = data_in[offset] + data_in[offset + 1]
-        offset = offset + 2
-        apdu_len = {
-            '0501': Get0501, '0502': Get0502, '0503': Get0503, '0504': Get0504,
-            '0505': Get0505,
-            '8501': Get8501, '8502': Get8502, '8503': Get8503, '8504': Get8504,
-            '8505': Get8505,
-            '0601': Set0601, '0602': Set0602, '0603': Set0603,
-            '8601': Set8601, '8602': Set8602, '8603': Set8603,
-            '0701': Action0701, '0702': Action0702, '0703': Action0703,
-            '8701': Action8701, '8702': Action8702, '8703': Action8703,
-            '0801': Rep0801, '0802': Rep0801,  # 与0801一致
-            '8801': Rep8801, '8802': Rep8802,
-            '0901': Pro0901, '0902': Pro0902, '0903': Pro0903, '0904': Pro0904,
-            '0905': Pro0905, '0906': Pro0906, '0907': Pro0907,
-            '8901': Pro8901, '8902': Pro8902, '8903': Pro8903, '8904': Pro8904,
-            '8905': Pro8905, '8906': Pro8906, '8907': Pro8907,
-        }[server_type](offset, *data_in)
+        offset += 2
+        offset += {
+            '0501': get0501, '0502': get0502, '0503': get0503, '0504': get0504,
+            '0505': get0505,
+            '8501': get8501, '8502': get8502, '8503': get8503, '8504': get8504,
+            '8505': get8505,
+            # '0601': set0601, '0602': set0602, '0603': set0603,
+            # '8601': set8601, '8602': set8602, '8603': set8603,
+            # '0701': action0701, '0702': action0702, '0703': action0703,
+            # '8701': action8701, '8702': action8702, '8703': action8703,
+            # '0801': rep0801, '0802': rep0801,  # 与0801一致
+            # '8801': rep8801, '8802': rep8802,
+            # '0901': pro0901, '0902': pro0902, '0903': pro0903, '0904': pro0904,
+            # '0905': pro0905, '0906': pro0906, '0907': pro0907,
+            # '8901': pro8901, '8902': pro8902, '8903': pro8903, '8904': pro8904,
+            # '8905': pro8905, '8906': pro8906, '8907': pro8907,
+        }[server_type](data_in[offset:])
     # 处理链路层末尾
-    offset = offset + apdu_len
     ShowOther(offset, *data_in)
     ShowFCS16(*data_in)
 

@@ -19,9 +19,54 @@ def show_data_source(data, len):
     output(source_text, False)
 
 
+def get_num_of_SEQUENCE(data, SEQUENCE_text=''):
+    num = int(data[0], 16)
+    show_data_source(data, 1)
+    output(' —— ' + SEQUENCE_text + '*' + str(num))
+    return num
+
+
+def get_DAR(DAR):
+    file_path = os.path.join(pathname, '698ErrIDConfig.ini')
+    file_handle = open(file_path, 'rb')
+    file_lines = file_handle.readlines()
+    file_handle.close()
+    dar_explain = ''
+    for dar_line in file_lines:
+        if dar_line.decode('utf-8')[0:2] == DAR:
+            dar_explain = dar_line.decode('utf-8')[3:].split('\n')[0]
+            break
+    return dar_explain
+
+
+def take_A_ResultNormal(data, add_text=''):
+    offset = 0
+    offset += take_OAD(data[offset:])
+    offset += take_Get_Result(data[offset:])
+    return offset
+
+
+def take_Get_Result(data, add_text=''):
+    offset = 0
+    result = data[offset]
+    if result == '00':  # 错误信息
+        show_data_source(data[offset:], 2)
+        dar = get_DAR(data[offset + 1])
+        output(' —— 错误信息:' + dar)
+        offset += 2
+    if result == '01':  # 数据
+        show_data_source(data[offset:], 1)
+        output(' —— 数据')
+        offset += 1
+        offset += take_Data(data[offset:])
+    return offset
+
+
 # ############################ 数据类型处理 #############################
 def take_Data(data, add_text=''):
     offset = 0
+    show_data_source(data[offset:], 1)
+    offset += 1
     offset += {
         '00': take_NULL,
         '01': take_array,
@@ -63,7 +108,7 @@ def take_Data(data, add_text=''):
         '5E': take_SID_MAC,
         '5F': take_COMDCB,
         '60': take_RCSD,
-    }[data[offset]](data, add_text)
+    }[data[offset - 1]](data[offset:])
     return offset
 
 
@@ -170,6 +215,9 @@ def take_long64_unsigned(data, add_text=''):
 
 def take_enum(data, add_text=''):
     offset = 0
+    show_data_source(data, 1)
+    output(' —— enum:' + str(int(data[offset], 16)) + add_text)
+    offset += 1
     return offset
 
 
@@ -250,6 +298,13 @@ def take_OAD(data, add_text=''):
 
 def take_ROAD(data, add_text=''):
     offset = 0
+    offset += take_OAD(data[offset:], '对象属性描述符')
+    oad_num = int(data[offset], 16)
+    show_data_source(data[offset:], 1)
+    output(' —— 关联OAD*' + str(oad_num))
+    offset += 1
+    for oad_count in range(oad_num):
+        offset += take_OAD(data[offset:], '(关联OAD)')
     return offset
 
 
@@ -367,6 +422,14 @@ def take_RSD(data, add_text=''):
 
 def take_CSD(data, add_text=''):
     offset = 0
+    csd_choice = data[offset]
+    show_data_source(data[offset:], 1)
+    output(' —— OAD' if csd_choice == '00' else ' —— ROAD')
+    offset += 1
+    if csd_choice == '00':
+        offset += take_OAD(data[offset:])
+    elif csd_choice == '01':
+        offset += take_ROAD(data[offset:])
     return offset
 
 
@@ -442,4 +505,10 @@ def take_COMDCB(data, add_text=''):
 
 def take_RCSD(data, add_text=''):
     offset = 0
+    csd_num = int(data[offset], 16)
+    show_data_source(data[offset:], 1)
+    output(' —— CSD*' + str(csd_num))
+    offset += 1
+    for csd_count in range(csd_num):
+        offset += take_CSD(data[offset:])
     return offset
