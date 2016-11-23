@@ -29,36 +29,35 @@ fcstab = (0x0000, 0x1189, 0x2312, 0x329b, 0x4624, 0x57ad, 0x6536, 0x74bf,
           0xe70e, 0xf687, 0xc41c, 0xd595, 0xa12a, 0xb0a3, 0x8238, 0x93b1,
           0x6b46, 0x7acf, 0x4854, 0x59dd, 0x2d62, 0x3ceb, 0x0e70, 0x1ff9,
           0xf78f, 0xe606, 0xd49d, 0xc514, 0xb1ab, 0xa022, 0x92b9, 0x8330,
-          0x7bc7, 0x6a4e, 0x58d5, 0x495c, 0x3de3, 0x2c6a, 0x1ef1, 0x0f78 )
+          0x7bc7, 0x6a4e, 0x58d5, 0x495c, 0x3de3, 0x2c6a, 0x1ef1, 0x0f78)
 
 
-
-def pppfcs16(fcs, tlen ,*cp) :
+def pppfcs16(fcs, tlen, *cp):
     Tlen = 0
     FCS = fcs
-    while (tlen ) :
+    while (tlen):
         tlen -= 1
-        FCS=(FCS >> 8) ^ fcstab[(FCS ^ int(cp[Tlen])) & 0xff]
+        FCS = (FCS >> 8) ^ fcstab[(FCS ^ int(cp[Tlen])) & 0xff]
         Tlen += 1
     return FCS
 
 
-def tryfcs16(InputFcs) :
+def tryfcs16(InputFcs):
     cp = ['0']
     tlen = 1
-    PPPINITFCS16 = int(InputFcs,16)
-    trialfcs=pppfcs16( PPPINITFCS16, tlen, *cp )
+    PPPINITFCS16 = int(InputFcs, 16)
+    trialfcs = pppfcs16(PPPINITFCS16, tlen, *cp)
     trialfcs ^= 0xffff
     cp.append(str(trialfcs & 0x00ff))
     cp.append(str((trialfcs >> 8) & 0x00ff))
-    trialfcs=pppfcs16( PPPINITFCS16, tlen + 2, *cp )
-    if  trialfcs == 0xf0b8 :
-        return 0 #Ture
-    else :
-        return -1 #False
+    trialfcs = pppfcs16(PPPINITFCS16, tlen + 2, *cp)
+    if trialfcs == 0xf0b8:
+        return 0  # Ture
+    else:
+        return -1  # False
 
-for k in range(0,100):
-    Tstr = 'a8ee'#input
+for k in range(0, 100):
+    Tstr = 'a8ee'  # input
     if tryfcs16(Tstr) == 0:
         print("Good FCS")
     input('pleased input:')

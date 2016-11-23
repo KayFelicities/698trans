@@ -6,7 +6,8 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt4 import QtCore, QtGui
+from PyQt4 import QtCore
+from PyQt4 import QtGui
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -16,13 +17,16 @@ except AttributeError:
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
+
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
+
 class Ui_Kaytest(object):
+
     def setupUi(self, Kaytest):
         Kaytest.setObjectName(_fromUtf8("Kaytest"))
         Kaytest.resize(462, 568)
@@ -81,9 +85,12 @@ class Ui_Kaytest(object):
         Kaytest.setStatusBar(self.statusbar)
 
         self.retranslateUi(Kaytest)
-        QtCore.QObject.connect(self.translate_button, QtCore.SIGNAL(_fromUtf8("clicked()")), self.output_box.paste)
-        QtCore.QObject.connect(self.clear_button, QtCore.SIGNAL(_fromUtf8("clicked()")), self.input_box.clear)
-        QtCore.QObject.connect(self.clear_button, QtCore.SIGNAL(_fromUtf8("clicked()")), self.output_box.clear)
+        QtCore.QObject.connect(self.translate_button, QtCore.SIGNAL(
+            _fromUtf8("clicked()")), self.output_box.paste)
+        QtCore.QObject.connect(self.clear_button, QtCore.SIGNAL(
+            _fromUtf8("clicked()")), self.input_box.clear)
+        QtCore.QObject.connect(self.clear_button, QtCore.SIGNAL(
+            _fromUtf8("clicked()")), self.output_box.clear)
         QtCore.QMetaObject.connectSlotsByName(Kaytest)
 
     def retranslateUi(self, Kaytest):
@@ -92,5 +99,5 @@ class Ui_Kaytest(object):
         self.label.setText(_translate("Kaytest", "输入报文：", None))
         self.label_3.setText(_translate("Kaytest", "解析结果：", None))
         self.clear_button.setText(_translate("Kaytest", "清空", None))
-        self.label_5.setText(_translate("Kaytest", "Copyright(C), 2005-2020,Sanxing Medical & Electric Co.,Ltd.", None))
-
+        self.label_5.setText(_translate(
+            "Kaytest", "Copyright(C), 2005-2020,Sanxing Medical & Electric Co.,Ltd.", None))
