@@ -26,6 +26,21 @@ def get_num_of_SEQUENCE(data, SEQUENCE_text=''):
     return num
 
 
+def get_len_of_octect_string(data):
+    offset = 0
+    len_flag = int(data[offset], 16)
+    offset += 1
+    if len_flag >> 7 == 0:  # 单字节长度
+        return len_flag, offset
+    else:
+        len_of_len = len_flag | 0x7f
+        string_len = ''
+        for count in range(len_of_len):
+            string_len += data[offset + count]
+        offset += len_of_len
+        return int(string_len, 16), offset
+
+
 def get_DAR(DAR):
     file_path = os.path.join(pathname, '698ErrIDConfig.ini')
     file_handle = open(file_path, 'rb')
@@ -152,6 +167,13 @@ def take_double_long_unsigned(data, add_text=''):
 
 def take_octect_string(data, add_text=''):
     offset = 0
+    string_len = 0
+    string_len, offset = get_len_of_octect_string(data[offset:])
+    show_data_source(data[:offset], offset)
+    output(' —— octect_string,长度:' + str(string_len))
+    show_data_source(data[offset:], string_len)
+    output(' —— octect_string' + add_text)
+    offset += string_len
     return offset
 
 

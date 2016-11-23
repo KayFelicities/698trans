@@ -33,6 +33,10 @@ def get8502(data):
     offset = 0
     output(data[offset] + ' —— PIID')
     offset += 1
+    A_ResultNormal_num = get_num_of_SEQUENCE(data[offset:], 'A_ResultNormal')
+    offset += 1
+    for A_ResultNormal_count in range(A_ResultNormal_num):
+        offset += take_A_ResultNormal(data[offset:])
     return offset
 
 
