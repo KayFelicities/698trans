@@ -19,6 +19,29 @@ def show_data_source(data, len):
     output(source_text, False)
 
 
+def take_PIID(data, SEQUENCE_text=''):
+    offset = 0
+    piid = int(data[offset], 16)
+    service_priority = '一般的, ' if piid >> 7 == 0 else '高级的, '
+    invoke_id = piid & 0x3f
+    show_data_source(data[offset:], 1)
+    output(' —— PIID(服务优先级:' + service_priority + '服务序号:' + str(invoke_id) + ')')
+    offset += 1
+    return offset
+
+
+def take_PIID_ACD(data, SEQUENCE_text=''):
+    offset = 0
+    piid_acd = int(data[offset], 16)
+    service_priority = '一般的, ' if piid_acd >> 7 == 0 else '高级的, '
+    ACD = '不请求访问, ' if (piid_acd >> 6) & 0x01 == 0 else '请求访问, '
+    invoke_id = piid_acd & 0x3f
+    show_data_source(data[offset:], 1)
+    output(' —— PIID-ACD(服务优先级:' + service_priority + ACD + '服务序号:' + str(invoke_id) + ')')
+    offset += 1
+    return offset
+
+
 def get_num_of_SEQUENCE(data, SEQUENCE_text=''):
     num = int(data[0], 16)
     show_data_source(data, 1)
