@@ -94,7 +94,7 @@ class Ui_Kaytest(object):
         QtCore.QMetaObject.connectSlotsByName(Kaytest)
 
     def retranslateUi(self, Kaytest):
-        Kaytest.setWindowTitle(_translate("Kaytest", "698报文解析工具_V1.1  终端开发部内测版(2016.11.17)", None))
+        Kaytest.setWindowTitle(_translate("Kaytest", "V1.2beta  终端开发部内测版(2016.11.17)", None))
         self.translate_button.setText(_translate("Kaytest", "解析", None))
         self.label.setText(_translate("Kaytest", "输入报文：", None))
         self.label_3.setText(_translate("Kaytest", "解析结果：", None))

@@ -4,8 +4,7 @@ import sys
 
 from shared_functions import *  # NOQA
 from sRunFun import *  # NOQA
-from GET_Request import *  # NOQA
-from GET_Response import *  # NOQA
+from get_service import *  # NOQA
 from SET_Request import *  # NOQA
 from SET_Response import *  # NOQA
 from Action_Request import *  # NOQA

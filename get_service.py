@@ -44,9 +44,7 @@ def get0503(data):
     offset = 0
     output(data[offset] + ' —— PIID')
     offset += 1
-    offset += take_OAD(data[offset:])
-    offset += take_RSD(data[offset:])  # RSD
-    offset += take_RCSD(data[offset:])  # RCSD处理
+    offset += take_GetRecord(data[offset:])
     return offset
 
 
@@ -54,6 +52,7 @@ def get8503(data):
     offset = 0
     output(data[offset] + ' —— PIID')
     offset += 1
+    offset += take_A_ResultRecord(data[offset:])
     return offset
 
 
@@ -64,7 +63,7 @@ def get0504(data):
     get0503_num = get_num_of_SEQUENCE(data[offset:], 'getRecord')
     offset += 1
     for get0503_count in range(get0503_num):
-        get0503(data[offset:])
+        offset += take_GetRecord(data[offset:])
     return offset
 
 
@@ -72,6 +71,10 @@ def get8504(data):
     offset = 0
     output(data[offset] + ' —— PIID')
     offset += 1
+    A_ResultRecord_num = get_num_of_SEQUENCE(data[offset:], 'A_ResultRecord')
+    offset += 1
+    for A_ResultRecord_count in range(A_ResultRecord_num):
+        offset += take_A_ResultRecord(data[offset:])
     return offset
 
 
@@ -87,4 +90,21 @@ def get8505(data):
     offset = 0
     output(data[offset] + ' —— PIID')
     offset += 1
+    offset += take_bool(data[offset:], '(末帧标志)')
+    offset += take_long_unsigned(data[offset:], '(分帧序号)')
+
+    re_data_choice = data[offset]
+    if re_data_choice == '00':
+        show_data_source(data[offset:], 2)
+        dar = get_DAR(data[offset + 1])
+        output(' —— 错误信息:' + dar)
+        offset += 2
+    elif re_data_choice == '01':  # EQUENCE OF A-ResultNormal
+        A_ResultNormal_num = get_num_of_SEQUENCE(data[offset:], 'A_ResultNormal')
+        offset += 1
+        offset += take_A_ResultNormal(data[offset:])
+    elif re_data_choice == '02':  # SEQUENCE OF A-ResultRecord
+        A_ResultRecord_num = get_num_of_SEQUENCE(data[offset:], 'A_ResultRecord')
+        offset += 1
+        offset += take_A_ResultRecord(data[offset:])
     return offset
