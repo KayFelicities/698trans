@@ -3,6 +3,7 @@ from PyQt4 import QtGui
 import sys
 
 from shared_functions import *  # NOQA
+from link_layer import *  # NOQA
 from sRunFun import *  # NOQA
 from get_service import *  # NOQA
 from set_service import *  # NOQA
@@ -32,30 +33,13 @@ class UItest(QtGui.QMainWindow, QtGui.QWidget, Ui_Kaytest):
 
 
 def my_translate(input_text):
-    input_text = input_text.replace(' ', '').replace('\n', '').upper()  # 处理空格和换行
-    data_len = int(len(input_text) / 2)
-    output('报文总长：' + str(data_len) + '字节(' + str(hex(data_len)) + ')\n')
-    # 处理FE前缀
-    k = 0
-    while input_text[k * 2:(k + 1) * 2] == 'FE':
-        k += 1
-    input_text = input_text[k * 2:]
-    print('原始报文： ' + input_text + '\n')
-    # 写入list
-    data_in = []
-    for k in range(0, int(len(input_text) / 2)):
-        data_in.append(input_text[k * 2:(k + 1) * 2])
-    # print(data_in)
-    # 判断合法性
-    if Verify(*data_in) is not True:  # 非法
+    offset = 0
+    data_in = data_format(input_text)
+    if check_data(data_in) is not True:  # 非法
+        output('报文非法')
         return
-    # 解链路层
-    ShowLen(*data_in)  # 显示长度
-    ShowCtrl(*data_in)  # 显示控制域
-    offset = 1 + 2 + 1  # 68 长度 长度 控制码
-    offset += lShowAddr(*data_in)  # 地址
-    offset += lShowHCS(offset, *data_in)  # 帧头校验
-    offset += lShowFenZen(offset, *data_in)  # 分帧
+    offset += take_link_layer_1(data_in[offset:])
+
     # 解应用层
     show_service_type(offset, *data_in)
     if data_in[offset] in ['01', '02', '03', '81', '82', '83', '84']:
@@ -89,8 +73,7 @@ def my_translate(input_text):
             '8905': pro8905, '8906': pro8906, '8907': pro8907,
         }[server_type](data_in[offset:])
     # 处理链路层末尾
-    ShowOther(offset, *data_in)
-    ShowFCS16(*data_in)
+    take_link_layer_2(data_in[offset:])
 
 
 if __name__ == "__main__":

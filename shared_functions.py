@@ -384,7 +384,7 @@ def take_date_time(data, add_text=''):
     second = int(data[7], 16)
     milliseconds = int(data[8] + data[9], 16)
     show_data_source(data, 10)
-    output(' —— data_time:{0:04d}-{1:02d}-{2:02d} {3:02d}:{4:02d}:{5:02d}:{6:03d}'
+    output(' —— date_time:{0:04d}-{1:02d}-{2:02d} {3:02d}:{4:02d}:{5:02d}:{6:03d}'
            .format(year, month, day, hour, minute, second, milliseconds) + add_text)
     offset += 10
     return offset
