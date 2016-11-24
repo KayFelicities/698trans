@@ -88,14 +88,18 @@ def get8505(data):
         dar = get_DAR(data[offset + 1])
         output(' —— 错误信息:' + dar)
         offset += 2
-    elif re_data_choice == '01':  # EQUENCE OF A-ResultNormal
-        A_ResultNormal_num = get_num_of_SEQUENCE(data[offset:], 'A_ResultNormal')
-        offset += 1
+    elif re_data_choice == '01':  # SEQUENCE OF A-ResultNormal
+        show_data_source(data[offset:], 2)
+        A_ResultNormal_num = get_num_of_SEQUENCE(data[offset + 1:], 'A_ResultNormal')
+        output(' —— 对象属性*', str(A_ResultNormal_num))
+        offset += 2
         for A_ResultNormal_count in range(A_ResultNormal_num):
             offset += take_A_ResultNormal(data[offset:])
     elif re_data_choice == '02':  # SEQUENCE OF A-ResultRecord
-        A_ResultRecord_num = get_num_of_SEQUENCE(data[offset:], 'A_ResultRecord')
-        offset += 1
+        show_data_source(data[offset:], 2)
+        A_ResultRecord_num = get_num_of_SEQUENCE(data[offset + 1:], 'A_ResultRecord')
+        output(' —— 记录型对象属性*', str(A_ResultRecord_num))
+        offset += 2
         for A_ResultRecord_count in range(A_ResultRecord_num):
             offset += take_A_ResultRecord(data[offset:])
     return offset

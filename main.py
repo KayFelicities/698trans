@@ -8,8 +8,7 @@ from get_service import *  # NOQA
 from set_service import *  # NOQA
 from action_service import *  # NOQA
 from report_service import *  # NOQA
-from Pro_Request import *  # NOQA
-from Pro_Response import *  # NOQA
+from proxy_service import *  # NOQA
 from Other import connect_service
 from security_service import *  # NOQA
 from testgui import Ui_Kaytest
@@ -84,10 +83,10 @@ def my_translate(input_text):
             '8701': act8701, '8702': act8702, '8703': act8703,
             '0801': rep0801, '0802': rep0802,
             '8801': rep8801, '8802': rep8802,
-            # '0901': pro0901, '0902': pro0902, '0903': pro0903, '0904': pro0904,
-            # '0905': pro0905, '0906': pro0906, '0907': pro0907,
-            # '8901': pro8901, '8902': pro8902, '8903': pro8903, '8904': pro8904,
-            # '8905': pro8905, '8906': pro8906, '8907': pro8907,
+            '0901': pro0901, '0902': pro0902, '0903': pro0903, '0904': pro0904,
+            '0905': pro0905, '0906': pro0906, '0907': pro0907,
+            '8901': pro8901, '8902': pro8902, '8903': pro8903, '8904': pro8904,
+            '8905': pro8905, '8906': pro8906, '8907': pro8907,
         }[server_type](data_in[offset:])
     # 处理链路层末尾
     ShowOther(offset, *data_in)

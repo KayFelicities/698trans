@@ -507,7 +507,7 @@ def take_TSA(data, add_text=''):
     addr_text = ''
     for tsa_count in range(addr_len + 1):
         addr_text += data[offset + 2 + tsa_count]
-    output(' —— TSA' + ':' + addr_text)
+    output(' —— TSA' + ':' + addr_text + add_text)
     offset += 1 + TSA_len
     return offset
 

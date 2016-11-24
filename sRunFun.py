@@ -1,8 +1,6 @@
 ﻿from sFindIDFun import sFindAPDU
 from shared_functions import *
 
-# 验证合法性
-
 
 def Verify(*data_in):  # True合法
     if data_in[0] != '68' or data_in[len(data_in) - 1] != '16' or int(data_in[2] + data_in[1], 16) != len(data_in) - 2:
@@ -12,15 +10,11 @@ def Verify(*data_in):  # True合法
         output('68 —— 帧起始符')
         return True
 
-# 长度
-
 
 def ShowLen(*data_in):
     output(data_in[1] + ' ' + data_in[2] + ' —— 长度域L=' +
            str(int(data_in[2] + data_in[1], 16)) + '字节')
     return 0
-
-# 控制码
 
 
 def ShowCtrl(*data_in):
@@ -69,7 +63,6 @@ def lShowAddr(*data_in):
     server_logic_addr = (int(data_in[4], 16) >> 4) & 0x03
     server_addr_len = (int(data_in[4], 16) & 0x0f) + 1
     # print('server_addr_len', server_addr_len)
-
     server_addr_list = data_in[4: server_addr_len + 6]
     server_addr_list_reverse = data_in[4 + server_addr_len: 4: -1]
     server_addr_data = ''
@@ -112,8 +105,6 @@ def lShowFenZen(offset, *data_in):
     else:
         return 0
 
-# APDU
-
 
 def show_service_type(offset, *data_in):
     server_type_line = sFindAPDU(data_in[offset])
@@ -132,8 +123,6 @@ def show_service_type(offset, *data_in):
         output('APDU解析出错')
     return
 
-# 信息及时间标签
-
 
 def ShowOther(offset, *data_in):
     OtherCommand = ''
@@ -142,8 +131,6 @@ def ShowOther(offset, *data_in):
     if OtherCommand != '':
         output(OtherCommand + '—— 信息域及时间标签')
     return 0
-
-# 帧头校验FCS及结束码
 
 
 def ShowFCS16(*data_in):
