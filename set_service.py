@@ -12,7 +12,7 @@ def set0601(data):
 def set8601(data):
     offset = 0
     offset += take_PIID_ACD(data[offset:])
-    dar = get_DAR(data[offset + 1])
+    dar = get_DAR(data[offset])
     output(' —— 设置执行结果:' + dar)
     offset += 1
     return offset
@@ -36,7 +36,7 @@ def set8602(data):
     offset += 1
     for set_result_count in range(set_result_num):
         offset += take_OAD(data[offset:])
-        dar = get_DAR(data[offset + 1])
+        dar = get_DAR(data[offset])
         output(' —— 设置执行结果:' + dar)
         offset += 1
     return offset
@@ -62,9 +62,9 @@ def set8603(data):
     offset += 1
     for set_result_count in range(set_result_num):
         offset += take_OAD(data[offset:])
-        dar = get_DAR(data[offset + 1])
+        dar = get_DAR(data[offset])
         output(' —— 设置执行结果:' + dar)
+        offset += 1
         offset += take_OAD(data[offset:])
         offset += take_Get_Result(data[offset:])
-        offset += 1
     return offset

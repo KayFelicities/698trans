@@ -5,10 +5,8 @@ import sys
 from shared_functions import *  # NOQA
 from sRunFun import *  # NOQA
 from get_service import *  # NOQA
-from SET_Request import *  # NOQA
-from SET_Response import *  # NOQA
-from Action_Request import *  # NOQA
-from Action_Response import *  # NOQA
+from set_service import *  # NOQA
+from action_service import *  # NOQA
 from Rep_Noti import *  # NOQA
 from Rep_Response import *  # NOQA
 from Pro_Request import *  # NOQA
@@ -81,10 +79,10 @@ def my_translate(input_text):
             '0505': get0505,
             '8501': get8501, '8502': get8502, '8503': get8503, '8504': get8504,
             '8505': get8505,
-            # '0601': set0601, '0602': set0602, '0603': set0603,
-            # '8601': set8601, '8602': set8602, '8603': set8603,
-            # '0701': action0701, '0702': action0702, '0703': action0703,
-            # '8701': action8701, '8702': action8702, '8703': action8703,
+            '0601': set0601, '0602': set0602, '0603': set0603,
+            '8601': set8601, '8602': set8602, '8603': set8603,
+            '0701': act0701, '0702': act0702, '0703': act0703,
+            '8701': act8701, '8702': act8702, '8703': act8703,
             # '0801': rep0801, '0802': rep0801,  # 与0801一致
             # '8801': rep8801, '8802': rep8802,
             # '0901': pro0901, '0902': pro0902, '0903': pro0903, '0904': pro0904,
