@@ -6,8 +6,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt4 import QtCore
-from PyQt4 import QtGui
+from PyQt4 import QtCore, QtGui  # NOQA
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8

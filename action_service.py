@@ -20,9 +20,8 @@ def act8701(data):
     show_data_source(data[offset:], 1)
     output(' —— OPTIONAL:' + int(optional, 16))
     offset += 1
-    if optional == '00':
-        return offset
-    offset += take_Data(data[offset:])
+    if optional == '01':
+        offset += take_Data(data[offset:])
     return offset
 
 

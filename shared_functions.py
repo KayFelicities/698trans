@@ -259,9 +259,8 @@ def take_octect_string(data, add_text=''):
     string_len = 0
     string_len, offset = get_len_of_octect_string(data[offset:])
     show_data_source(data[:offset], offset)
-    output(' —— octect_string,长度:' + str(string_len))
     show_data_source(data[offset:], string_len)
-    output(' —— octect_string' + add_text)
+    output(' —— octect_string,长度' + str(string_len) + add_text)
     offset += string_len
     return offset
 
@@ -524,6 +523,13 @@ def take_RN(data, add_text=''):
     return offset
 
 
+def take_RN_MAC(data, add_text=''):
+    offset = 0
+    offset += take_octect_string(data[offset:], '(RN)')
+    offset += take_octect_string(data[offset:], '(MAC)')
+    return offset
+
+
 def take_Region(data, add_text=''):
     offset = 0
     uint = {
@@ -663,7 +669,7 @@ def take_MS(data, add_text=''):
 def take_SID(data, add_text=''):
     offset = 0
     offset += take_double_long_unsigned(data[offset:], '标识')
-    offset += take_octect_string(data[offset:], '附加数据')
+    offset += take_octect_string(data[offset:], '(附加数据)')
     return offset
 
 

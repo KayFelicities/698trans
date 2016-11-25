@@ -29,6 +29,30 @@ def check_data(data_in):  # True合法
         return True
 
 
+def take_service_type(data):
+    offset = 0
+    file_path = os.path.join(pathname, '698APDUConfig.ini')
+    file_handle = open(file_path, 'rb')
+    file_lines = file_handle.readlines()
+    file_handle.close()
+    service_type = data[offset]
+    service_explain = ' —— '
+    for service_line in file_lines:
+        if int(service_line.decode('utf-8').split('=')[0]) == int(service_type, 16):
+            service_explain += service_line.decode('utf-8').split('=')[1].split('\n')[0].split('\r')[0]
+            break
+    if service_type not in ['01', '02', '03', '10', '81', '82', '83', '84', '90']:
+        service_type += data[offset + 1]
+        service_explain += ', ' + service_line.decode('utf-8').split('=')[int(data[offset + 1], 16) + 1].split('\n')[0].split('\r')[0]
+        show_data_source(data[offset:], 2)
+        offset += 2
+    else:
+        show_data_source(data[offset:], 1)
+        offset += 1
+    output(service_explain)
+    return offset, service_type
+
+
 def take_link_layer_1(data):
     offset = 0
     # 起始符
@@ -36,7 +60,7 @@ def take_link_layer_1(data):
     offset += 1
     # 长度
     show_data_source(data[offset:], 2)
-    output(' —— 长度L=' + str(int(data[offset + 1] + data[offset], 16)) + '字节')
+    output(' —— 长度L:' + str(int(data[offset + 1] + data[offset], 16)) + '字节')
     offset += 2
     # 控制域
     ctrol = int(data[offset], 16)
@@ -113,9 +137,10 @@ def take_link_layer_1(data):
 
 def take_link_layer_2(data):
     offset = 0
-    show_data_source(data[offset:], len(data) - 3)
-    output(' —— 信息域及时间标签')
-    offset += len(data) - 3
+    if len(data) - 3 > 0:
+        show_data_source(data[offset:], len(data) - 3)
+        output(' —— 信息域及时间标签')
+        offset += len(data) - 3
     show_data_source(data[offset:], 2)
     output(' —— 帧校验')
     offset += 2
