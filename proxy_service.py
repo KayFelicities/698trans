@@ -4,12 +4,12 @@ from shared_functions import *  # NOQA
 def pro0901(data):
     offset = 0
     offset += take_PIID(data[offset:])
-    offset += take_long_unsigned(data[offset:], '(整个代理请求的超时时间)')
+    offset += take_long_unsigned(data[offset:], '整个代理请求的超时时间:')
     proxy_num = get_num_of_SEQUENCE(data[offset:], '代理服务器')
     offset += 1
     for proxy_count in range(proxy_num):
-        offset += take_TSA(data[offset:], '(目标服务器地址)')
-        offset += take_long_unsigned(data[offset:], '(代理一个服务器的超时时间)')
+        offset += take_TSA(data[offset:], '目标服务器地址:')
+        offset += take_long_unsigned(data[offset:], '代理一个服务器的超时时间:')
         oad_num = get_num_of_SEQUENCE(data[offset:], 'OAD')
         offset += 1
         for oad_count in range(oad_num):
@@ -20,8 +20,8 @@ def pro0901(data):
 def pro0902(data):
     offset = 0
     offset += take_PIID(data[offset:])
-    offset += take_long_unsigned(data[offset:], '(代理请求的超时时间)')
-    offset += take_TSA(data[offset:], '(目标服务器地址)')
+    offset += take_long_unsigned(data[offset:], '代理请求的超时时间:')
+    offset += take_TSA(data[offset:], '目标服务器地址:')
     offset += take_OAD(data[offset:])
     offset += take_RSD(data[offset:])
     offset += take_RCSD(data[offset:])
@@ -31,12 +31,12 @@ def pro0902(data):
 def pro0903(data):
     offset = 0
     offset += take_PIID(data[offset:])
-    offset += take_long_unsigned(data[offset:], '(整个代理请求的超时时间)')
+    offset += take_long_unsigned(data[offset:], '整个代理请求的超时时间:')
     proxy_num = get_num_of_SEQUENCE(data[offset:], '代理服务器')
     offset += 1
     for proxy_count in range(proxy_num):
-        offset += take_TSA(data[offset:], '(目标服务器地址)')
-        offset += take_long_unsigned(data[offset:], '(代理一个服务器的超时时间)')
+        offset += take_TSA(data[offset:], '目标服务器地址:')
+        offset += take_long_unsigned(data[offset:], '代理一个服务器的超时时间:')
         oad_num = get_num_of_SEQUENCE(data[offset:], 'OAD及其数据')
         offset += 1
         for oad_count in range(oad_num):
@@ -48,31 +48,31 @@ def pro0903(data):
 def pro0904(data):
     offset = 0
     offset += take_PIID(data[offset:])
-    offset += take_long_unsigned(data[offset:], '(整个代理请求的超时时间)')
+    offset += take_long_unsigned(data[offset:], '整个代理请求的超时时间:')
     proxy_num = get_num_of_SEQUENCE(data[offset:], '代理服务器')
     offset += 1
     for proxy_count in range(proxy_num):
-        offset += take_TSA(data[offset:], '(目标服务器地址)')
-        offset += take_long_unsigned(data[offset:], '(代理一个服务器的超时时间)')
+        offset += take_TSA(data[offset:], '目标服务器地址:')
+        offset += take_long_unsigned(data[offset:], '代理一个服务器的超时时间:')
         oad_num = get_num_of_SEQUENCE(data[offset:], '对象属性的设置后读取')
         offset += 1
         for oad_count in range(oad_num):
             offset += take_OAD(data[offset:])
             offset += take_Data(data[offset:])
             offset += take_OAD(data[offset:])
-            offset += take_unsigned(data[offset:], '(延时读取时间)')
+            offset += take_unsigned(data[offset:], '延时读取时间:')
     return offset
 
 
 def pro0905(data):
     offset = 0
     offset += take_PIID(data[offset:])
-    offset += take_long_unsigned(data[offset:], '(整个代理请求的超时时间)')
+    offset += take_long_unsigned(data[offset:], '整个代理请求的超时时间:')
     proxy_num = get_num_of_SEQUENCE(data[offset:], '代理服务器')
     offset += 1
     for proxy_count in range(proxy_num):
-        offset += take_TSA(data[offset:], '(目标服务器地址)')
-        offset += take_long_unsigned(data[offset:], '(代理一个服务器的超时时间)')
+        offset += take_TSA(data[offset:], '目标服务器地址:')
+        offset += take_long_unsigned(data[offset:], '代理一个服务器的超时时间:')
         oad_num = get_num_of_SEQUENCE(data[offset:], 'OAD及其参数')
         offset += 1
         for oad_count in range(oad_num):
@@ -84,19 +84,19 @@ def pro0905(data):
 def pro0906(data):
     offset = 0
     offset += take_PIID(data[offset:])
-    offset += take_long_unsigned(data[offset:], '(整个代理请求的超时时间)')
+    offset += take_long_unsigned(data[offset:], '整个代理请求的超时时间:')
     proxy_num = get_num_of_SEQUENCE(data[offset:], '代理服务器')
     offset += 1
     for proxy_count in range(proxy_num):
-        offset += take_TSA(data[offset:], '(目标服务器地址)')
-        offset += take_long_unsigned(data[offset:], '(代理一个服务器的超时时间)')
+        offset += take_TSA(data[offset:], '目标服务器地址:')
+        offset += take_long_unsigned(data[offset:], '代理一个服务器的超时时间:')
         oad_num = get_num_of_SEQUENCE(data[offset:], '对象方法及属性的操作后读取')
         offset += 1
         for oad_count in range(oad_num):
             offset += take_OMD(data[offset:])
             offset += take_Data(data[offset:])
             offset += take_OAD(data[offset:])
-            offset += take_unsigned(data[offset:], '(延时读取时间)')
+            offset += take_unsigned(data[offset:], '延时读取时间:')
     return offset
 
 
@@ -104,10 +104,10 @@ def pro0907(data):
     offset = 0
     offset += take_PIID(data[offset:])
     offset += take_OAD(data[offset:])
-    offset += take_COMDCB(data[offset:], '(端口通信控制块)')
-    offset += take_long_unsigned(data[offset:], '(接收等待报文超时时间（秒）)')
-    offset += take_long_unsigned(data[offset:], '(接收等待字节超时时间（毫秒）)')
-    offset += take_octect_string(data[offset:], '(透明转发命令)')
+    offset += take_COMDCB(data[offset:], '端口通信控制块:')
+    offset += take_long_unsigned(data[offset:], '接收等待报文超时时间（秒）:')
+    offset += take_long_unsigned(data[offset:], '接收等待字节超时时间（毫秒）:')
+    offset += take_octect_string(data[offset:], '透明转发命令')
     return offset
 
 
@@ -185,9 +185,7 @@ def pro8905(data):
             output(' —— 操作结果:' + dar)
             offset += 1
             optional = data[offset]
-            show_data_source(data[offset:], 1)
-            output(' —— OPTIONAL:' + int(optional, 16))
-            offset += 1
+            offset += take_OPTIONAL(data[offset:], '操作返回数据')
             if optional == '01':
                 offset += take_Data(data[offset:])
     return offset
@@ -208,9 +206,7 @@ def pro8906(data):
             output(' —— 操作结果:' + dar)
             offset += 1
             optional = data[offset]
-            show_data_source(data[offset:], 1)
-            output(' —— OPTIONAL:' + int(optional, 16))
-            offset += 1
+            offset += take_OPTIONAL(data[offset:], '操作返回数据')
             if optional == '01':
                 offset += take_Data(data[offset:])
             offset += take_OAD(data[offset:])
