@@ -19,7 +19,7 @@ def show_data_source(data, len):
     output(source_text, False)
 
 
-def take_PIID(data, SEQUENCE_text=''):
+def take_PIID(data, add_text=''):
     offset = 0
     piid = int(data[offset], 16)
     service_priority = '一般的, ' if piid >> 7 == 0 else '高级的, '
@@ -30,7 +30,7 @@ def take_PIID(data, SEQUENCE_text=''):
     return offset
 
 
-def take_PIID_ACD(data, SEQUENCE_text=''):
+def take_PIID_ACD(data, add_text=''):
     offset = 0
     piid_acd = int(data[offset], 16)
     service_priority = '一般的, ' if piid_acd >> 7 == 0 else '高级的, '
@@ -38,6 +38,15 @@ def take_PIID_ACD(data, SEQUENCE_text=''):
     invoke_id = piid_acd & 0x3f
     show_data_source(data[offset:], 1)
     output(' —— PIID-ACD(服务优先级:' + service_priority + ACD + '服务序号:' + str(invoke_id) + ')')
+    offset += 1
+    return offset
+
+
+def take_OPTIONAL(data, add_text=''):
+    offset = 0
+    optional = '有' if data[offset] == '01' else '无'
+    show_data_source(data[offset:], 1)
+    output(' —— ' + add_text + ':' + optional)
     offset += 1
     return offset
 
@@ -131,6 +140,63 @@ def take_GetRecord(data, add_text=''):
     return offset
 
 
+def take_ConnectMechanismInfo(data, add_text=''):
+    offset = 0
+    connect_choice = data[offset]
+    show_data_source(data[offset:], 1)
+    output(' —— ' + {
+        '00': '公共连接',
+        '01': '一般密码',
+        '02': '对称加密',
+        '03': '数字签名',
+    }[connect_choice])
+    offset += 1
+    if connect_choice == '00':
+        offset += take_NULL(data[offset:], '(NullSecurity)')
+    elif connect_choice == '01':
+        offset += take_visible_string(data[offset:], '(PasswordSecurity)')
+    elif connect_choice == '02':
+        offset += take_octect_string(data[offset:], '(密文1)')
+        offset += take_octect_string(data[offset:], '(客户机签名1)')
+    elif connect_choice == '03':
+        offset += take_octect_string(data[offset:], '(密文2)')
+        offset += take_octect_string(data[offset:], '(客户机签名2)')
+    return offset
+
+
+def take_ConnectResponseInfo(data, add_text=''):
+    offset = 0
+    connect_result = {
+        '00': '允许建立应用连接',
+        '01': '密码错误',
+        '02': '对称解密错误',
+        '03': '非对称解密错误',
+        '04': '签名错误',
+        '05': '协议版本不匹配',
+        'FF': '其他错误'
+    }[data[offset]]
+    show_data_source(data[offset:], 1)
+    output(' —— 认证结果:' + connect_result)
+    offset += 1
+    optional = data[offset]
+    offset += take_OPTIONAL(data[offset:], '认证附加信息')
+    if optional == '01':
+        offset += take_RN(data[offset:], '(服务器随机数)')
+        offset += take_octect_string(data[offset:], '(服务器签名信息)')
+    return offset
+
+
+def take_FactoryVersion(data, add_text=''):
+    offset = 0
+    offset += take_visible_string(data[offset:], '(厂商代码)', 4)
+    offset += take_visible_string(data[offset:], '(软件版本号)', 4)
+    offset += take_visible_string(data[offset:], '(软件版本日期)', 6)
+    offset += take_visible_string(data[offset:], '(硬件版本号)', 4)
+    offset += take_visible_string(data[offset:], '(硬件版本日期)', 6)
+    offset += take_visible_string(data[offset:], '(厂家扩展信息)', 8)
+    return offset
+
+
 # ############################ 数据类型处理 #############################
 def take_Data(data, add_text=''):
     offset = 0
@@ -204,7 +270,7 @@ def take_structure(data, add_text=''):
     offset = 0
     structure_num = int(data[offset], 16)
     show_data_source(data[offset:], 1)
-    output(' —— structure, 元素个数:' + str(structure_num))
+    output(' —— structure, 成员个数:' + str(structure_num))
     offset += 1
     for count in range(structure_num):
         offset += take_Data(data[offset:])
@@ -214,7 +280,8 @@ def take_structure(data, add_text=''):
 def take_bool(data, add_text=''):
     offset = 0
     show_data_source(data, 1)
-    output(' —— bool:' + str(int(data[offset], 16)) + add_text)
+    bool_value = 'False' if data[offset] == 0 else 'True'
+    output(' —— bool:' + bool_value + add_text)
     offset += 1
     return offset
 
@@ -265,9 +332,17 @@ def take_octect_string(data, add_text=''):
     return offset
 
 
-def take_visible_string(data, add_text=''):
+def take_visible_string(data, add_text='', string_len=None):
     offset = 0
-    print('未定义\n')
+    if string_len is None:
+        string_len, offset = get_len_of_octect_string(data[offset:])
+        show_data_source(data[:offset], offset)
+    show_data_source(data[offset:], string_len)
+    visible_string = ''
+    for char in data[offset: offset + string_len]:
+        visible_string += chr(int(char, 16))
+    output(' —— visible_string:' + visible_string + add_text)
+    offset += string_len
     return offset
 
 
@@ -448,11 +523,23 @@ def take_OI(data, add_text=''):
 
 def take_OAD(data, add_text=''):
     offset = 0
-    offset += take_OI(data[offset:],)
-    attr = data[offset]
-    index = data[offset + 1]
+    file_path = os.path.join(pathname, '698DataIDConfig.ini')
+    file_handle = open(file_path, 'rb')
+    file_lines = file_handle.readlines()
+    file_handle.close()
+    OI = data[offset] + data[offset + 1]
+    OI_explain = ''
+    for OI_line in file_lines:
+        if OI_line.decode('utf-8')[0:4] == OI:
+            OI_explain = OI_line.decode('utf-8')[8:].split('=')[0].split('\r\n')[0]
+            break
+    # print('OI_explain:', OI_explain, 'over')
     show_data_source(data[offset:], 2)
-    output(' —— 属性' + attr + ', 索引' + index)
+    offset += 2
+    attr = int(data[offset], 16)
+    index = int(data[offset + 1], 16)
+    show_data_source(data[offset:], 2)
+    output(' —— OAD:' + OI_explain + add_text + ', 属性' + str(attr) + ', 索引' + str(index))
     offset += 2
     return offset
 
@@ -471,11 +558,23 @@ def take_ROAD(data, add_text=''):
 
 def take_OMD(data, add_text=''):
     offset = 0
-    offset += take_OI(data[offset:],)
-    attr = data[offset]
-    index = data[offset + 1]
+    file_path = os.path.join(pathname, '698DataIDConfig.ini')
+    file_handle = open(file_path, 'rb')
+    file_lines = file_handle.readlines()
+    file_handle.close()
+    OI = data[offset] + data[offset + 1]
+    OI_explain = ''
+    for OI_line in file_lines:
+        if OI_line.decode('utf-8')[0:4] == OI:
+            OI_explain = OI_line.decode('utf-8')[8:].split('=')[0].split('\r\n')[0]
+            break
+    # print('OI_explain:', OI_explain, 'over')
     show_data_source(data[offset:], 2)
-    output(' —— 方法' + attr + ', 操作模式' + index)
+    offset += 2
+    attr = int(data[offset], 16)
+    index = int(data[offset + 1], 16)
+    show_data_source(data[offset:], 2)
+    output(' —— OMD:' + OI_explain + add_text + ', 方法' + str(attr) + ', 操作模式' + str(index))
     offset += 2
     return offset
 
