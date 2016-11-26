@@ -15,7 +15,6 @@ from testgui import Ui_Kaytest
 
 
 class UItest(QtGui.QMainWindow, QtGui.QWidget, Ui_Kaytest):
-
     def __init__(self):
         super(UItest, self).__init__()
         self.setupUi(self)
