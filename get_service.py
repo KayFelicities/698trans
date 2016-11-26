@@ -72,15 +72,15 @@ def get8504(data):
 def get0505(data):
     offset = 0
     offset += take_PIID(data[offset:])
-    offset += take_long_unsigned(data[offset:], '(最近一次数据块序号)')
+    offset += take_long_unsigned(data[offset:], '最近一次数据块序号:')
     return offset
 
 
 def get8505(data):
     offset = 0
     offset += take_PIID_ACD(data[offset:])
-    offset += take_bool(data[offset:], '(末帧标志)')
-    offset += take_long_unsigned(data[offset:], '(分帧序号)')
+    offset += take_bool(data[offset:], '末帧标志:')
+    offset += take_long_unsigned(data[offset:], '分帧序号:')
 
     re_data_choice = data[offset]
     if re_data_choice == '00':

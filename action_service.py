@@ -17,9 +17,7 @@ def act8701(data):
     output(' —— 操作执行结果:' + dar)
     offset += 1
     optional = data[offset]
-    show_data_source(data[offset:], 1)
-    output(' —— OPTIONAL:' + int(optional, 16))
-    offset += 1
+    offset += take_OPTIONAL(data[offset:], '操作返回数据')
     if optional == '01':
         offset += take_Data(data[offset:])
     return offset
@@ -46,9 +44,7 @@ def act8702(data):
         output(' —— 操作执行结果:' + dar)
         offset += 1
         optional = data[offset]
-        show_data_source(data[offset:], 1)
-        output(' —— OPTIONAL:' + int(optional, 16))
-        offset += 1
+        offset += take_OPTIONAL(data[offset:], '操作返回数据')
         if optional == '01':
             offset += take_Data(data[offset:])
     return offset
@@ -60,10 +56,10 @@ def act0703(data):
     object_num = get_num_of_SEQUENCE(data[offset:], '设置后读取对象属性')
     offset += 1
     for object_count in range(object_num):
-        offset += take_OMD(data[offset:], '(设置的对象方法)')
-        offset += take_Data(data[offset:], '(方法参数)')
-        offset += take_OMD(data[offset:], '(读取的对象属性)')
-        offset += take_Data(data[offset:], '(读取延时)')
+        offset += take_OMD(data[offset:], '设置的对象方法:')
+        offset += take_Data(data[offset:], '方法参数:')
+        offset += take_OMD(data[offset:], '读取的对象属性:')
+        offset += take_Data(data[offset:], '读取延时:')
     return offset
 
 
@@ -77,9 +73,7 @@ def act8703(data):
         output(' —— 操作执行结果:' + dar)
         offset += 1
         optional = data[offset]
-        show_data_source(data[offset:], 1)
-        output(' —— OPTIONAL:' + int(optional, 16))
-        offset += 1
+        offset += take_OPTIONAL(data[offset:], '操作返回数据')
         if optional == '01':
             offset += take_Data(data[offset:])
         offset += take_OAD(data[offset:])
