@@ -48,10 +48,10 @@ def set0603(data):
     object_num = get_num_of_SEQUENCE(data[offset:], '设置后读取对象属性')
     offset += 1
     for object_count in range(object_num):
-        offset += take_OAD(data[offset:], '设置的对象属性:')
-        offset += take_Data(data[offset:], '数据:')
-        offset += take_OAD(data[offset:], '读取的对象属性:')
-        offset += take_Data(data[offset:], '延时读取时间:')
+        offset += take_OAD(data[offset:], '(设置的对象属性)')
+        offset += take_Data(data[offset:], '(数据)')
+        offset += take_OAD(data[offset:], '(读取的对象属性)')
+        offset += take_Data(data[offset:], '(延时读取时间)')
     return offset
 
 
