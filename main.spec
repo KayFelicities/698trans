@@ -4,9 +4,9 @@ block_cipher = None
 
 
 a = Analysis(['main.py'],
-             pathex=['C:\\Users\\wangke\\AppData\\Local\\Programs\\Python\\Python35\\Lib\\site-packages\\PyQt5\\Qt\\bin', 'C:\\Users\\wangke\\Desktop\\698trans'],
+             pathex=[],
              binaries=[],
-             datas =[('C:\\Users\\wangke\\Desktop\\698trans\\698APDUConfig.ini',''),('C:\\Users\\wangke\\Desktop\\698trans\\698DataIDConfig.ini',''),('C:\\Users\\wangke\\Desktop\\698trans\\698DataTypeConfig.ini',''),('C:\\Users\\wangke\\Desktop\\698trans\\698ErrIDConfig.ini','')],
+             datas =[('698APDUConfig.ini',''),('698DataIDConfig.ini',''),('698DataTypeConfig.ini',''),('698ErrIDConfig.ini','')],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
@@ -25,4 +25,4 @@ exe = EXE(pyz,
           debug=False,
           strip=False,
           upx=True,
-          console=False , icon='698.ico')
+          console=False , icon='UI\\698.ico')

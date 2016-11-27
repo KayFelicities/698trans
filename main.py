@@ -1,7 +1,7 @@
 import config
 from PyQt4 import QtGui
 import sys
-
+sys.path.append('UI\\')
 from shared_functions import *  # NOQA
 from link_layer import *  # NOQA
 from get_service import *  # NOQA
