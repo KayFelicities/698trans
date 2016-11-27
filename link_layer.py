@@ -1,10 +1,15 @@
 from shared_functions import *  # NOQA
 
 
-def data_format(input_text):
+def calc_len(input_text):
     input_text = input_text.replace(' ', '').replace('\n', '').upper()  # 处理空格和换行
     data_len = int(len(input_text) / 2)
-    output('报文总长：' + str(data_len) + '字节(' + str(hex(data_len)) + ')\n')
+    len_message = str(data_len) + '字节(' + str(hex(data_len)) + ')'
+    return len_message
+
+
+def data_format(input_text):
+    input_text = input_text.replace(' ', '').replace('\n', '').upper()  # 处理空格和换行
     # 处理FE前缀
     k = 0
     while input_text[k * 2:(k + 1) * 2] == 'FE':
