@@ -44,9 +44,9 @@ def my_translate(input_text):
         return
     offset += take_link_layer_1(data[offset:])
     # 解应用层
+    output('=' * 60 + 'APDU')
     offset_temp, service_type = take_service_type(data[offset:])
     offset += offset_temp
-    print(offset)
     offset += {
         '01': link_request, '02': connect_request, '03': release_request,
         '81': link_response, '82': connect_response, '83': release_response,
@@ -66,8 +66,9 @@ def my_translate(input_text):
         '8905': pro8905, '8906': pro8906, '8907': pro8907,
         '10': security_request, '90': security_response,
     }[service_type](data[offset:])
+    output('^' * 60 + 'APDU')
     # 处理链路层末尾
-    offset += take_link_layer_2(data[offset:])
+    offset += take_link_layer_2(data[0:], offset)
 
 
 if __name__ == "__main__":
