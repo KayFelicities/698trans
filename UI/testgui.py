@@ -137,7 +137,7 @@ class Ui_Kaytest(object):
         Kaytest.setTabOrder(self.crc_box, self.clear_button)
 
     def retranslateUi(self, Kaytest):
-        Kaytest.setWindowTitle(_translate("Kaytest", "698解析工具", None))
+        Kaytest.setWindowTitle(_translate("Kaytest", "698解析工具_V2.0_Beta(2016.11.28)", None))
         self.translate_button.setText(_translate("Kaytest", "解析", None))
         self.clear_button.setText(_translate("Kaytest", "清空", None))
         self.label.setText(_translate("Kaytest", "长度:", None))

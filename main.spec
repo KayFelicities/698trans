@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['main.py'],
-             pathex=[],
+             pathex=['UI\\'],
              binaries=[],
              datas =[('698APDUConfig.ini',''),('698DataIDConfig.ini',''),('698DataTypeConfig.ini',''),('698ErrIDConfig.ini','')],
              hiddenimports=[],

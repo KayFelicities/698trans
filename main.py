@@ -33,6 +33,9 @@ class UItest(QtGui.QMainWindow, QtGui.QWidget, Ui_Kaytest):
 
 def my_translate(input_text):
     offset = 0
+    if len(input_text) < 5:
+        output('请输入698报文')
+        return
     data = data_format(input_text)
     if check_data(data) is not True:  # 非法
         output('报文非法')
