@@ -26,9 +26,9 @@ class UItest(QtGui.QMainWindow, QtGui.QWidget, Ui_Kaytest):
 
     def my_calc_len_and_crc(self):
         input_text = self.input_box.toPlainText()
-        input_len, crc_calc = calc_len_and_crc(input_text)
+        input_len = calc_len(input_text)
         self.len_box.setText(input_len)
-        self.crc_box.setText(crc_calc)
+        # self.crc_box.setText(crc_calc)
 
 
 def my_translate(input_text):

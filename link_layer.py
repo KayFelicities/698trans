@@ -1,16 +1,16 @@
 from shared_functions import *  # NOQA
 
 
-def calc_len_and_crc(input_text):
+def calc_len(input_text):
     input_text = input_text.replace(' ', '').replace('\n', '').upper()  # 处理空格和换行
     data_len = int(len(input_text) / 2)
     len_message = str(data_len) + '字节(' + str(hex(data_len)) + ')'
-    data = []
-    for k in range(0, data_len):
-        data.append(input_text[k * 2:(k + 1) * 2])
-    fcs_calc = get_fcs(data[:], data_len)
-    fcs_calc = ((fcs_calc << 8) | (fcs_calc >> 8)) & 0xffff  # 低位在前
-    return len_message, '{0:04X}'.format(fcs_calc)
+    # data = []
+    # for k in range(0, data_len):
+    #     data.append(input_text[k * 2:(k + 1) * 2])
+    # fcs_calc = get_fcs(data[:], data_len)
+    # fcs_calc = ((fcs_calc << 8) | (fcs_calc >> 8)) & 0xffff  # 低位在前
+    return len_message
 
 
 def data_format(input_text):

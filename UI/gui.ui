@@ -88,29 +88,6 @@
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>校验:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="crc_box">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>80</width>
-          <height>50</height>
-         </size>
-        </property>
-       </widget>
-      </item>
      </layout>
     </item>
     <item>
@@ -239,7 +216,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>translate_button</tabstop>
   <tabstop>output_box</tabstop>
   <tabstop>len_box</tabstop>
-  <tabstop>crc_box</tabstop>
   <tabstop>clear_button</tabstop>
  </tabstops>
  <resources>

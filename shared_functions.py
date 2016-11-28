@@ -273,6 +273,7 @@ def take_Data(data, add_text=''):
         offset += take_NULL(data[offset:])
         return offset
     show_data_source(data[offset:], 1)
+    print(data[0])
     offset += 1
     offset += {
         '00': take_NULL,
@@ -727,6 +728,7 @@ def take_Scaler_Unit(data, add_text=''):
 
 def take_RSD(data, add_text=''):
     offset = 0
+    # print(data[:])
     show_data_source(data[offset:], 1)
     selector = data[offset]
     output(' —— Selector' + selector)
