@@ -182,8 +182,8 @@ def take_Get_Result(data, add_text=''):
 def take_A_ResultRecord(data, add_text=''):
     offset = 0
     offset += take_OAD(data[offset:])
-    temp_offset, csd_num = take_RCSD(data[offset:])
-    offset += temp_offset
+    csd_num = int(data[offset], 16)
+    offset += take_RCSD(data[offset:])
     re_data_choice = data[offset]
     if re_data_choice == '00':
         show_data_source(data[offset:], 1)
@@ -204,8 +204,7 @@ def take_GetRecord(data, add_text=''):
     offset = 0
     offset += take_OAD(data[offset:])
     offset += take_RSD(data[offset:])  # RSD
-    temp_offset, temp = take_RCSD(data[offset:])  # RCSD处理
-    offset += temp_offset
+    offset += take_RCSD(data[offset:])  # RCSD处理
     return offset
 
 
@@ -221,7 +220,7 @@ def take_ConnectMechanismInfo(data, add_text=''):
     }[connect_choice])
     offset += 1
     if connect_choice == '00':
-        offset += take_NULL(data[offset:], 'NullSecurity:')
+        pass
     elif connect_choice == '01':
         offset += take_visible_string(data[offset:], 'PasswordSecurity:')
     elif connect_choice == '02':
@@ -273,7 +272,6 @@ def take_Data(data, add_text=''):
         offset += take_NULL(data[offset:])
         return offset
     show_data_source(data[offset:], 1)
-    print(data[0])
     offset += 1
     offset += {
         '00': take_NULL,
@@ -620,13 +618,13 @@ def take_OAD(data, add_text=''):
 
 def take_ROAD(data, add_text=''):
     offset = 0
-    offset += take_OAD(data[offset:],)
+    offset += take_OAD(data[offset:])
     oad_num = int(data[offset], 16)
     show_data_source(data[offset:], 1)
     output(' —— 关联OAD*' + str(oad_num))
     offset += 1
     for oad_count in range(oad_num):
-        offset += take_OAD(data[offset:],)
+        offset += take_OAD(data[offset:])
     return offset
 
 
@@ -731,10 +729,13 @@ def take_RSD(data, add_text=''):
     # print(data[:])
     show_data_source(data[offset:], 1)
     selector = data[offset]
-    output(' —— Selector' + selector)
+    if selector == '00':
+        output(' —— Selector0, 不选择')
+    else:
+        output(' —— Selector' + selector)
     offset += 1
     if selector == '00':
-        offset += take_NULL(data[offset:], '不选择')
+        pass
     elif selector == '01':
         offset += take_OAD(data[offset:])
         offset += take_Data(data[offset:], '数值')
@@ -869,4 +870,4 @@ def take_RCSD(data, add_text=''):
     offset += 1
     for csd_count in range(csd_num):
         offset += take_CSD(data[offset:])
-    return offset, csd_num
+    return offset
