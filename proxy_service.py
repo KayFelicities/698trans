@@ -1,7 +1,7 @@
 from shared_functions import *  # NOQA
 
 
-def pro0901(data):
+def ProxyGetRequestList(data):
     offset = 0
     offset += take_PIID(data[offset:])
     offset += take_long_unsigned(data[offset:], '整个代理请求的超时时间:')
@@ -17,7 +17,7 @@ def pro0901(data):
     return offset
 
 
-def pro0902(data):
+def ProxyGetRequestRecord(data):
     offset = 0
     offset += take_PIID(data[offset:])
     offset += take_long_unsigned(data[offset:], '代理请求的超时时间:')
@@ -28,7 +28,7 @@ def pro0902(data):
     return offset
 
 
-def pro0903(data):
+def ProxySetRequestList(data):
     offset = 0
     offset += take_PIID(data[offset:])
     offset += take_long_unsigned(data[offset:], '整个代理请求的超时时间:')
@@ -45,7 +45,7 @@ def pro0903(data):
     return offset
 
 
-def pro0904(data):
+def ProxySetThenGetRequestList(data):
     offset = 0
     offset += take_PIID(data[offset:])
     offset += take_long_unsigned(data[offset:], '整个代理请求的超时时间:')
@@ -64,7 +64,7 @@ def pro0904(data):
     return offset
 
 
-def pro0905(data):
+def ProxyActionRequestList(data):
     offset = 0
     offset += take_PIID(data[offset:])
     offset += take_long_unsigned(data[offset:], '整个代理请求的超时时间:')
@@ -81,7 +81,7 @@ def pro0905(data):
     return offset
 
 
-def pro0906(data):
+def ProxyActionThenGetRequestList(data):
     offset = 0
     offset += take_PIID(data[offset:])
     offset += take_long_unsigned(data[offset:], '整个代理请求的超时时间:')
@@ -100,7 +100,7 @@ def pro0906(data):
     return offset
 
 
-def pro0907(data):
+def ProxyTransCommandRequest(data):
     offset = 0
     offset += take_PIID(data[offset:])
     offset += take_OAD(data[offset:])
@@ -111,7 +111,7 @@ def pro0907(data):
     return offset
 
 
-def pro8901(data):
+def ProxyGetResponseList(data):
     offset = 0
     offset += take_PIID_ACD(data[offset:])
     proxy_num = get_num_of_SEQUENCE(data[offset:], '代理服务器的读取结果')
@@ -126,7 +126,7 @@ def pro8901(data):
     return offset
 
 
-def pro8902(data):
+def ProxyGetResponseRecord(data):
     offset = 0
     offset += take_PIID_ACD(data[offset:])
     offset += take_TSA(data[offset:])
@@ -134,7 +134,7 @@ def pro8902(data):
     return offset
 
 
-def pro8903(data):
+def ProxySetResponseList(data):
     offset = 0
     offset += take_PIID_ACD(data[offset:])
     proxy_num = get_num_of_SEQUENCE(data[offset:], '代理服务器的读取结果')
@@ -149,7 +149,7 @@ def pro8903(data):
     return offset
 
 
-def pro8904(data):
+def ProxySetThenGetResponseList(data):
     offset = 0
     offset += take_PIID_ACD(data[offset:])
     proxy_num = get_num_of_SEQUENCE(data[offset:], '代理服务器的读取结果')
@@ -166,7 +166,7 @@ def pro8904(data):
     return offset
 
 
-def pro8905(data):
+def ProxyActionResponseList(data):
     offset = 0
     offset += take_PIID_ACD(data[offset:])
     proxy_num = get_num_of_SEQUENCE(data[offset:], '代理服务器的读取结果')
@@ -185,7 +185,7 @@ def pro8905(data):
     return offset
 
 
-def pro8906(data):
+def ProxyActionThenGetResponseList(data):
     offset = 0
     offset += take_PIID_ACD(data[offset:])
     proxy_num = get_num_of_SEQUENCE(data[offset:], '代理服务器的读取结果')
@@ -206,7 +206,7 @@ def pro8906(data):
     return offset
 
 
-def pro8907(data):
+def ProxyTransCommandResponse(data):
     offset = 0
     offset += take_PIID_ACD(data[offset:])
     offset += take_OAD(data[offset:])

@@ -1,7 +1,7 @@
 from shared_functions import *  # NOQA
 
 
-def act0701(data):
+def ActionRequest(data):
     offset = 0
     offset += take_PIID(data[offset:])
     offset += take_OMD(data[offset:])
@@ -9,7 +9,31 @@ def act0701(data):
     return offset
 
 
-def act8701(data):
+def ActionRequestList(data):
+    offset = 0
+    offset += take_PIID(data[offset:])
+    object_num = get_num_of_SEQUENCE(data[offset:], '对象方法')
+    offset += 1
+    for object_count in range(object_num):
+        offset += take_OMD(data[offset:])
+        offset += take_Data(data[offset:])
+    return offset
+
+
+def ActionThenGetRequestNormalList(data):
+    offset = 0
+    offset += take_PIID(data[offset:])
+    object_num = get_num_of_SEQUENCE(data[offset:], '设置后读取对象属性')
+    offset += 1
+    for object_count in range(object_num):
+        offset += take_OMD(data[offset:], '设置的对象方法:')
+        offset += take_Data(data[offset:], '方法参数:')
+        offset += take_OMD(data[offset:], '读取的对象属性:')
+        offset += take_Data(data[offset:], '读取延时:')
+    return offset
+
+
+def ActionResponseNormal(data):
     offset = 0
     offset += take_PIID_ACD(data[offset:])
     offset += take_OMD(data[offset:])
@@ -21,18 +45,7 @@ def act8701(data):
     return offset
 
 
-def act0702(data):
-    offset = 0
-    offset += take_PIID(data[offset:])
-    object_num = get_num_of_SEQUENCE(data[offset:], '对象方法')
-    offset += 1
-    for object_count in range(object_num):
-        offset += take_OMD(data[offset:])
-        offset += take_Data(data[offset:])
-    return offset
-
-
-def act8702(data):
+def ActionResponseNormalList(data):
     offset = 0
     offset += take_PIID_ACD(data[offset:])
     action_result_num = get_num_of_SEQUENCE(data[offset:], '对象方法操作结果')
@@ -46,20 +59,7 @@ def act8702(data):
     return offset
 
 
-def act0703(data):
-    offset = 0
-    offset += take_PIID(data[offset:])
-    object_num = get_num_of_SEQUENCE(data[offset:], '设置后读取对象属性')
-    offset += 1
-    for object_count in range(object_num):
-        offset += take_OMD(data[offset:], '设置的对象方法:')
-        offset += take_Data(data[offset:], '方法参数:')
-        offset += take_OMD(data[offset:], '读取的对象属性:')
-        offset += take_Data(data[offset:], '读取延时:')
-    return offset
-
-
-def act8703(data):
+def ActionThenGetResponseNormalList(data):
     offset = 0
     offset += take_PIID_ACD(data[offset:])
     action_result_num = get_num_of_SEQUENCE(data[offset:], '对象方法操作结果')

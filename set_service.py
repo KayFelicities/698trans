@@ -1,7 +1,7 @@
 from shared_functions import *  # NOQA
 
 
-def set0601(data):
+def SetRequestNormal(data):
     offset = 0
     offset += take_PIID(data[offset:])
     offset += take_OAD(data[offset:])
@@ -9,15 +9,7 @@ def set0601(data):
     return offset
 
 
-def set8601(data):
-    offset = 0
-    offset += take_PIID_ACD(data[offset:])
-    offset += take_OAD(data[offset:])
-    offset += take_DAR(data[offset:], '设置执行结果')
-    return offset
-
-
-def set0602(data):
+def SetRequestNormalList(data):
     offset = 0
     offset += take_PIID(data[offset:])
     object_num = get_num_of_SEQUENCE(data[offset:], '对象属性')
@@ -28,18 +20,7 @@ def set0602(data):
     return offset
 
 
-def set8602(data):
-    offset = 0
-    offset += take_PIID_ACD(data[offset:])
-    set_result_num = get_num_of_SEQUENCE(data[offset:], '对象属性设置结果')
-    offset += 1
-    for set_result_count in range(set_result_num):
-        offset += take_OAD(data[offset:])
-        offset += take_DAR(data[offset:], '设置执行结果')
-    return offset
-
-
-def set0603(data):
+def SetThenGetRequestNormalList(data):
     offset = 0
     offset += take_PIID(data[offset:])
     object_num = get_num_of_SEQUENCE(data[offset:], '设置后读取对象属性')
@@ -52,7 +33,26 @@ def set0603(data):
     return offset
 
 
-def set8603(data):
+def SetResponseNormal(data):
+    offset = 0
+    offset += take_PIID_ACD(data[offset:])
+    offset += take_OAD(data[offset:])
+    offset += take_DAR(data[offset:], '设置执行结果')
+    return offset
+
+
+def SetResponseNormalList(data):
+    offset = 0
+    offset += take_PIID_ACD(data[offset:])
+    set_result_num = get_num_of_SEQUENCE(data[offset:], '对象属性设置结果')
+    offset += 1
+    for set_result_count in range(set_result_num):
+        offset += take_OAD(data[offset:])
+        offset += take_DAR(data[offset:], '设置执行结果')
+    return offset
+
+
+def SetThenGetResponseNormalList(data):
     offset = 0
     offset += take_PIID_ACD(data[offset:])
     set_result_num = get_num_of_SEQUENCE(data[offset:], '对象属性设置后读取结果')

@@ -1,17 +1,7 @@
 from shared_functions import *  # NOQA
 
 
-def rep8801(data):
-    offset = 0
-    offset += take_PIID_ACD(data[offset:])
-    A_ResultNormal_num = get_num_of_SEQUENCE(data[offset:], 'A_ResultNormal')
-    offset += 1
-    for A_ResultNormal_count in range(A_ResultNormal_num):
-        offset += take_A_ResultNormal(data[offset:])
-    return offset
-
-
-def rep0801(data):
+def ReportResponseList(data):
     offset = 0
     offset += take_PIID_ACD(data[offset:])
     OAD_num = get_num_of_SEQUENCE(data[offset:], '上报的对象')
@@ -21,7 +11,21 @@ def rep0801(data):
     return offset
 
 
-def rep8802(data):
+def ReportResponseRecordList(data):
+    return ReportResponseList(data)
+
+
+def ReportNotificationList(data):
+    offset = 0
+    offset += take_PIID_ACD(data[offset:])
+    A_ResultNormal_num = get_num_of_SEQUENCE(data[offset:], 'A_ResultNormal')
+    offset += 1
+    for A_ResultNormal_count in range(A_ResultNormal_num):
+        offset += take_A_ResultNormal(data[offset:])
+    return offset
+
+
+def ReportNotificationRecordList(data):
     offset = 0
     offset += take_PIID_ACD(data[offset:])
     A_ResultRecord_num = get_num_of_SEQUENCE(data[offset:], 'A_ResultNormal')
@@ -29,7 +33,3 @@ def rep8802(data):
     for A_ResultRecord_count in range(A_ResultRecord_num):
         offset += take_A_ResultRecord(data[offset:])
     return offset
-
-
-def rep0802(data):
-    return rep0801(data)

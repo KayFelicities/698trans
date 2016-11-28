@@ -1,21 +1,14 @@
 from shared_functions import *  # NOQA
 
 
-def get0501(data):
+def GetRequestNormal(data):
     offset = 0
     offset += take_PIID(data[offset:])
     offset += take_OAD(data[offset:])
     return offset
 
 
-def get8501(data):
-    offset = 0
-    offset += take_PIID_ACD(data[offset:])
-    offset += take_A_ResultNormal(data[offset:])
-    return offset
-
-
-def get0502(data):
+def GetRequestNormalList(data):
     offset = 0
     offset += take_PIID(data[offset:])
     oad_num = get_num_of_SEQUENCE(data[offset:], 'OAD')
@@ -25,7 +18,38 @@ def get0502(data):
     return offset
 
 
-def get8502(data):
+def GetRequestRecord(data):
+    offset = 0
+    offset += take_PIID(data[offset:])
+    offset += take_GetRecord(data[offset:])
+    return offset
+
+
+def GetRequestRecordList(data):
+    offset = 0
+    offset += take_PIID(data[offset:])
+    GetRequestRecord_num = get_num_of_SEQUENCE(data[offset:], 'getRecord')
+    offset += 1
+    for GetRequestRecord_count in range(GetRequestRecord_num):
+        offset += take_GetRecord(data[offset:])
+    return offset
+
+
+def GetRequestNext(data):
+    offset = 0
+    offset += take_PIID(data[offset:])
+    offset += take_long_unsigned(data[offset:], '最近一次数据块序号:')
+    return offset
+
+
+def GetResponseNormal(data):
+    offset = 0
+    offset += take_PIID_ACD(data[offset:])
+    offset += take_A_ResultNormal(data[offset:])
+    return offset
+
+
+def GetResponseNormalList(data):
     offset = 0
     offset += take_PIID_ACD(data[offset:])
     A_ResultNormal_num = get_num_of_SEQUENCE(data[offset:], 'A_ResultNormal')
@@ -35,31 +59,14 @@ def get8502(data):
     return offset
 
 
-def get0503(data):
-    offset = 0
-    offset += take_PIID(data[offset:])
-    offset += take_GetRecord(data[offset:])
-    return offset
-
-
-def get8503(data):
+def GetResponseRecord(data):
     offset = 0
     offset += take_PIID_ACD(data[offset:])
     offset += take_A_ResultRecord(data[offset:])
     return offset
 
 
-def get0504(data):
-    offset = 0
-    offset += take_PIID(data[offset:])
-    get0503_num = get_num_of_SEQUENCE(data[offset:], 'getRecord')
-    offset += 1
-    for get0503_count in range(get0503_num):
-        offset += take_GetRecord(data[offset:])
-    return offset
-
-
-def get8504(data):
+def GetResponseRecordList(data):
     offset = 0
     offset += take_PIID_ACD(data[offset:])
     A_ResultRecord_num = get_num_of_SEQUENCE(data[offset:], 'A_ResultRecord')
@@ -69,14 +76,7 @@ def get8504(data):
     return offset
 
 
-def get0505(data):
-    offset = 0
-    offset += take_PIID(data[offset:])
-    offset += take_long_unsigned(data[offset:], '最近一次数据块序号:')
-    return offset
-
-
-def get8505(data):
+def GetResponseNext(data):
     offset = 0
     offset += take_PIID_ACD(data[offset:])
     offset += take_bool(data[offset:], '末帧标志:')
