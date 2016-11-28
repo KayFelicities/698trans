@@ -13,9 +13,7 @@ def act8701(data):
     offset = 0
     offset += take_PIID_ACD(data[offset:])
     offset += take_OMD(data[offset:])
-    dar = get_DAR(data[offset])
-    output(' —— 操作执行结果:' + dar)
-    offset += 1
+    offset += take_DAR(data[offset:], '操作执行结果')
     optional = data[offset]
     offset += take_OPTIONAL(data[offset:], '操作返回数据')
     if optional == '01':
@@ -40,9 +38,7 @@ def act8702(data):
     action_result_num = get_num_of_SEQUENCE(data[offset:], '对象方法操作结果')
     for action_result_count in range(action_result_num):
         offset += take_OMD(data[offset:])
-        dar = get_DAR(data[offset])
-        output(' —— 操作执行结果:' + dar)
-        offset += 1
+        offset += take_DAR(data[offset:], '设置执行结果')
         optional = data[offset]
         offset += take_OPTIONAL(data[offset:], '操作返回数据')
         if optional == '01':
@@ -69,9 +65,7 @@ def act8703(data):
     action_result_num = get_num_of_SEQUENCE(data[offset:], '对象方法操作结果')
     for action_result_count in range(action_result_num):
         offset += take_OMD(data[offset:])
-        dar = get_DAR(data[offset])
-        output(' —— 操作执行结果:' + dar)
-        offset += 1
+        offset += take_DAR(data[offset:], '设置执行结果')
         optional = data[offset]
         offset += take_OPTIONAL(data[offset:], '操作返回数据')
         if optional == '01':

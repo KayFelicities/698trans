@@ -19,6 +19,60 @@ def show_data_source(data, len):
     output(source_text, False)
 
 
+def take_service_type(data):
+    offset = 0
+    file_path = os.path.join(pathname, '698APDUConfig.ini')
+    file_handle = open(file_path, 'rb')
+    file_lines = file_handle.readlines()
+    file_handle.close()
+    service_type = data[offset]
+    service_explain = ' —— '
+    for service_line in file_lines:
+        if int(service_line.decode('utf-8').split('=')[0]) == int(service_type, 16):
+            service_explain += service_line.decode('utf-8').split('=')[1].split('\n')[0].split('\r')[0]
+            break
+    if service_type not in ['01', '02', '03', '10', '81', '82', '83', '84', '90']:
+        service_type += data[offset + 1]
+        service_explain += ', ' + service_line.decode('utf-8').split('=')[int(data[offset + 1], 16) + 1].split('\n')[0].split('\r')[0]
+        show_data_source(data[offset:], 2)
+        offset += 2
+    else:
+        show_data_source(data[offset:], 1)
+        offset += 1
+    output(service_explain)
+    return offset, service_type
+
+
+def take_FollowReport(data, add_text=''):
+    offset = 0
+    follow_report_option = data[offset]
+    offset += take_OPTIONAL(data[offset:], '跟随上报信息域')
+    if follow_report_option == '01':
+        follow_report_choice = data[offset]
+        show_data_source(data[offset:], 1)
+        if follow_report_choice == '01':
+            result_normal_num = get_num_of_SEQUENCE(data[offset:], '对象属性及其数据')
+            offset += 1
+            for result_normal_count in range(result_normal_num):
+                offset += take_A_ResultNormal(data[offset:])
+        elif follow_report_choice == '02':
+            result_record_num = get_num_of_SEQUENCE(data[offset:], '对象属性及其数据')
+            offset += 1
+            for result_record_count in range(result_record_num):
+                offset += take_A_ResultRecord(data[offset:])
+    return offset
+
+
+def take_TimeTag(data, add_text=''):
+    offset = 0
+    timetag_option = data[offset]
+    offset += take_OPTIONAL(data[offset:], '时间标签')
+    if timetag_option == '01':
+        offset += take_date_time_s(data[offset:], '发送时标')
+        offset += take_TI(data[offset:], '允许传输延时时间')
+    return offset
+
+
 def take_PIID(data, add_text=''):
     offset = 0
     piid = int(data[offset], 16)
@@ -77,25 +131,30 @@ def get_len_of_octect_string(data):
     if len_flag >> 7 == 0:  # 单字节长度
         return len_flag, offset
     else:
-        len_of_len = len_flag | 0x7f
+        len_of_len = len_flag & 0x7f
         string_len = ''
         for count in range(len_of_len):
             string_len += data[offset + count]
         offset += len_of_len
+        print('string_len:', string_len)
         return int(string_len, 16), offset
 
 
-def get_DAR(DAR):
+def take_DAR(data, add_text=''):
+    offset = 0
     file_path = os.path.join(pathname, '698ErrIDConfig.ini')
     file_handle = open(file_path, 'rb')
     file_lines = file_handle.readlines()
     file_handle.close()
     dar_explain = ''
     for dar_line in file_lines:
-        if dar_line.decode('utf-8')[0:2] == DAR:
+        if dar_line.decode('utf-8')[0:2] == data[0]:
             dar_explain = dar_line.decode('utf-8')[3:].split('\n')[0]
             break
-    return dar_explain
+    show_data_source(data[offset:], 1)
+    output(' —— ' + add_text + ':' + dar_explain)
+    offset += 1
+    return offset
 
 
 def take_A_ResultNormal(data, add_text=''):
@@ -109,10 +168,9 @@ def take_Get_Result(data, add_text=''):
     offset = 0
     result = data[offset]
     if result == '00':  # 错误信息
-        show_data_source(data[offset:], 2)
-        dar = get_DAR(data[offset + 1])
-        output(' —— 错误信息:' + dar)
-        offset += 2
+        show_data_source(data[offset:], 1)
+        offset += 1
+        offset += take_DAR(data[offset:], 'DAR')
     elif result == '01':  # 数据
         show_data_source(data[offset:], 1)
         output(' —— 数据')
@@ -128,10 +186,9 @@ def take_A_ResultRecord(data, add_text=''):
     offset += temp_offset
     re_data_choice = data[offset]
     if re_data_choice == '00':
-        show_data_source(data[offset:], 2)
-        dar = get_DAR(data[offset + 1])
-        output(' —— 错误信息:' + dar)
-        offset += 2
+        show_data_source(data[offset:], 1)
+        offset += 1
+        offset += take_DAR(data[offset:], '错误信息')
     elif re_data_choice == '01':  # M条记录
         record_num = int(data[offset + 1], 16)
         show_data_source(data[offset:], 2)
@@ -212,6 +269,9 @@ def take_FactoryVersion(data, add_text=''):
 # ############################ 数据类型处理 #############################
 def take_Data(data, add_text=''):
     offset = 0
+    if data[offset] == '00':    # 对null类型特殊处理
+        offset += take_NULL(data[offset:])
+        return offset
     show_data_source(data[offset:], 1)
     offset += 1
     offset += {
@@ -781,6 +841,7 @@ def take_MS(data, add_text=''):
 def take_SID(data, add_text=''):
     offset = 0
     offset += take_double_long_unsigned(data[offset:], '标识:')
+    print(data[offset:])
     offset += take_octect_string(data[offset:], '附加数据')
     return offset
 

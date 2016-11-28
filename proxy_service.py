@@ -145,9 +145,7 @@ def pro8903(data):
         offset += 1
         for set_result_count in range(set_result_num):
             offset += take_OAD(data[offset:])
-            dar = get_DAR(data[offset])
-            output(' —— 设置结果:' + dar)
-            offset += 1
+            offset += take_DAR(data[offset:], '设置结果')
     return offset
 
 
@@ -162,9 +160,7 @@ def pro8904(data):
         offset += 1
         for set_result_count in range(set_result_num):
             offset += take_OAD(data[offset:])
-            dar = get_DAR(data[offset])
-            output(' —— 设置结果:' + dar)
-            offset += 1
+            offset += take_DAR(data[offset:], '设置结果')
             offset += take_OAD(data[offset:])
             offset += take_Get_Result(data[offset:])
     return offset
@@ -181,9 +177,7 @@ def pro8905(data):
         offset += 1
         for set_result_count in range(set_result_num):
             offset += take_OMD(data[offset:])
-            dar = get_DAR(data[offset])
-            output(' —— 操作结果:' + dar)
-            offset += 1
+            offset += take_DAR(data[offset:], '操作结果')
             optional = data[offset]
             offset += take_OPTIONAL(data[offset:], '操作返回数据')
             if optional == '01':
@@ -202,9 +196,7 @@ def pro8906(data):
         offset += 1
         for set_result_count in range(set_result_num):
             offset += take_OMD(data[offset:])
-            dar = get_DAR(data[offset])
-            output(' —— 操作结果:' + dar)
-            offset += 1
+            offset += take_DAR(data[offset:], '操作结果')
             optional = data[offset]
             offset += take_OPTIONAL(data[offset:], '操作返回数据')
             if optional == '01':
@@ -221,9 +213,7 @@ def pro8907(data):
     trans_result_choice = data[offset]
     if trans_result_choice == '00':
         show_data_source(data[offset:], 2)
-        dar = get_DAR(data[offset + 1])
-        output(' —— 错误信息:' + dar)
-        offset += 2
+        offset += take_DAR(data[offset + 1:], '错误信息') + 1
     elif trans_result_choice == '01':
         show_data_source(data[offset:], 1)
         output(' —— 返回数据')

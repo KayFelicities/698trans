@@ -4,13 +4,7 @@ import sys
 sys.path.append('UI\\')
 from shared_functions import *  # NOQA
 from link_layer import *  # NOQA
-from get_service import *  # NOQA
-from set_service import *  # NOQA
-from action_service import *  # NOQA
-from report_service import *  # NOQA
-from proxy_service import *  # NOQA
-from connect_service import *  # NOQA
-from security_service import *  # NOQA
+from apdu import *  # NOQA
 from testgui import Ui_Kaytest
 
 
@@ -23,10 +17,10 @@ class UItest(QtGui.QMainWindow, QtGui.QWidget, Ui_Kaytest):
 
     def buttontest(self):
         input_text = self.input_box.toPlainText()
-        # try:
-        my_translate(input_text)
-        # except:
-        #    output('此条报文解析过程中出现错误')
+        try:
+            my_translate(input_text)
+        except:
+            output('此条报文解析过程中出现错误')
         self.output_box.setText(config.text_test)
         config.text_test = ''
 
@@ -44,32 +38,8 @@ def my_translate(input_text):
         output('报文非法')
         return
     offset += take_link_layer_1(data[offset:])
-    # 解应用层
-    output('=' * 60 + 'APDU')
-    offset_temp, service_type = take_service_type(data[offset:])
-    offset += offset_temp
-    offset += {
-        '01': link_request, '02': connect_request, '03': release_request,
-        '81': link_response, '82': connect_response, '83': release_response,
-        '0501': get0501, '0502': get0502, '0503': get0503, '0504': get0504,
-        '0505': get0505,
-        '8501': get8501, '8502': get8502, '8503': get8503, '8504': get8504,
-        '8505': get8505,
-        '0601': set0601, '0602': set0602, '0603': set0603,
-        '8601': set8601, '8602': set8602, '8603': set8603,
-        '0701': act0701, '0702': act0702, '0703': act0703,
-        '8701': act8701, '8702': act8702, '8703': act8703,
-        '0801': rep0801, '0802': rep0802,
-        '8801': rep8801, '8802': rep8802,
-        '0901': pro0901, '0902': pro0902, '0903': pro0903, '0904': pro0904,
-        '0905': pro0905, '0906': pro0906, '0907': pro0907,
-        '8901': pro8901, '8902': pro8902, '8903': pro8903, '8904': pro8904,
-        '8905': pro8905, '8906': pro8906, '8907': pro8907,
-        '10': security_request, '90': security_response,
-    }[service_type](data[offset:])
-    output('^' * 60 + 'APDU')
-    # 处理链路层末尾
-    offset += take_link_layer_2(data[0:], offset)
+    offset += take_APDU(data[offset:])  # 解应用层
+    offset += take_link_layer_2(data[0:], offset)  # 处理链路层末尾
 
 
 if __name__ == "__main__":

@@ -85,8 +85,7 @@ def get8505(data):
     re_data_choice = data[offset]
     if re_data_choice == '00':
         show_data_source(data[offset:], 2)
-        dar = get_DAR(data[offset + 1])
-        output(' —— 错误信息:' + dar)
+        offset += take_DAR(data[offset + 1:], '错误信息')
         offset += 2
     elif re_data_choice == '01':  # SEQUENCE OF A-ResultNormal
         show_data_source(data[offset:], 2)
