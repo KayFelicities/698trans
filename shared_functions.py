@@ -37,7 +37,7 @@ def take_PIID_ACD(data, add_text=''):
     ACD = '不请求访问, ' if (piid_acd >> 6) & 0x01 == 0 else '请求访问, '
     invoke_id = piid_acd & 0x3f
     show_data_source(data[offset:], 1)
-    output(' —— PIID-ACD(服务优先级:' + service_priority + ACD + '服务序号:' + str(invoke_id) + ':')
+    output(' —— PIID-ACD(服务优先级:' + service_priority + ACD + '服务序号:' + str(invoke_id) + ')')
     offset += 1
     return offset
 

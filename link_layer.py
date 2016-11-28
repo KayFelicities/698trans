@@ -1,11 +1,16 @@
 from shared_functions import *  # NOQA
 
 
-def calc_len(input_text):
+def calc_len_and_crc(input_text):
     input_text = input_text.replace(' ', '').replace('\n', '').upper()  # 处理空格和换行
     data_len = int(len(input_text) / 2)
     len_message = str(data_len) + '字节(' + str(hex(data_len)) + ')'
-    return len_message
+    data = []
+    for k in range(0, data_len):
+        data.append(input_text[k * 2:(k + 1) * 2])
+    fcs_calc = get_fcs(data[:], data_len)
+    fcs_calc = ((fcs_calc << 8) | (fcs_calc >> 8)) & 0xffff  # 低位在前
+    return len_message, '{0:04X}'.format(fcs_calc)
 
 
 def data_format(input_text):
@@ -118,12 +123,13 @@ def take_link_layer_1(data):
     offset += 1
     # 帧头校验
     fcs_calc = get_fcs(data[1:offset], offset - 1)
+    fcs_calc = ((fcs_calc << 8) | (fcs_calc >> 8)) & 0xffff  # 低位在前
     # print('fcs test:', data[1:offset], 'cs:', hex(fcs_calc))
-    fcs_now = int(data[offset + 1] + data[offset], 16)
-    hcs_check = '(正确)' if fcs_now == fcs_calc else '(错误，正确值0x{0:04X})'.format(fcs_calc)
+    fcs_now = int(data[offset] + data[offset + 1], 16)
+    hcs_check = '(正确)' if fcs_now == fcs_calc else '(错误，正确值{0:04X})'.format(fcs_calc)
 
     show_data_source(data[offset:], 2)
-    output(' —— 帧头校验:0x{0:04X}'.format(fcs_now) + hcs_check)
+    output(' —— 帧头校验:{0:04X}'.format(fcs_now) + hcs_check)
     offset += 2
     # 分帧
     if frame_separation_flag == 1:
@@ -146,17 +152,17 @@ def take_link_layer_1(data):
 
 
 def take_link_layer_2(data, offset):
-    offset = 0
-    if len(data) - 3 > 0:
-        show_data_source(data[offset:], len(data) - 3)
+    if len(data) - offset - 3 > 0:
+        show_data_source(data[offset:], len(data) - offset - 3)
         output(' —— 信息域及时间标签')
-        offset += len(data) - 3
+        offset += len(data) - offset - 3
     fcs_calc = get_fcs(data[1:offset], offset - 1)
+    fcs_calc = ((fcs_calc << 8) | (fcs_calc >> 8)) & 0xffff  # 低位在前
     # print('fcs test:', data[1:offset], 'cs:', hex(fcs_calc))
-    fcs_now = int(data[offset + 1] + data[offset], 16)
-    hcs_check = '(正确)' if fcs_now == fcs_calc else '(错误，正确值0x{0:04X})'.format(fcs_calc)
+    fcs_now = int(data[offset] + data[offset + 1], 16)
+    hcs_check = '(正确)' if fcs_now == fcs_calc else '(错误，正确值{0:04X})'.format(fcs_calc)
     show_data_source(data[offset:], 2)
-    output(' —— 帧校验:0x{0:04X}'.format(fcs_now) + hcs_check)
+    output(' —— 帧校验:{0:04X}'.format(fcs_now) + hcs_check)
     offset += 2
     show_data_source(data[offset:], 1)
     output(' —— 结束符')

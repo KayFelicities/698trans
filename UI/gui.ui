@@ -7,8 +7,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>443</width>
-    <height>586</height>
+    <width>450</width>
+    <height>606</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -52,11 +52,11 @@
          <enum>Qt::Horizontal</enum>
         </property>
         <property name="sizeType">
-         <enum>QSizePolicy::Fixed</enum>
+         <enum>QSizePolicy::Expanding</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>90</width>
+          <width>50</width>
           <height>20</height>
          </size>
         </property>
@@ -71,11 +71,43 @@
       </item>
       <item>
        <widget class="QLineEdit" name="len_box">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>160</width>
+          <height>16777215</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>校验:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="crc_box">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>80</width>
+          <height>50</height>
+         </size>
         </property>
        </widget>
       </item>
@@ -159,7 +191,7 @@ p, li { white-space: pre-wrap; }
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
          <horstretch>0</horstretch>
-         <verstretch>3</verstretch>
+         <verstretch>5</verstretch>
         </sizepolicy>
        </property>
        <property name="cursor" stdset="0">
@@ -181,35 +213,16 @@ p, li { white-space: pre-wrap; }
       </widget>
      </widget>
     </item>
-    <item>
-     <widget class="QLabel" name="label_5">
-      <property name="font">
-       <font>
-        <family>微软雅黑</family>
-        <pointsize>10</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Copyright(C), 2005-2020,Sanxing Medical &amp; Electric Co.,Ltd.</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-    </item>
    </layout>
    <zorder></zorder>
    <zorder>splitter</zorder>
-   <zorder>label_5</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>443</width>
+     <width>450</width>
      <height>23</height>
     </rect>
    </property>
@@ -225,8 +238,9 @@ p, li { white-space: pre-wrap; }
   <tabstop>input_box</tabstop>
   <tabstop>translate_button</tabstop>
   <tabstop>output_box</tabstop>
-  <tabstop>clear_button</tabstop>
   <tabstop>len_box</tabstop>
+  <tabstop>crc_box</tabstop>
+  <tabstop>clear_button</tabstop>
  </tabstops>
  <resources>
   <include location="icon.qrc"/>
