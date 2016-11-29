@@ -17,10 +17,13 @@ class UItest(QtGui.QMainWindow, QtGui.QWidget, Ui_Kaytest):
 
     def buttontest(self):
         input_text = self.input_box.toPlainText()
-        # try:
-        my_translate(input_text)
-        # except:
-        #     output('此条报文解析过程中出现错误')
+        if 1:  # 0 for debug
+            try:
+                my_translate(input_text)
+            except:
+                output('此条报文解析过程中出现错误')
+        else:
+            my_translate(input_text)
         self.output_box.setText(config.text_test)
         config.text_test = ''
 
