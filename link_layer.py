@@ -30,13 +30,13 @@ def data_format(input_text):
 
 def check_data(data_in):  # True合法
     if data_in[0] != '68' or data_in[len(data_in) - 1] != '16':
-        output('报文格式错误')
-        return False
+        # output('报文格式错误')
+        return 'format_error'
     elif int(data_in[2] + data_in[1], 16) != len(data_in) - 2:
         output('报文长度(0x' + data_in[2] + data_in[1] + ')错误！正确值0x{0:04X}'.format(len(data_in) - 2))
-        return False
+        return 'len_error'
     else:
-        return True
+        return 'ok'
 
 
 def take_link_layer_1(data):
@@ -128,6 +128,7 @@ def take_link_layer_1(data):
 
 
 def take_link_layer_2(data, offset):
+    offset_temp = offset
     fcs_calc = get_fcs(data[1:offset], offset - 1)
     fcs_calc = ((fcs_calc << 8) | (fcs_calc >> 8)) & 0xffff  # 低位在前
     # print('fcs test:', data[1:offset], 'cs:', hex(fcs_calc))
@@ -139,7 +140,7 @@ def take_link_layer_2(data, offset):
     show_data_source(data[offset:], 1)
     output(' —— 结束符')
     offset += 1
-    return offset
+    return offset - offset_temp
 
 
 def get_fcs(cp, tlen):
