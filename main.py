@@ -41,16 +41,16 @@ def all_translate(input_text):
         return
     data = data_format(input_text)
     data_check = check_data(data)
-    if data_check != 'ok':
-        if data_check == 'format_error':  # 格式错误，尝试解apdu
-            offset += take_APDU(data[offset:])  # 解应用层
-            return offset
-        else:
-            output('报文非法')
-            return
-    offset += take_link_layer_1(data[offset:])
-    offset += take_APDU(data[offset:])  # 解应用层
-    offset += take_link_layer_2(data[0:], offset)  # 处理链路层末尾
+    if data_check == 'ok':
+        offset += take_link_layer_1(data[offset:])
+        offset += take_APDU(data[offset:])  # 解应用层
+        offset += take_link_layer_2(data[0:], offset)  # 处理链路层末尾
+    elif data_check == 'format_error':  # 格式错误，尝试解apdu
+        offset += take_APDU(data[offset:])  # 解应用层
+    else:
+        output('报文非法')
+        return
+
     if offset != len(data):
         print('offset, len(data): ', offset, len(data))
         output('报文解析过程出现问题，请检查报文。若报文无问题请反馈665593，谢谢！')
