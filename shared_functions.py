@@ -12,8 +12,11 @@ def output(text, newline=True):
 
 
 # 输出原始报文
-def show_data_source(data, len):
-    source_text = ''
+def show_data_source(data, len, level=0, end_flag=0):
+    if config.show_level == 1:
+        source_text = '   ' * (level - 1) + ('' if level == 0 else '|  ' if end_flag == 0 else '└ ')
+    else:
+        source_text = ''
     for count in range(len):
         source_text += data[count] + ' '
     output(source_text, False)
@@ -266,12 +269,14 @@ def take_FactoryVersion(data, add_text=''):
 
 
 # ############################ 数据类型处理 #############################
-def take_Data(data, add_text=''):
+def take_Data(data, end_flag=0):
     offset = 0
     if data[offset] == '00':    # 对null类型特殊处理
-        offset += take_NULL(data[offset:])
+        offset += take_NULL(data[offset:], level_flag=1, end_flag=end_flag)
         return offset
-    show_data_source(data[offset:], 1)
+    # if level != 0:
+    #     config.line_level += level
+    show_data_source(data[offset:], 1, config.line_level, end_flag)
     offset += 1
     offset += {
         '00': take_NULL,
@@ -318,9 +323,9 @@ def take_Data(data, add_text=''):
     return offset
 
 
-def take_NULL(data, add_text=''):
+def take_NULL(data, add_text='', level_flag=0, end_flag=0):
     offset = 0
-    show_data_source(data, 1)
+    show_data_source(data, 1, 0 if level_flag == 0 else config.line_level, end_flag)
     offset += 1
     output(' —— ' + add_text + '(NULL)')
     return offset
@@ -328,23 +333,29 @@ def take_NULL(data, add_text=''):
 
 def take_array(data, add_text=''):
     offset = 0
-    structure_num = int(data[offset], 16)
+    member_num = int(data[offset], 16)
     show_data_source(data[offset:], 1)
-    output(' —— ' + add_text + 'array, 元素个数:' + str(structure_num))
+    output(' —— ' + add_text + 'array, 元素个数:' + str(member_num))
     offset += 1
-    for count in range(structure_num):
-        offset += take_Data(data[offset:])
+    config.line_level += 1
+    for count in range(member_num):
+        end_flag = 1 if count == member_num - 1 else 0
+        offset += take_Data(data[offset:], end_flag)
+    config.line_level -= 1
     return offset
 
 
 def take_structure(data, add_text=''):
     offset = 0
-    structure_num = int(data[offset], 16)
+    member_num = int(data[offset], 16)
     show_data_source(data[offset:], 1)
-    output(' —— ' + add_text + 'structure, 成员个数:' + str(structure_num))
+    output(' —— ' + add_text + 'structure, 成员个数:' + str(member_num))
     offset += 1
-    for count in range(structure_num):
-        offset += take_Data(data[offset:])
+    config.line_level += 1
+    for count in range(member_num):
+        end_flag = 1 if count == member_num - 1 else 0
+        offset += take_Data(data[offset:], end_flag)
+    config.line_level -= 1
     return offset
 
 
@@ -594,7 +605,7 @@ def take_OI(data, add_text=''):
     return offset
 
 
-def take_OAD(data, add_text=''):
+def take_OAD(data, add_text='', end_flag=0):
     offset = 0
     file_path = os.path.join(pathname, '698DataIDConfig.ini')
     file_handle = open(file_path, 'rb')
@@ -607,7 +618,7 @@ def take_OAD(data, add_text=''):
             OI_explain = OI_line.decode('utf-8')[8:].split('=')[0].split('\r\n')[0]
             break
     # print('OI_explain:', OI_explain, 'over')
-    show_data_source(data[offset:], 2)
+    show_data_source(data[offset:], 2, level=config.line_level, end_flag=end_flag)
     offset += 2
     attr = int(data[offset], 16)
     index = int(data[offset + 1], 16)
@@ -619,13 +630,18 @@ def take_OAD(data, add_text=''):
 
 def take_ROAD(data, add_text=''):
     offset = 0
+    config.line_level += 1
     offset += take_OAD(data[offset:])
     oad_num = int(data[offset], 16)
-    show_data_source(data[offset:], 1)
+    show_data_source(data[offset:], 1, level=config.line_level, end_flag=1)
     output(' —— 关联OAD*' + str(oad_num))
     offset += 1
+    config.line_level += 1
     for oad_count in range(oad_num):
-        offset += take_OAD(data[offset:])
+        end_flag = 1 if oad_count == oad_num - 1 else 0
+        offset += take_OAD(data[offset:], end_flag=end_flag)
+    config.line_level -= 1
+    config.line_level -= 1
     return offset
 
 

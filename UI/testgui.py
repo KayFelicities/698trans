@@ -27,14 +27,14 @@ class Ui_Kaytest(object):
         Kaytest.setObjectName(_fromUtf8("Kaytest"))
         Kaytest.resize(450, 606)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Selected, QtGui.QIcon.Off)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Selected, QtGui.QIcon.On)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Disabled, QtGui.QIcon.On)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Active, QtGui.QIcon.Off)
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.On)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Disabled, QtGui.QIcon.On)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Active, QtGui.QIcon.On)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Selected, QtGui.QIcon.On)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Selected, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Active, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Kaytest.setWindowIcon(icon)
         self.centralwidget = QtGui.QWidget(Kaytest)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
@@ -100,6 +100,7 @@ class Ui_Kaytest(object):
         sizePolicy.setHeightForWidth(self.output_box.sizePolicy().hasHeightForWidth())
         self.output_box.setSizePolicy(sizePolicy)
         self.output_box.viewport().setProperty("cursor", QtGui.QCursor(QtCore.Qt.ArrowCursor))
+        self.output_box.setAcceptDrops(False)
         self.output_box.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.output_box.setAutoFillBackground(False)
         self.output_box.setObjectName(_fromUtf8("output_box"))
@@ -124,7 +125,7 @@ class Ui_Kaytest(object):
         Kaytest.setTabOrder(self.len_box, self.clear_button)
 
     def retranslateUi(self, Kaytest):
-        Kaytest.setWindowTitle(_translate("Kaytest", "698解析工具_V2.0Beta2(2016.12.01)", None))
+        Kaytest.setWindowTitle(_translate("Kaytest", "698解析工具_V2.0Beta(2016.11.29)", None))
         self.translate_button.setText(_translate("Kaytest", "解析", None))
         self.clear_button.setText(_translate("Kaytest", "清空", None))
         self.label.setText(_translate("Kaytest", "长度:", None))
@@ -137,7 +138,12 @@ class Ui_Kaytest(object):
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">解析结果：</p></body></html>", None))
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">说明：</p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">1.请在上方输入框内输入需要解析的698报文，按“解析”按钮即可在本框中看到解析结果。</p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">2.本软件支持APDU片段的解析。</p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">3.右上方长度框显示的是输入框内报文的总长度，并非698报文长度域的值。</p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">4.“清空”按钮可清空输入、输出框。</p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">5.本软件为终端开发部内部测试软件。在软件使用过程中遇到任何问题，请向665593反馈，谢谢。</p></body></html>", None))
         self.menu.setTitle(_translate("Kaytest", "关于", None))
 
 import icon_rc

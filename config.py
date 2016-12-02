@@ -2,6 +2,8 @@ import os
 import sys
 
 text_test = ''
+show_level = 0
+line_level = 0
 
 pathname = ''
 if getattr(sys, 'frozen', False):
