@@ -13,7 +13,7 @@ def output(text, newline=True):
 
 # 输出原始报文
 def show_data_source(data, len, level=0, end_flag=0):
-    if config.show_level == 1:
+    if config.show_level is True:
         source_text = '   ' * (level - 1) + ('' if level == 0 else '|  ' if end_flag == 0 else '└ ')
     else:
         source_text = ''

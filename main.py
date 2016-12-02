@@ -16,6 +16,7 @@ class MainWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_MainWindow):
         self.child = AboutWindow()
         self.translate_button.clicked.connect(self.trans_botton)
         self.clear_button.clicked.connect(self.clear_botton)
+        self.show_level.clicked.connect(self.show_level_check_box)
         self.input_box.textChanged.connect(self.calc_len_box)
         self.about.triggered.connect(self.show_about_window)
 
@@ -33,6 +34,10 @@ class MainWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_MainWindow):
 
     def clear_botton(self):
         self.input_box.setFocus()
+
+    def show_level_check_box(self):
+        config.show_level = self.show_level.isChecked()
+        self.trans_botton()
 
     def calc_len_box(self):
         input_text = self.input_box.toPlainText()

@@ -220,9 +220,9 @@ p, li { white-space: pre-wrap; }
          </spacer>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkBox">
+         <widget class="QCheckBox" name="show_level">
           <property name="text">
-           <string>显示结构</string>
+           <string>显示层级结构</string>
           </property>
          </widget>
         </item>
@@ -232,9 +232,6 @@ p, li { white-space: pre-wrap; }
     </item>
    </layout>
    <zorder></zorder>
-   <zorder>splitter</zorder>
-   <zorder>checkBox</zorder>
-   <zorder>horizontalSpacer</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

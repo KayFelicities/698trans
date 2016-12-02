@@ -2,7 +2,7 @@ import os
 import sys
 
 output_text = ''
-show_level = 0
+show_level = False
 line_level = 0
 
 pathname = ''
