@@ -5,9 +5,9 @@ import os
 
 # 文字输出
 def output(text, newline=True):
-    config.text_test += text
+    config.output_text += text
     if newline is True:
-        config.text_test += '\n'
+        config.output_text += '\n'
     return 0
 
 

@@ -5,17 +5,21 @@ sys.path.append('UI\\')
 from shared_functions import *  # NOQA
 from link_layer import *  # NOQA
 from apdu import *  # NOQA
-from testgui import Ui_Kaytest
+from about_window import Ui_AboutWindow
+from main_window import Ui_MainWindow
 
 
-class UItest(QtGui.QMainWindow, QtGui.QWidget, Ui_Kaytest):
+class MainWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_MainWindow):
     def __init__(self):
-        super(UItest, self).__init__()
+        super(MainWindow, self).__init__()
         self.setupUi(self)
-        self.translate_button.clicked.connect(self.buttontest)
-        self.input_box.textChanged.connect(self.my_calc_len_and_crc)
+        self.child = AboutWindow()
+        self.translate_button.clicked.connect(self.trans_botton)
+        self.clear_button.clicked.connect(self.clear_botton)
+        self.input_box.textChanged.connect(self.calc_len_box)
+        self.about.triggered.connect(self.show_about_window)
 
-    def buttontest(self):
+    def trans_botton(self):
         input_text = self.input_box.toPlainText()
         if 1:  # 0 for debug
             try:
@@ -24,14 +28,26 @@ class UItest(QtGui.QMainWindow, QtGui.QWidget, Ui_Kaytest):
                 output('报文解析过程出现问题，请检查报文。若报文无问题请反馈665593，谢谢！')
         else:
             all_translate(input_text)
-        self.output_box.setText(config.text_test)
-        config.text_test = ''
+        self.output_box.setText(config.output_text)
+        config.output_text = ''
 
-    def my_calc_len_and_crc(self):
+    def clear_botton(self):
+        self.input_box.setFocus()
+
+    def calc_len_box(self):
         input_text = self.input_box.toPlainText()
         input_len = calc_len(input_text)
         self.len_box.setText(input_len)
         # self.crc_box.setText(crc_calc)
+
+    def show_about_window(self):
+        self.child.show()
+
+
+class AboutWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_AboutWindow):
+    def __init__(self):
+        super(AboutWindow, self).__init__()
+        self.setupUi(self)
 
 
 def all_translate(input_text):
@@ -59,6 +75,6 @@ def all_translate(input_text):
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
-    myUI = UItest()
+    myUI = MainWindow()
     myUI.show()
     sys.exit(app.exec_())

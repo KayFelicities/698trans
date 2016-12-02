@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'gui.ui'
+# Form implementation generated from reading ui file 'main_window.ui'
 #
 # Created by: PyQt4 UI code generator 4.11.4
 #
@@ -22,21 +22,21 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class Ui_Kaytest(object):
-    def setupUi(self, Kaytest):
-        Kaytest.setObjectName(_fromUtf8("Kaytest"))
-        Kaytest.resize(450, 606)
+class Ui_MainWindow(object):
+    def setupUi(self, MainWindow):
+        MainWindow.setObjectName(_fromUtf8("MainWindow"))
+        MainWindow.resize(450, 606)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.On)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Active, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Selected, QtGui.QIcon.On)
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Disabled, QtGui.QIcon.On)
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Active, QtGui.QIcon.On)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Selected, QtGui.QIcon.On)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Selected, QtGui.QIcon.Off)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Active, QtGui.QIcon.Off)
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        Kaytest.setWindowIcon(icon)
-        self.centralwidget = QtGui.QWidget(Kaytest)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.On)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Active, QtGui.QIcon.On)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Selected, QtGui.QIcon.Off)
+        MainWindow.setWindowIcon(icon)
+        self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.verticalLayout = QtGui.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setMargin(3)
@@ -106,35 +106,39 @@ class Ui_Kaytest(object):
         self.output_box.setObjectName(_fromUtf8("output_box"))
         self.verticalLayout.addWidget(self.splitter)
         self.splitter.raise_()
-        Kaytest.setCentralWidget(self.centralwidget)
-        self.menubar = QtGui.QMenuBar(Kaytest)
+        MainWindow.setCentralWidget(self.centralwidget)
+        self.menubar = QtGui.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 450, 23))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         self.menu = QtGui.QMenu(self.menubar)
         self.menu.setObjectName(_fromUtf8("menu"))
-        Kaytest.setMenuBar(self.menubar)
+        MainWindow.setMenuBar(self.menubar)
+        self.about = QtGui.QAction(MainWindow)
+        self.about.setShortcutContext(QtCore.Qt.WindowShortcut)
+        self.about.setObjectName(_fromUtf8("about"))
+        self.menu.addAction(self.about)
         self.menubar.addAction(self.menu.menuAction())
 
-        self.retranslateUi(Kaytest)
+        self.retranslateUi(MainWindow)
         QtCore.QObject.connect(self.clear_button, QtCore.SIGNAL(_fromUtf8("clicked()")), self.output_box.clear)
         QtCore.QObject.connect(self.clear_button, QtCore.SIGNAL(_fromUtf8("clicked()")), self.input_box.clear)
-        QtCore.QMetaObject.connectSlotsByName(Kaytest)
-        Kaytest.setTabOrder(self.input_box, self.translate_button)
-        Kaytest.setTabOrder(self.translate_button, self.output_box)
-        Kaytest.setTabOrder(self.output_box, self.len_box)
-        Kaytest.setTabOrder(self.len_box, self.clear_button)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        MainWindow.setTabOrder(self.input_box, self.translate_button)
+        MainWindow.setTabOrder(self.translate_button, self.output_box)
+        MainWindow.setTabOrder(self.output_box, self.len_box)
+        MainWindow.setTabOrder(self.len_box, self.clear_button)
 
-    def retranslateUi(self, Kaytest):
-        Kaytest.setWindowTitle(_translate("Kaytest", "698解析工具_V2.0Beta(2016.11.29)", None))
-        self.translate_button.setText(_translate("Kaytest", "解析", None))
-        self.clear_button.setText(_translate("Kaytest", "清空", None))
-        self.label.setText(_translate("Kaytest", "长度:", None))
-        self.input_box.setHtml(_translate("Kaytest", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+    def retranslateUi(self, MainWindow):
+        MainWindow.setWindowTitle(_translate("MainWindow", "698解析工具_V2.0(2016.12.02)", None))
+        self.translate_button.setText(_translate("MainWindow", "解析", None))
+        self.clear_button.setText(_translate("MainWindow", "清空", None))
+        self.label.setText(_translate("MainWindow", "长度:", None))
+        self.input_box.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
-        self.output_box.setHtml(_translate("Kaytest", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.output_box.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
@@ -144,6 +148,7 @@ class Ui_Kaytest(object):
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">3.右上方长度框显示的是输入框内报文的总长度，并非698报文长度域的值。</p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">4.“清空”按钮可清空输入、输出框。</p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">5.本软件为终端开发部内部测试软件。在软件使用过程中遇到任何问题，请向665593反馈，谢谢。</p></body></html>", None))
-        self.menu.setTitle(_translate("Kaytest", "关于", None))
+        self.menu.setTitle(_translate("MainWindow", "帮助", None))
+        self.about.setText(_translate("MainWindow", "关于", None))
 
 import icon_rc

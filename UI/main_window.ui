@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <author>Kay</author>
- <class>Kaytest</class>
- <widget class="QMainWindow" name="Kaytest">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -12,7 +12,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>698解析工具_V2.0Beta(2016.11.29)</string>
+   <string>698解析工具_V2.0(2016.12.02)</string>
   </property>
   <property name="windowIcon">
    <iconset resource="icon.qrc">
@@ -213,11 +213,20 @@ p, li { white-space: pre-wrap; }
    </property>
    <widget class="QMenu" name="menu">
     <property name="title">
-     <string>关于</string>
+     <string>帮助</string>
     </property>
+    <addaction name="about"/>
    </widget>
    <addaction name="menu"/>
   </widget>
+  <action name="about">
+   <property name="text">
+    <string>关于</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::WindowShortcut</enum>
+   </property>
+  </action>
  </widget>
  <tabstops>
   <tabstop>input_box</tabstop>

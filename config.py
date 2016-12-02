@@ -1,7 +1,7 @@
 import os
 import sys
 
-text_test = ''
+output_text = ''
 show_level = 0
 line_level = 0
 
