@@ -64,7 +64,7 @@ def take_link_layer_1(data):
                 0: '主站确认登录心跳',
                 2: '终端登录心跳'
             }[dir_prm_flag]
-        except:
+        except Exception:
             function_type = '错误'
     elif function_flag == 3:
         function_type = {
@@ -119,7 +119,7 @@ def take_link_layer_1(data):
                 2: '(确认帧)',
                 3: '(中间帧)',
             }[frame_separation >> 14]
-        except:
+        except Exception:
             frame_separation_type = '错误'
         show_data_source(data[offset:], 2)
         output(' —— 分帧序号:' + str(frame_separation_seq) + frame_separation_type)

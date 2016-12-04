@@ -11,7 +11,7 @@ def link_request(data):
             '02': ' —— 退出登录'
         }[data[offset]]
         output(data[offset] + link_type)
-    except:
+    except Exception:
         output(data[offset] + ' —— 报文有误')
     offset += 1
     offset += take_long_unsigned(data[offset:], '心跳周期s:')

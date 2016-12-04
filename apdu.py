@@ -63,7 +63,7 @@ def take_APDU(data, add_text=''):
             '10': security_request,
             '90': security_response,
         }[service_type](data[offset:])
-    except:
+    except Exception:
         output('报文格式错误')
         return offset
     if data[0] in ['82', '83', '84', '85', '86', '87', '88', '89']:

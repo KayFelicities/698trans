@@ -26,7 +26,7 @@ class MainWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_MainWindow):
         if 1:  # 0 for debug
             try:
                 all_translate(input_text)
-            except:
+            except Exception:
                 output('报文解析过程出现问题，请检查报文。若报文无问题请反馈665593，谢谢！')
         else:
             all_translate(input_text)

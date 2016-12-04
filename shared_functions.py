@@ -1,7 +1,5 @@
 import config
-from config import pathname
-import descriptor_explain
-import os
+import data_translate
 
 
 # 文字输出
@@ -25,25 +23,19 @@ def show_data_source(data, len, level=0, end_flag=0):
 
 def take_service_type(data):
     offset = 0
-    file_path = os.path.join(pathname, '698APDUConfig.ini')
-    file_handle = open(file_path, 'rb')
-    file_lines = file_handle.readlines()
-    file_handle.close()
     service_type = data[offset]
-    service_explain = ' —— '
-    for service_line in file_lines:
-        if int(service_line.decode('utf-8').split('=')[0]) == int(service_type, 16):
-            service_explain += service_line.decode('utf-8').split('=')[1].split('\n')[0].split('\r')[0]
-            break
     if service_type not in ['01', '02', '03', '10', '81', '82', '83', '84', '90']:
         service_type += data[offset + 1]
-        service_explain += ', ' + service_line.decode('utf-8').split('=')[int(data[offset + 1], 16) + 1].split('\n')[0].split('\r')[0]
         show_data_source(data[offset:], 2)
         offset += 2
     else:
         show_data_source(data[offset:], 1)
         offset += 1
-    output(service_explain)
+    try:
+        explain = ' —— ' + data_translate.service_explain[service_type]
+    except Exception:
+        explain = ' —— ' + '未知服务'
+    output(explain)
     return offset, service_type
 
 
@@ -146,17 +138,12 @@ def get_len_of_octect_string(data):
 
 def take_DAR(data, add_text=''):
     offset = 0
-    file_path = os.path.join(pathname, '698ErrIDConfig.ini')
-    file_handle = open(file_path, 'rb')
-    file_lines = file_handle.readlines()
-    file_handle.close()
-    dar_explain = ''
-    for dar_line in file_lines:
-        if dar_line.decode('utf-8')[0:2] == data[0]:
-            dar_explain = dar_line.decode('utf-8')[3:].split('\n')[0]
-            break
     show_data_source(data[offset:], 1)
-    output(' —— ' + add_text + ':' + dar_explain)
+    try:
+        explain = data_translate.dar_explain[data[0]]
+    except Exception:
+        explain = '未知DAR'
+    output(' —— ' + add_text + ':' + explain)
     offset += 1
     return offset
 
@@ -589,7 +576,7 @@ def take_date_time_s(data, add_text='', level=-1):
 
 def take_OI(data, add_text='', level=-1):
     offset = 0
-    OI_explain = descriptor_explain.descriptor_explain[data[offset] + data[offset + 1] + '01'].split('，')[0]
+    OI_explain = data_translate.data_translate[data[offset] + data[offset + 1] + '01'].split('，')[0]
     # print('OI_explain:', OI_explain, 'over')
     show_data_source(data, 2)
     output(' —— ' + add_text + OI_explain + '(OI)')
@@ -601,12 +588,12 @@ def take_OAD(data, add_text='', level=-1, end_flag=0):
     offset = 0
     attr = int(data[offset + 2], 16)
     try:
-        explain = descriptor_explain.oad_explain[data[offset] + data[offset + 1] + data[offset + 2]]
-    except:
+        explain = data_translate.oad_explain[data[offset] + data[offset + 1] + data[offset + 2]]
+    except Exception:
         try:
-            explain = descriptor_explain.oad_explain[data[offset] + data[offset + 1] + '01'].split('，')[0]
+            explain = data_translate.oad_explain[data[offset] + data[offset + 1] + '01'].split('，')[0]
             explain += '，属性' + str(attr)
-        except:
+        except Exception:
             explain = '未知OAD，属性' + str(attr)
     index = int(data[offset + 3], 16)
     if level == -1:
@@ -639,12 +626,12 @@ def take_OMD(data, add_text='', level=-1, end_flag=0):
     offset = 0
     method = int(data[offset + 2], 16)
     try:
-        explain = descriptor_explain.omd_explain[data[offset] + data[offset + 1] + data[offset + 2]]
-    except:
+        explain = data_translate.omd_explain[data[offset] + data[offset + 1] + data[offset + 2]]
+    except Exception:
         try:
-            explain = descriptor_explain.omd_explain[data[offset] + data[offset + 1] + '01'].split('，')[0]
+            explain = data_translate.omd_explain[data[offset] + data[offset + 1] + '01'].split('，')[0]
             explain += '，方法' + str(method)
-        except:
+        except Exception:
             explain = '未知OMD，方法' + str(method)
     mode = int(data[offset + 3], 16)
     show_data_source(data[offset:], 4, level=config.line_level, end_flag=end_flag)
