@@ -1,5 +1,6 @@
 import config
 from config import pathname
+import OAD_explain
 import os
 
 
@@ -607,24 +608,27 @@ def take_OI(data, add_text=''):
 
 def take_OAD(data, add_text='', end_flag=0):
     offset = 0
-    file_path = os.path.join(pathname, '698DataIDConfig.ini')
-    file_handle = open(file_path, 'rb')
-    file_lines = file_handle.readlines()
-    file_handle.close()
-    OI = data[offset] + data[offset + 1]
-    OI_explain = ''
-    for OI_line in file_lines:
-        if OI_line.decode('utf-8')[0:4] == OI:
-            OI_explain = OI_line.decode('utf-8')[8:].split('=')[0].split('\r\n')[0]
-            break
+    # file_path = os.path.join(pathname, '698DataIDConfig.ini')
+    # file_handle = open(file_path, 'rb')
+    # file_lines = file_handle.readlines()
+    # file_handle.close()
+    # OI = data[offset] + data[offset + 1]
+    # OI_explain = ''
+    # for OI_line in file_lines:
+    #     if OI_line.decode('utf-8')[0:4] == OI:
+    #         OI_explain = OI_line.decode('utf-8')[8:].split('=')[0].split('\r\n')[0]
+    #         break
     # print('OI_explain:', OI_explain, 'over')
-    show_data_source(data[offset:], 2, level=config.line_level, end_flag=end_flag)
-    offset += 2
-    attr = int(data[offset], 16)
-    index = int(data[offset + 1], 16)
-    show_data_source(data[offset:], 2)
-    output(' —— ' + add_text + OI_explain + ', 属性' + str(attr) + ', 索引' + str(index) + '(OAD)')
-    offset += 2
+    attr = int(data[offset + 2], 16)
+    try:
+        explain = OAD_explain.oad_explain[data[offset] + data[offset + 1] + data[offset + 2]]
+    except:
+        explain = OAD_explain.oad_explain[data[offset] + data[offset + 1] + '01'].split('，')[0]
+        explain += '，属性' + str(attr)
+    index = int(data[offset + 3], 16)
+    show_data_source(data[offset:], 4, level=config.line_level, end_flag=end_flag)
+    offset += 4
+    output(' —— ' + add_text + explain + '，索引' + str(index) + '(OAD)')
     return offset
 
 
