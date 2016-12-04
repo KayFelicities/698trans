@@ -1,6 +1,6 @@
 import config
 from config import pathname
-import OAD_explain
+import descriptor_explain
 import os
 
 
@@ -320,19 +320,19 @@ def take_Data(data, end_flag=0):
         '5E': take_SID_MAC,
         '5F': take_COMDCB,
         '60': take_RCSD,
-    }[data[offset - 1]](data[offset:])
+    }[data[offset - 1]](data[offset:], level=0)
     return offset
 
 
-def take_NULL(data, add_text='', level_flag=0, end_flag=0):
+def take_NULL(data, add_text='', level_flag=-1, end_flag=0):
     offset = 0
-    show_data_source(data, 1, 0 if level_flag == 0 else config.line_level, end_flag)
+    show_data_source(data, 1, 0 if level_flag == -1 else config.line_level, end_flag)
     offset += 1
     output(' —— ' + add_text + '(NULL)')
     return offset
 
 
-def take_array(data, add_text=''):
+def take_array(data, add_text='', level=-1):
     offset = 0
     member_num = int(data[offset], 16)
     show_data_source(data[offset:], 1)
@@ -346,7 +346,7 @@ def take_array(data, add_text=''):
     return offset
 
 
-def take_structure(data, add_text=''):
+def take_structure(data, add_text='', level=-1):
     offset = 0
     member_num = int(data[offset], 16)
     show_data_source(data[offset:], 1)
@@ -360,7 +360,7 @@ def take_structure(data, add_text=''):
     return offset
 
 
-def take_bool(data, add_text=''):
+def take_bool(data, add_text='', level=-1):
     offset = 0
     show_data_source(data, 1)
     bool_value = ':False' if data[offset] == 0 else ':True'
@@ -369,7 +369,7 @@ def take_bool(data, add_text=''):
     return offset
 
 
-def take_bit_string(data, add_text='', bit_len=None):
+def take_bit_string(data, add_text='', bit_len=None, level=-1):
     offset = 0
     if bit_len is None:
         bit_len = int(data[offset], 16)
@@ -385,7 +385,7 @@ def take_bit_string(data, add_text='', bit_len=None):
     return offset
 
 
-def take_double_long(data, add_text=''):
+def take_double_long(data, add_text='', level=-1):
     offset = 0
     show_data_source(data, 4)
     if int(data[offset], 16) >> 7 == 1:  # 负数
@@ -398,7 +398,7 @@ def take_double_long(data, add_text=''):
     return offset
 
 
-def take_double_long_unsigned(data, add_text=''):
+def take_double_long_unsigned(data, add_text='', level=-1):
     offset = 0
     show_data_source(data, 4)
     output(' —— ' + add_text + str(int(data[offset] + data[offset + 1] + data[offset + 2] + data[offset + 3], 16)) + '(double_long_unsigned)')
@@ -406,7 +406,7 @@ def take_double_long_unsigned(data, add_text=''):
     return offset
 
 
-def take_octect_string(data, add_text='', string_len=None):
+def take_octect_string(data, add_text='', string_len=None, level=-1):
     offset = 0
     if string_len is None:
         string_len, offset = get_len_of_octect_string(data[offset:])
@@ -417,7 +417,7 @@ def take_octect_string(data, add_text='', string_len=None):
     return offset
 
 
-def take_visible_string(data, add_text='', string_len=None):
+def take_visible_string(data, add_text='', string_len=None, level=-1):
     offset = 0
     if string_len is None:
         string_len, offset = get_len_of_octect_string(data[offset:])
@@ -431,13 +431,13 @@ def take_visible_string(data, add_text='', string_len=None):
     return offset
 
 
-def take_UTF8_string(data, add_text=''):
+def take_UTF8_string(data, add_text='', level=-1):
     offset = 0
     print('未定义\n')
     return offset
 
 
-def take_integer(data, add_text=''):
+def take_integer(data, add_text='', level=-1):
     offset = 0
     show_data_source(data, 1)
     if int(data[offset], 16) >> 7 == 1:  # 负数
@@ -449,7 +449,7 @@ def take_integer(data, add_text=''):
     return offset
 
 
-def take_long(data, add_text=''):
+def take_long(data, add_text='', level=-1):
     offset = 0
     show_data_source(data, 2)
     if int(data[offset], 16) >> 7 == 1:  # 负数
@@ -461,7 +461,7 @@ def take_long(data, add_text=''):
     return offset
 
 
-def take_unsigned(data, add_text=''):
+def take_unsigned(data, add_text='', level=-1):
     offset = 0
     show_data_source(data, 1)
     output(' —— ' + add_text + str(int(data[offset], 16)) + '(unsigned)')
@@ -469,7 +469,7 @@ def take_unsigned(data, add_text=''):
     return offset
 
 
-def take_long_unsigned(data, add_text=''):
+def take_long_unsigned(data, add_text='', level=-1):
     offset = 0
     show_data_source(data, 2)
     output(' —— ' + add_text + str(int(data[offset] + data[offset + 1], 16)) + '(long_unsigned)')
@@ -477,7 +477,7 @@ def take_long_unsigned(data, add_text=''):
     return offset
 
 
-def take_long64(data, add_text=''):
+def take_long64(data, add_text='', level=-1):
     offset = 0
     show_data_source(data, 8)
     if int(data[offset], 16) >> 7 == 1:  # 负数
@@ -490,7 +490,7 @@ def take_long64(data, add_text=''):
     return offset
 
 
-def take_long64_unsigned(data, add_text=''):
+def take_long64_unsigned(data, add_text='', level=-1):
     offset = 0
     show_data_source(data, 8)
     value = int(data[offset] + data[offset + 1] + data[offset + 2] + data[offset + 3] + data[offset + 4] + data[offset + 5] + data[offset + 6] + data[offset + 7], 16)
@@ -499,7 +499,7 @@ def take_long64_unsigned(data, add_text=''):
     return offset
 
 
-def take_enum(data, add_text=''):
+def take_enum(data, add_text='', level=-1):
     offset = 0
     show_data_source(data, 1)
     output(' —— ' + add_text + str(int(data[offset], 16)) + '(enum)')
@@ -507,7 +507,7 @@ def take_enum(data, add_text=''):
     return offset
 
 
-def take_float32(data, add_text=''):
+def take_float32(data, add_text='', level=-1):
     offset = 0
     show_data_source(data, 4)
     if int(data[offset], 16) >> 7 == 1:  # 负数
@@ -520,7 +520,7 @@ def take_float32(data, add_text=''):
     return offset
 
 
-def take_float64(data, add_text=''):
+def take_float64(data, add_text='', level=-1):
     offset = 0
     show_data_source(data, 8)
     if int(data[offset], 16) >> 7 == 1:  # 负数
@@ -533,7 +533,7 @@ def take_float64(data, add_text=''):
     return offset
 
 
-def take_date_time(data, add_text=''):
+def take_date_time(data, add_text='', level=-1):
     offset = 0
     year = int(data[0] + data[1], 16)
     month = int(data[2], 16)
@@ -549,7 +549,7 @@ def take_date_time(data, add_text=''):
     return offset
 
 
-def take_date(data, add_text=''):
+def take_date(data, add_text='', level=-1):
     offset = 0
     year = int(data[0] + data[1], 16)
     month = int(data[2], 16)
@@ -561,7 +561,7 @@ def take_date(data, add_text=''):
     return offset
 
 
-def take_time(data, add_text=''):
+def take_time(data, add_text='', level=-1):
     offset = 0
     hour = int(data[0], 16)
     minute = int(data[1], 16)
@@ -572,7 +572,7 @@ def take_time(data, add_text=''):
     return offset
 
 
-def take_date_time_s(data, add_text=''):
+def take_date_time_s(data, add_text='', level=-1):
     offset = 0
     year = int(data[0] + data[1], 16)
     month = int(data[2], 16)
@@ -587,18 +587,9 @@ def take_date_time_s(data, add_text=''):
     return offset
 
 
-def take_OI(data, add_text=''):
+def take_OI(data, add_text='', level=-1):
     offset = 0
-    file_path = os.path.join(pathname, '698DataIDConfig.ini')
-    file_handle = open(file_path, 'rb')
-    file_lines = file_handle.readlines()
-    file_handle.close()
-    OI = data[offset] + data[offset + 1]
-    OI_explain = ''
-    for OI_line in file_lines:
-        if OI_line.decode('utf-8')[0:4] == OI:
-            OI_explain = OI_line.decode('utf-8')[8:].split('=')[0].split('\r\n')[0]
-            break
+    OI_explain = descriptor_explain.descriptor_explain[data[offset] + data[offset + 1] + '01'].split('，')[0]
     # print('OI_explain:', OI_explain, 'over')
     show_data_source(data, 2)
     output(' —— ' + add_text + OI_explain + '(OI)')
@@ -606,33 +597,28 @@ def take_OI(data, add_text=''):
     return offset
 
 
-def take_OAD(data, add_text='', end_flag=0):
+def take_OAD(data, add_text='', level=-1, end_flag=0):
     offset = 0
-    # file_path = os.path.join(pathname, '698DataIDConfig.ini')
-    # file_handle = open(file_path, 'rb')
-    # file_lines = file_handle.readlines()
-    # file_handle.close()
-    # OI = data[offset] + data[offset + 1]
-    # OI_explain = ''
-    # for OI_line in file_lines:
-    #     if OI_line.decode('utf-8')[0:4] == OI:
-    #         OI_explain = OI_line.decode('utf-8')[8:].split('=')[0].split('\r\n')[0]
-    #         break
-    # print('OI_explain:', OI_explain, 'over')
     attr = int(data[offset + 2], 16)
     try:
-        explain = OAD_explain.oad_explain[data[offset] + data[offset + 1] + data[offset + 2]]
+        explain = descriptor_explain.oad_explain[data[offset] + data[offset + 1] + data[offset + 2]]
     except:
-        explain = OAD_explain.oad_explain[data[offset] + data[offset + 1] + '01'].split('，')[0]
-        explain += '，属性' + str(attr)
+        try:
+            explain = descriptor_explain.oad_explain[data[offset] + data[offset + 1] + '01'].split('，')[0]
+            explain += '，属性' + str(attr)
+        except:
+            explain = '未知OAD，属性' + str(attr)
     index = int(data[offset + 3], 16)
-    show_data_source(data[offset:], 4, level=config.line_level, end_flag=end_flag)
+    if level == -1:
+        show_data_source(data[offset:], 4, level=config.line_level, end_flag=end_flag)
+    else:
+        show_data_source(data[offset:], 4, level=level, end_flag=end_flag)
     offset += 4
     output(' —— ' + add_text + explain + '，索引' + str(index) + '(OAD)')
     return offset
 
 
-def take_ROAD(data, add_text=''):
+def take_ROAD(data, add_text='', level=-1):
     offset = 0
     config.line_level += 1
     offset += take_OAD(data[offset:])
@@ -649,30 +635,25 @@ def take_ROAD(data, add_text=''):
     return offset
 
 
-def take_OMD(data, add_text=''):
+def take_OMD(data, add_text='', level=-1, end_flag=0):
     offset = 0
-    file_path = os.path.join(pathname, '698DataIDConfig.ini')
-    file_handle = open(file_path, 'rb')
-    file_lines = file_handle.readlines()
-    file_handle.close()
-    OI = data[offset] + data[offset + 1]
-    OI_explain = ''
-    for OI_line in file_lines:
-        if OI_line.decode('utf-8')[0:4] == OI:
-            OI_explain = OI_line.decode('utf-8')[8:].split('=')[0].split('\r\n')[0]
-            break
-    # print('OI_explain:', OI_explain, 'over')
-    show_data_source(data[offset:], 2)
-    offset += 2
-    attr = int(data[offset], 16)
-    index = int(data[offset + 1], 16)
-    show_data_source(data[offset:], 2)
-    output(' —— ' + add_text + OI_explain + ', 方法' + str(attr) + ', 操作模式' + str(index) + '(OMD)')
-    offset += 2
+    method = int(data[offset + 2], 16)
+    try:
+        explain = descriptor_explain.omd_explain[data[offset] + data[offset + 1] + data[offset + 2]]
+    except:
+        try:
+            explain = descriptor_explain.omd_explain[data[offset] + data[offset + 1] + '01'].split('，')[0]
+            explain += '，方法' + str(method)
+        except:
+            explain = '未知OMD，方法' + str(method)
+    mode = int(data[offset + 3], 16)
+    show_data_source(data[offset:], 4, level=config.line_level, end_flag=end_flag)
+    offset += 4
+    output(' —— ' + add_text + explain + '，操作模式' + str(mode) + '(OMD)')
     return offset
 
 
-def take_TI(data, add_text=''):
+def take_TI(data, add_text='', level=-1):
     offset = 0
     TI_uint = {
         '00': '秒',
@@ -689,7 +670,7 @@ def take_TI(data, add_text=''):
     return offset
 
 
-def take_TSA(data, add_text=''):
+def take_TSA(data, add_text='', level=-1):
     # print('Kay, take_TSA data:', data)
     offset = 0
     TSA_len = int(data[offset], 16)
@@ -703,26 +684,26 @@ def take_TSA(data, add_text=''):
     return offset
 
 
-def take_MAC(data, add_text=''):
+def take_MAC(data, add_text='', level=-1):
     offset = 0
     offset += take_octect_string(data[offset:], 'MAC')
     return offset
 
 
-def take_RN(data, add_text=''):
+def take_RN(data, add_text='', level=-1):
     offset = 0
     offset += take_octect_string(data[offset:], 'RN')
     return offset
 
 
-def take_RN_MAC(data, add_text=''):
+def take_RN_MAC(data, add_text='', level=-1):
     offset = 0
     offset += take_octect_string(data[offset:], 'RN')
     offset += take_octect_string(data[offset:], 'MAC')
     return offset
 
 
-def take_Region(data, add_text=''):
+def take_Region(data, add_text='', level=-1):
     offset = 0
     uint = {
         '00': '前闭后开',
@@ -738,14 +719,14 @@ def take_Region(data, add_text=''):
     return offset
 
 
-def take_Scaler_Unit(data, add_text=''):
+def take_Scaler_Unit(data, add_text='', level=-1):
     offset = 0
     offset += take_integer(data[offset:], '换算:')
     offset += take_enum(data[offset:], '单位:')
     return offset
 
 
-def take_RSD(data, add_text=''):
+def take_RSD(data, add_text='', level=-1):
     offset = 0
     # print(data[:])
     show_data_source(data[offset:], 1)
@@ -794,7 +775,7 @@ def take_RSD(data, add_text=''):
     return offset
 
 
-def take_CSD(data, add_text=''):
+def take_CSD(data, add_text='', level=-1):
     offset = 0
     csd_choice = data[offset]
     show_data_source(data[offset:], 1)
@@ -807,7 +788,7 @@ def take_CSD(data, add_text=''):
     return offset
 
 
-def take_MS(data, add_text=''):
+def take_MS(data, add_text='', level=-1):
     offset = 0
     MS_choice = data[0]
     if MS_choice == '00':  # 无电能表
@@ -862,7 +843,7 @@ def take_MS(data, add_text=''):
     return offset
 
 
-def take_SID(data, add_text=''):
+def take_SID(data, add_text='', level=-1):
     offset = 0
     offset += take_double_long_unsigned(data[offset:], '标识:')
     print(data[offset:])
@@ -870,20 +851,20 @@ def take_SID(data, add_text=''):
     return offset
 
 
-def take_SID_MAC(data, add_text=''):
+def take_SID_MAC(data, add_text='', level=-1):
     offset = 0
     offset += take_SID(data[offset:])
     offset += take_MAC(data[offset:])
     return offset
 
 
-def take_COMDCB(data, add_text=''):
+def take_COMDCB(data, add_text='', level=-1):
     offset = 0
     print('未定义\n')
     return offset
 
 
-def take_RCSD(data, add_text=''):
+def take_RCSD(data, add_text='', level=-1):
     offset = 0
     csd_num = int(data[offset], 16)
     show_data_source(data[offset:], 1)

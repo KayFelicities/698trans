@@ -19,6 +19,7 @@ class MainWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_MainWindow):
         self.show_level.clicked.connect(self.show_level_check_box)
         self.input_box.textChanged.connect(self.calc_len_box)
         self.about.triggered.connect(self.show_about_window)
+        config.show_level = self.show_level.isChecked()
 
     def trans_botton(self):
         input_text = self.input_box.toPlainText()
