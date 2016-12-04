@@ -21,7 +21,7 @@ def show_data_source(data, len, level=0, end_flag=0):
     output(source_text, False)
 
 
-def take_service_type(data):
+def take_service_type(data, end_flag=0):
     offset = 0
     service_type = data[offset]
     if service_type not in ['01', '02', '03', '10', '81', '82', '83', '84', '90']:
@@ -39,7 +39,7 @@ def take_service_type(data):
     return offset, service_type
 
 
-def take_FollowReport(data, add_text=''):
+def take_FollowReport(data, add_text='', end_flag=0):
     offset = 0
     follow_report_option = data[offset]
     offset += take_OPTIONAL(data[offset:], '跟随上报信息域')
@@ -49,17 +49,23 @@ def take_FollowReport(data, add_text=''):
         if follow_report_choice == '01':
             result_normal_num = get_num_of_SEQUENCE(data[offset:], '对象属性及其数据')
             offset += 1
+            config.line_level += 1
             for result_normal_count in range(result_normal_num):
-                offset += take_A_ResultNormal(data[offset:])
+                end_flag = 1 if result_normal_count == result_normal_num - 1 else 0
+                offset += take_A_ResultNormal(data[offset:], end_flag=end_flag)
+            config.line_level -= 1
         elif follow_report_choice == '02':
             result_record_num = get_num_of_SEQUENCE(data[offset:], '对象属性及其数据')
             offset += 1
+            config.line_level += 1
             for result_record_count in range(result_record_num):
-                offset += take_A_ResultRecord(data[offset:])
+                end_flag = 1 if result_record_count == result_record_num - 1 else 0
+                offset += take_A_ResultRecord(data[offset:], end_flag=end_flag)
+            config.line_level -= 1
     return offset
 
 
-def take_TimeTag(data, add_text=''):
+def take_TimeTag(data, add_text='', end_flag=0):
     offset = 0
     timetag_option = data[offset]
     offset += take_OPTIONAL(data[offset:], '时间标签')
@@ -69,7 +75,7 @@ def take_TimeTag(data, add_text=''):
     return offset
 
 
-def take_PIID(data, add_text=''):
+def take_PIID(data, add_text='', end_flag=0):
     offset = 0
     piid = int(data[offset], 16)
     service_priority = '一般的, ' if piid >> 7 == 0 else '高级的, '
@@ -80,7 +86,7 @@ def take_PIID(data, add_text=''):
     return offset
 
 
-def take_PIID_ACD(data, add_text=''):
+def take_PIID_ACD(data, add_text='', end_flag=0):
     offset = 0
     piid_acd = int(data[offset], 16)
     service_priority = '一般的, ' if piid_acd >> 7 == 0 else '高级的, '
@@ -92,16 +98,16 @@ def take_PIID_ACD(data, add_text=''):
     return offset
 
 
-def take_OPTIONAL(data, add_text=''):
+def take_OPTIONAL(data, add_text='', end_flag=0):
     offset = 0
     optional = '有(OPTIONAL)' if data[offset] == '01' else '无(OPTIONAL)'
-    show_data_source(data[offset:], 1)
+    show_data_source(data[offset:], 1, config.line_level)
     output(' —— ' + add_text + ':' + optional)
     offset += 1
     return offset
 
 
-def take_CHOICE(data, add_text='', choice_dict=None):
+def take_CHOICE(data, add_text='', choice_dict=None, end_flag=0):
     offset = 0
     choice = data[offset]
     show_data_source(data[offset:], 1)
@@ -113,14 +119,14 @@ def take_CHOICE(data, add_text='', choice_dict=None):
     return offset
 
 
-def get_num_of_SEQUENCE(data, SEQUENCE_text=''):
+def get_num_of_SEQUENCE(data, SEQUENCE_text='', end_flag=0):
     num = int(data[0], 16)
     show_data_source(data, 1)
     output(' —— ' + SEQUENCE_text + '*' + str(num))
     return num
 
 
-def get_len_of_octect_string(data):
+def get_len_of_octect_string(data, end_flag=0):
     offset = 0
     len_flag = int(data[offset], 16)
     offset += 1
@@ -136,9 +142,9 @@ def get_len_of_octect_string(data):
         return int(string_len, 16), offset
 
 
-def take_DAR(data, add_text=''):
+def take_DAR(data, add_text='', level=0, end_flag=0):
     offset = 0
-    show_data_source(data[offset:], 1)
+    show_data_source(data[offset:], 1, level=level)
     try:
         explain = data_translate.dar_explain[data[0]]
     except Exception:
@@ -148,29 +154,29 @@ def take_DAR(data, add_text=''):
     return offset
 
 
-def take_A_ResultNormal(data, add_text=''):
+def take_A_ResultNormal(data, add_text='', end_flag=0):
     offset = 0
     offset += take_OAD(data[offset:])
     offset += take_Get_Result(data[offset:])
     return offset
 
 
-def take_Get_Result(data, add_text=''):
+def take_Get_Result(data, add_text='', end_flag=0):
     offset = 0
     result = data[offset]
     if result == '00':  # 错误信息
-        show_data_source(data[offset:], 1)
+        show_data_source(data[offset:], 1, level=config.line_level)
         offset += 1
         offset += take_DAR(data[offset:], 'DAR')
     elif result == '01':  # 数据
-        show_data_source(data[offset:], 1)
+        show_data_source(data[offset:], 1, level=config.line_level)
         output(' —— 数据')
         offset += 1
         offset += take_Data(data[offset:])
     return offset
 
 
-def take_A_ResultRecord(data, add_text=''):
+def take_A_ResultRecord(data, add_text='', end_flag=0):
     offset = 0
     offset += take_OAD(data[offset:])
     csd_num = int(data[offset], 16)
@@ -191,15 +197,15 @@ def take_A_ResultRecord(data, add_text=''):
     return offset
 
 
-def take_GetRecord(data, add_text=''):
+def take_GetRecord(data, add_text='', end_flag=0):
     offset = 0
     offset += take_OAD(data[offset:])
     offset += take_RSD(data[offset:])  # RSD
-    offset += take_RCSD(data[offset:])  # RCSD处理
+    offset += take_RCSD(data[offset:], end_flag=end_flag)  # RCSD处理
     return offset
 
 
-def take_ConnectMechanismInfo(data, add_text=''):
+def take_ConnectMechanismInfo(data, add_text='', end_flag=0):
     offset = 0
     connect_choice = data[offset]
     show_data_source(data[offset:], 1)
@@ -223,7 +229,7 @@ def take_ConnectMechanismInfo(data, add_text=''):
     return offset
 
 
-def take_ConnectResponseInfo(data, add_text=''):
+def take_ConnectResponseInfo(data, add_text='', end_flag=0):
     offset = 0
     connect_result = {
         '00': '允许建立应用连接',
@@ -245,7 +251,7 @@ def take_ConnectResponseInfo(data, add_text=''):
     return offset
 
 
-def take_FactoryVersion(data, add_text=''):
+def take_FactoryVersion(data, add_text='', end_flag=0):
     offset = 0
     offset += take_visible_string(data[offset:], '厂商代码:', 4)
     offset += take_visible_string(data[offset:], '软件版本号:', 4)
@@ -257,7 +263,7 @@ def take_FactoryVersion(data, add_text=''):
 
 
 # ############################ 数据类型处理 #############################
-def take_Data(data, end_flag=0):
+def take_Data(data, add_text='', end_flag=0):
     offset = 0
     if data[offset] == '00':    # 对null类型特殊处理
         offset += take_NULL(data[offset:], level_flag=1, end_flag=end_flag)
@@ -307,7 +313,7 @@ def take_Data(data, end_flag=0):
         '5E': take_SID_MAC,
         '5F': take_COMDCB,
         '60': take_RCSD,
-    }[data[offset - 1]](data[offset:], level=0)
+    }[data[offset - 1]](data[offset:], add_text=add_text, level=0)
     return offset
 
 
@@ -328,7 +334,7 @@ def take_array(data, add_text='', level=-1):
     config.line_level += 1
     for count in range(member_num):
         end_flag = 1 if count == member_num - 1 else 0
-        offset += take_Data(data[offset:], end_flag)
+        offset += take_Data(data[offset:], end_flag=end_flag)
     config.line_level -= 1
     return offset
 
@@ -342,7 +348,7 @@ def take_structure(data, add_text='', level=-1):
     config.line_level += 1
     for count in range(member_num):
         end_flag = 1 if count == member_num - 1 else 0
-        offset += take_Data(data[offset:], end_flag)
+        offset += take_Data(data[offset:], end_flag=end_flag)
     config.line_level -= 1
     return offset
 
@@ -605,12 +611,12 @@ def take_OAD(data, add_text='', level=-1, end_flag=0):
     return offset
 
 
-def take_ROAD(data, add_text='', level=-1):
+def take_ROAD(data, add_text='', level=-1, end_flag=0):
     offset = 0
     config.line_level += 1
     offset += take_OAD(data[offset:])
     oad_num = int(data[offset], 16)
-    show_data_source(data[offset:], 1, level=config.line_level, end_flag=1)
+    show_data_source(data[offset:], 1, level=config.line_level, end_flag=end_flag)
     output(' —— 关联OAD*' + str(oad_num))
     offset += 1
     config.line_level += 1
@@ -716,7 +722,7 @@ def take_Scaler_Unit(data, add_text='', level=-1):
 def take_RSD(data, add_text='', level=-1):
     offset = 0
     # print(data[:])
-    show_data_source(data[offset:], 1)
+    show_data_source(data[offset:], 1, level=config.line_level)
     selector = data[offset]
     if selector == '00':
         output(' —— Selector0, 不选择')
@@ -762,16 +768,16 @@ def take_RSD(data, add_text='', level=-1):
     return offset
 
 
-def take_CSD(data, add_text='', level=-1):
+def take_CSD(data, add_text='', level=-1, end_flag=0):
     offset = 0
     csd_choice = data[offset]
-    show_data_source(data[offset:], 1)
+    show_data_source(data[offset:], 1, level=config.line_level, end_flag=end_flag)
     output(' —— OAD' if csd_choice == '00' else ' —— ROAD')
     offset += 1
     if csd_choice == '00':
-        offset += take_OAD(data[offset:])
+        offset += take_OAD(data[offset:], end_flag=end_flag)
     elif csd_choice == '01':
-        offset += take_ROAD(data[offset:])
+        offset += take_ROAD(data[offset:], end_flag=end_flag)
     return offset
 
 
@@ -851,12 +857,15 @@ def take_COMDCB(data, add_text='', level=-1):
     return offset
 
 
-def take_RCSD(data, add_text='', level=-1):
+def take_RCSD(data, add_text='', level=-1, end_flag=0):
     offset = 0
     csd_num = int(data[offset], 16)
-    show_data_source(data[offset:], 1)
+    show_data_source(data[offset:], 1, level=config.line_level, end_flag=end_flag)
     output(' —— CSD*' + str(csd_num))
     offset += 1
+    config.line_level += 1
     for csd_count in range(csd_num):
-        offset += take_CSD(data[offset:])
+        end_flag = 1 if csd_count == csd_num - 1 else 0
+        offset += take_CSD(data[offset:], end_flag=end_flag)
+    config.line_level -= 1
     return offset
