@@ -4,6 +4,7 @@ import sys
 output_text = ''
 show_level = False
 line_level = 0
+serial = None
 
 pathname = ''
 if getattr(sys, 'frozen', False):
