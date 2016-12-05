@@ -69,7 +69,7 @@ def take_APDU(data, add_text=''):
     if data[0] in ['82', '83', '84', '85', '86', '87', '88', '89']:
         offset += take_FollowReport(data[offset:])
         offset += take_TimeTag(data[offset:])
-    elif data[0] in ['02', '03', '04', '05', '06', '07', '00', '09']:
+    elif data[0] in ['02', '03', '05', '06', '07', '08', '09']:
         offset += take_TimeTag(data[offset:])
     output('^' * 60 + 'APDU')
     return offset
