@@ -785,28 +785,28 @@ def take_MS(data, add_text='', level=-1):
     offset = 0
     MS_choice = data[0]
     if MS_choice == '00':  # 无电能表
-        offset += take_NULL(data[offset:], '无电能表')
+        offset += take_NULL(data[offset:], 'MS:无电能表')
     elif MS_choice == '01':  # 全部用户地址
-        offset += take_NULL(data[offset:], '全部用户地址')
+        offset += take_NULL(data[offset:], 'MS:全部用户地址')
     elif MS_choice == '02':  # 一组用户类型
         num = int(data[1], 16)
         show_data_source(data[offset:], 2)
         offset += 2
-        output(' —— 用户类型*' + str(num))
+        output(' —— MS:用户类型*' + str(num))
         for count in range(num):
             offset += take_unsigned(data[offset:], '用户类型:')
     elif MS_choice == '03':  # 一组用户地址
         num = int(data[1], 16)
         show_data_source(data, 2)
         offset += 2
-        output(' —— 用户地址*' + str(num))
+        output(' —— MS:用户地址*' + str(num))
         for count in range(num):
             offset += take_TSA(data[offset:])
     elif MS_choice == '04':  # 一组配置序号
         num = int(data[1], 16)
         show_data_source(data, 2)
         offset += 2
-        output(' —— 配置序号*' + str(num))
+        output(' —— MS:配置序号*' + str(num))
         for count in range(num):
             offset += take_long_unsigned(data[offset:], '配置序号:')
     elif MS_choice == '05':  # 一组用户类型区间
@@ -814,7 +814,7 @@ def take_MS(data, add_text='', level=-1):
         num = int(data[1], 16)
         show_data_source(data, 2)
         offset += 2
-        output(' —— 用户类型区间*' + str(num))
+        output(' —— MS:用户类型区间*' + str(num))
         for count in range(num):
             offset += take_Region(data[offset:], '用户类型区间:')
     elif MS_choice == '06':  # 一组用户地址区间
@@ -822,7 +822,7 @@ def take_MS(data, add_text='', level=-1):
         num = int(data[1], 16)
         show_data_source(data, 2)
         offset += 2
-        output(' —— 用户地址区间*' + str(num))
+        output(' —— MS:用户地址区间*' + str(num))
         for count in range(num):
             offset += take_Region(data[offset:], '用户地址区间:')
     elif MS_choice == '07':  # 一组配置序号区间
@@ -830,7 +830,7 @@ def take_MS(data, add_text='', level=-1):
         num = int(data[1], 16)
         show_data_source(data, 2)
         offset += 2
-        output(' —— 配置序号区间*' + str(num))
+        output(' —— MS:配置序号区间*' + str(num))
         for count in range(num):
             offset += take_Region(data[offset:], '配置序号区间:')
     return offset
