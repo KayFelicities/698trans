@@ -2,7 +2,8 @@ import os
 import sys
 
 output_text = ''
-show_level = False
+show_level = True
+auto_trans = True
 line_level = 0
 serial = None
 

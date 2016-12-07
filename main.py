@@ -2,9 +2,12 @@ import config
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 import serial
+import struct
 import serial.tools.list_ports
-import binascii
+from binascii import hexlify
+import threading
 import sys
+import time
 sys.path.append('UI\\')
 from shared_functions import *  # NOQA
 from link_layer import *  # NOQA
@@ -18,16 +21,22 @@ class MainWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_MainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.setupUi(self)
+        config.show_level = self.show_level.isChecked()
+        config.auto_trans = self.auto_trans.isChecked()
         self.child = AboutWindow()
-        self.translate_button.clicked.connect(self.trans_botton)
-        self.clear_button.clicked.connect(self.clear_botton)
+        if config.auto_trans is True:
+            self.input_box.textChanged.connect(self.start_trans)
+        else:
+            self.input_box.textChanged.disconnect(self.start_trans)
+        self.translate_button.clicked.connect(self.start_trans)
+        self.clear_button.clicked.connect(self.clear_box)
         self.show_level.clicked.connect(self.show_level_check_box)
+        self.auto_trans.clicked.connect(self.auto_trans_check_box)
         self.always_top.clicked.connect(self.always_top_check_box)
         self.input_box.textChanged.connect(self.calc_len_box)
         self.about.triggered.connect(self.show_about_window)
-        config.show_level = self.show_level.isChecked()
 
-    def trans_botton(self):
+    def start_trans(self):
         input_text = self.input_box.toPlainText()
         if 1:  # 0 for debug
             try:
@@ -39,12 +48,20 @@ class MainWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_MainWindow):
         self.output_box.setText(config.output_text)
         config.output_text = ''
 
-    def clear_botton(self):
+    def clear_box(self):
         self.input_box.setFocus()
 
     def show_level_check_box(self):
         config.show_level = self.show_level.isChecked()
-        self.trans_botton()
+        self.start_trans()
+
+    def auto_trans_check_box(self):
+        config.auto_trans = self.auto_trans.isChecked()
+        if config.auto_trans is True:
+            self.input_box.textChanged.connect(self.start_trans)
+        else:
+            self.input_box.textChanged.disconnect(self.start_trans)
+        self.start_trans()
 
     def always_top_check_box(self):
         if (self.always_top.isChecked() is True):
@@ -65,11 +82,19 @@ class MainWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_MainWindow):
 
 
 class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
+    _receive_signal = QtCore.pyqtSignal(str)
+
     def __init__(self):
         super(SerialWindow, self).__init__()
         self.setupUi(self)
+        self._receive_signal.connect(self.take_receive_data)
         self.child = AboutWindow()
-        self.send_input_box.textChanged.connect(self.send_trans)
+        config.show_level = self.show_level.isChecked()
+        config.auto_trans = self.auto_trans.isChecked()
+        if config.auto_trans is True:
+            self.send_input_box.textChanged.connect(self.send_trans)
+        else:
+            self.send_input_box.textChanged.disconnect(self.send_trans)
         self.receive_input_box.textChanged.connect(self.receive_trans)
         self.send_clear_button.clicked.connect(self.send_clear_botton)
         self.open_button.clicked.connect(self.open_serial)
@@ -77,10 +102,27 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         self.send_button.clicked.connect(self.send_data)
         self.show_level.clicked.connect(self.show_level_check_box)
         self.always_top.clicked.connect(self.always_top_check_box)
+        self.auto_trans.clicked.connect(self.auto_trans_check_box)
         self.send_input_box.textChanged.connect(self.calc_len_box)
         self.about.triggered.connect(self.show_about_window)
-        config.show_level = self.show_level.isChecked()
         self.com_list.addItems(self.port_list())
+
+    def serial_run(self):
+        while True:
+            re_text = ''
+            data_wait = config.serial.inWaiting()
+            while data_wait > 0:
+                re_data = config.serial.readline()
+                for re_char in re_data:
+                    re_text += '{0:02X} '.format(re_char)
+                time.sleep(0.03)
+                data_wait = config.serial.inWaiting()
+            if re_text != '':
+                # print(re_text)
+                self._receive_signal.emit(re_text)
+
+    def take_receive_data(self, re_text):
+        self.receive_input_box.setText(re_text)
 
     def port_list(self):
         com_List = []
@@ -90,17 +132,15 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         return com_List
 
     def open_serial(self):
-        config.serial = serial.Serial()
-        config.serial.port = self.com_list.currentText()
-        config.serial.baudrate = 115200
-        config.serial.bytesize = 8
-        config.serial.parity = 'E'
-        config.serial.stopbits = 1
+        config.serial = serial.Serial(self.com_list.currentText(), 9600, 8, 'E', 1, timeout=0.05)
+        config.serial.close()
         try:
             config.serial.open()
-            print(config.serial.isOpen())
+            threading.Thread(target=self.serial_run).start()
+            # print(config.serial.isOpen())
             self.open_button.setText(self.com_list.currentText() + '已打开')
             self.close_button.setText('关闭')
+            self.calc_len_box()
         except Exception:
             self.open_button.setText(self.com_list.currentText() + '打开失败')
             self.close_button.setText('关闭')
@@ -109,11 +149,23 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         config.serial.close()
         self.close_button.setText(self.com_list.currentText() + '已关闭')
         self.open_button.setText('打开')
+        self.send_button.setText('请打开串口')
 
     def send_data(self):
         input_text = self.send_input_box.toPlainText()
-        send_d = '0001020304'
-        config.serial.write(eval(send_d))
+        data = data_format(input_text)
+        send_d = b''
+        for char in data:
+            send_d += struct.pack('B', int(char, 16))
+        config.serial.write(send_d)
+
+    def auto_trans_check_box(self):
+        config.auto_trans = self.auto_trans.isChecked()
+        if config.auto_trans is True:
+            self.send_input_box.textChanged.connect(self.send_trans)
+        else:
+            self.send_input_box.textChanged.disconnect(self.send_trans)
+        self.send_trans()
 
     def send_trans(self):
         input_text = self.send_input_box.toPlainText()
