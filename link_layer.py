@@ -1,4 +1,29 @@
 from shared_functions import *  # NOQA
+from apdu import *  # NOQA
+
+
+def all_translate(input_text):
+    offset = 0
+    config.line_level = 0
+    if len(input_text) < 5:
+        output('请输入698报文')
+        return
+    data = data_format(input_text)
+    data_check = check_data(data)
+    if data_check == 'ok':
+        offset += take_link_layer_1(data[offset:])
+        offset += take_APDU(data[offset:])  # 解应用层
+        offset += take_link_layer_2(data[0:], offset)  # 处理链路层末尾
+    elif data_check == 'format_error':  # 格式错误，尝试解apdu
+        offset += take_APDU(data[offset:])  # 解应用层
+    else:
+        output('报文非法')
+        return
+
+    if offset != len(data):
+        print('offset, len(data): ', offset, len(data))
+        output('\n\n报文解析过程出现问题，请检查报文。若报文无问题请反馈665593，谢谢！')
+    return offset
 
 
 def calc_len(input_text):

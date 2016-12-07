@@ -259,7 +259,7 @@
       <item>
        <widget class="QPushButton" name="translate_button">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
           <horstretch>1</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -272,7 +272,7 @@
       <item>
        <widget class="QPushButton" name="send_clear_button">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>2</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -285,7 +285,7 @@
       <item>
        <widget class="QPushButton" name="send_button">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>2</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -302,7 +302,7 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>100</width>
+          <width>120</width>
           <height>20</height>
          </size>
         </property>
@@ -312,7 +312,7 @@
        <widget class="QPushButton" name="receive_clear_button">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-          <horstretch>5</horstretch>
+          <horstretch>4</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
@@ -1124,7 +1124,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>receive_input_box</tabstop>
   <tabstop>receive_output_box</tabstop>
   <tabstop>auto_trans</tabstop>
-  <tabstop>translate_button</tabstop>
   <tabstop>server_addr</tabstop>
   <tabstop>server_addr_len</tabstop>
   <tabstop>client_addr</tabstop>
