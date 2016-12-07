@@ -15,7 +15,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>698解析工具_V2.2(2016.12.00)</string>
+   <string>698解析工具_V3.0(2016.12.00)</string>
   </property>
   <property name="windowIcon">
    <iconset resource="icon.qrc">
@@ -644,12 +644,9 @@ p, li { white-space: pre-wrap; }
      </layout>
     </item>
    </layout>
+   <zorder>splitter_3</zorder>
    <zorder></zorder>
    <zorder></zorder>
-   <zorder>receive_clear_button</zorder>
-   <zorder>horizontalSpacer_6</zorder>
-   <zorder>horizontalSpacer_7</zorder>
-   <zorder>horizontalSpacer_8</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="enabled">

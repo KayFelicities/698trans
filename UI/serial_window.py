@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'serial_mode_window.ui'
+# Form implementation generated from reading ui file 'serial_window.ui'
 #
 # Created by: PyQt4 UI code generator 4.11.4
 #
@@ -28,14 +28,14 @@ class Ui_SerialWindow(object):
         SerialWindow.setWindowModality(QtCore.Qt.NonModal)
         SerialWindow.resize(848, 669)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Disabled, QtGui.QIcon.On)
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Active, QtGui.QIcon.Off)
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Selected, QtGui.QIcon.Off)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Selected, QtGui.QIcon.On)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Active, QtGui.QIcon.On)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Active, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Selected, QtGui.QIcon.On)
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.On)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Disabled, QtGui.QIcon.On)
         SerialWindow.setWindowIcon(icon)
         SerialWindow.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
         SerialWindow.setAnimated(True)
@@ -273,7 +273,7 @@ class Ui_SerialWindow(object):
         self.show_level.setObjectName(_fromUtf8("show_level"))
         self.horizontalLayout_2.addWidget(self.show_level)
         self.gridLayout.addLayout(self.horizontalLayout_2, 3, 0, 1, 1)
-        self.receive_clear_button.raise_()
+        self.splitter_3.raise_()
         SerialWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(SerialWindow)
         self.menubar.setEnabled(True)
@@ -458,7 +458,7 @@ class Ui_SerialWindow(object):
         SerialWindow.setTabOrder(self.server_addr_len, self.client_addr)
 
     def retranslateUi(self, SerialWindow):
-        SerialWindow.setWindowTitle(_translate("SerialWindow", "698解析工具_V2.2(2016.12.00)", None))
+        SerialWindow.setWindowTitle(_translate("SerialWindow", "698解析工具_V3.0(2016.12.00)", None))
         self.label_2.setText(_translate("SerialWindow", "服务器地址", None))
         self.server_addr.setText(_translate("SerialWindow", "1", None))
         self.label_3.setText(_translate("SerialWindow", "地址长度", None))
