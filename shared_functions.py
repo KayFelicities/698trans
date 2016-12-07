@@ -329,7 +329,7 @@ def take_array(data, add_text='', level=-1):
     offset = 0
     member_num = int(data[offset], 16)
     show_data_source(data[offset:], 1)
-    output(' —— ' + add_text + 'array, 元素个数:' + str(member_num))
+    output(' —— ' + add_text + 'array, 成员个数:' + str(member_num))
     offset += 1
     config.line_level += 1
     for count in range(member_num):
@@ -614,7 +614,7 @@ def take_OAD(data, add_text='', level=-1, end_flag=0):
 def take_ROAD(data, add_text='', level=-1, end_flag=0):
     offset = 0
     config.line_level += 1
-    offset += take_OAD(data[offset:])
+    offset += take_OAD(data[offset:], level=0)
     oad_num = int(data[offset], 16)
     show_data_source(data[offset:], 1, level=config.line_level, end_flag=end_flag)
     output(' —— 关联OAD*' + str(oad_num))

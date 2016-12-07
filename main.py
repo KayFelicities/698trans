@@ -240,6 +240,7 @@ class AboutWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_AboutWindow):
 
 def all_translate(input_text):
     offset = 0
+    config.line_level = 0
     if len(input_text) < 5:
         output('请输入698报文')
         return
