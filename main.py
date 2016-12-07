@@ -2,32 +2,33 @@ import config
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 import serial
-import struct
 import serial.tools.list_ports
-from binascii import hexlify
-import threading
+import struct
 import sys
+import threading
 import time
 sys.path.append('UI\\')
 from shared_functions import *  # NOQA
 from link_layer import *  # NOQA
 from apdu import *  # NOQA
 from about_window import Ui_AboutWindow
-from main_window import Ui_MainWindow
-from serial_mode_window import Ui_SerialWindow
+from trans_window import Ui_TransWindow
+from serial_window import Ui_SerialWindow
 
 
-class MainWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_MainWindow):
+class TransWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_TransWindow):
     def __init__(self):
-        super(MainWindow, self).__init__()
+        super(TransWindow, self).__init__()
         self.setupUi(self)
         config.show_level = self.show_level.isChecked()
         config.auto_trans = self.auto_trans.isChecked()
-        self.child = AboutWindow()
+        self.about_child = AboutWindow()
         if config.auto_trans is True:
             self.input_box.textChanged.connect(self.start_trans)
+            self.translate_button.setVisible(False)
         else:
             self.input_box.textChanged.disconnect(self.start_trans)
+            self.translate_button.setVisible(True)
         self.translate_button.clicked.connect(self.start_trans)
         self.clear_button.clicked.connect(self.clear_box)
         self.show_level.clicked.connect(self.show_level_check_box)
@@ -35,16 +36,15 @@ class MainWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_MainWindow):
         self.always_top.clicked.connect(self.always_top_check_box)
         self.input_box.textChanged.connect(self.calc_len_box)
         self.about.triggered.connect(self.show_about_window)
+        self.serial_mode_button.clicked.connect(self.shift_serial_window)
 
     def start_trans(self):
         input_text = self.input_box.toPlainText()
-        if 1:  # 0 for debug
-            try:
-                all_translate(input_text)
-            except Exception:
-                output('报文解析过程出现问题，请检查报文。若报文无问题请反馈665593，谢谢！')
-        else:
+        try:
             all_translate(input_text)
+        except Exception as e:
+            print(e)
+            output('报文解析过程出现问题，请检查报文。若报文无问题请反馈665593，谢谢！')
         self.output_box.setText(config.output_text)
         config.output_text = ''
 
@@ -59,8 +59,10 @@ class MainWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_MainWindow):
         config.auto_trans = self.auto_trans.isChecked()
         if config.auto_trans is True:
             self.input_box.textChanged.connect(self.start_trans)
+            self.translate_button.setVisible(False)
         else:
             self.input_box.textChanged.disconnect(self.start_trans)
+            self.translate_button.setVisible(True)
         self.start_trans()
 
     def always_top_check_box(self):
@@ -74,11 +76,14 @@ class MainWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_MainWindow):
     def calc_len_box(self):
         input_text = self.input_box.toPlainText()
         input_len = calc_len(input_text)
-        self.len_box.setText(input_len)
-        # self.crc_box.setText(crc_calc)
+        self.clear_button.setText('清空' + input_len)
 
     def show_about_window(self):
-        self.child.show()
+        self.about_child.show()
+
+    def shift_serial_window(self):
+        self.hide()
+        config.serial_child.show()
 
 
 class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
@@ -87,9 +92,9 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
     def __init__(self):
         super(SerialWindow, self).__init__()
         self.setupUi(self)
-        self._receive_signal.connect(self.take_receive_data)
-        self.child = AboutWindow()
+        self.about_child = AboutWindow()
         config.show_level = self.show_level.isChecked()
+        self._receive_signal.connect(self.take_receive_data)
         config.auto_trans = self.auto_trans.isChecked()
         if config.auto_trans is True:
             self.send_input_box.textChanged.connect(self.send_trans)
@@ -104,8 +109,9 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         self.always_top.clicked.connect(self.always_top_check_box)
         self.auto_trans.clicked.connect(self.auto_trans_check_box)
         self.send_input_box.textChanged.connect(self.calc_len_box)
-        self.about.triggered.connect(self.show_about_window)
         self.com_list.addItems(self.port_list())
+        self.about.triggered.connect(self.show_about_window)
+        self.trans_mode_button.clicked.connect(self.shift_trans_window)
 
     def serial_run(self):
         while True:
@@ -118,7 +124,6 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
                 time.sleep(0.03)
                 data_wait = config.serial.inWaiting()
             if re_text != '':
-                # print(re_text)
                 self._receive_signal.emit(re_text)
 
     def take_receive_data(self, re_text):
@@ -211,10 +216,13 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         input_text = self.send_input_box.toPlainText()
         input_len = calc_len(input_text)
         self.send_button.setText('发送（' + input_len + '）')
-        # self.crc_box.setText(crc_calc)
 
     def show_about_window(self):
-        self.child.show()
+        self.about_child.show()
+
+    def shift_trans_window(self):
+        self.hide()
+        config.trans_child.show()
 
 
 class AboutWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_AboutWindow):
@@ -248,6 +256,7 @@ def all_translate(input_text):
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
-    myUI = SerialWindow()
-    myUI.show()
+    config.trans_child = TransWindow()
+    config.serial_child = SerialWindow()
+    config.trans_child.show()
     sys.exit(app.exec_())

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <author>Kay</author>
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>TransWindow</class>
+ <widget class="QMainWindow" name="TransWindow">
   <property name="windowModality">
    <enum>Qt::NonModal</enum>
   </property>
@@ -54,6 +54,12 @@
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
          <widget class="QPushButton" name="translate_button">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>解析</string>
           </property>
@@ -61,50 +67,14 @@
         </item>
         <item>
          <widget class="QPushButton" name="clear_button">
-          <property name="text">
-           <string>清空</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer_3">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Expanding</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>50</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>长度:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="len_box">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>160</width>
-            <height>16777215</height>
-           </size>
+          <property name="text">
+           <string>清空0(0x0)字节</string>
           </property>
          </widget>
         </item>
@@ -223,7 +193,7 @@ p, li { white-space: pre-wrap; }
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="serial_mode_button">
           <property name="text">
            <string>串口模式</string>
           </property>
@@ -774,7 +744,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>input_box</tabstop>
   <tabstop>translate_button</tabstop>
   <tabstop>output_box</tabstop>
-  <tabstop>len_box</tabstop>
   <tabstop>clear_button</tabstop>
  </tabstops>
  <resources>

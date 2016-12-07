@@ -6,6 +6,8 @@ show_level = True
 auto_trans = True
 line_level = 0
 serial = None
+trans_child = None
+serial_child = None
 
 pathname = ''
 if getattr(sys, 'frozen', False):
