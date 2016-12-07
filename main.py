@@ -44,7 +44,7 @@ class TransWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_TransWindow):
             all_translate(input_text)
         except Exception as e:
             print(e)
-            output('报文解析过程出现问题，请检查报文。若报文无问题请反馈665593，谢谢！')
+            output('\n\n报文解析过程出现问题，请检查报文。若报文无问题请反馈665593，谢谢！')
         self.output_box.setText(config.output_text)
         config.output_text = ''
 
@@ -115,8 +115,12 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
 
     def serial_run(self):
         while True:
+            try:
+                data_wait = config.serial.inWaiting()
+            except Exception:
+                print('serial_run quit')
+                break
             re_text = ''
-            data_wait = config.serial.inWaiting()
             while data_wait > 0:
                 re_data = config.serial.readline()
                 for re_char in re_data:
@@ -125,6 +129,9 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
                 data_wait = config.serial.inWaiting()
             if re_text != '':
                 self._receive_signal.emit(re_text)
+            if config.serial_check is False:
+                print('serial_run quit')
+                break
 
     def take_receive_data(self, re_text):
         self.receive_input_box.setText(re_text)
@@ -137,12 +144,12 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         return com_List
 
     def open_serial(self):
-        config.serial = serial.Serial(self.com_list.currentText(), 9600, 8, 'E', 1, timeout=0.05)
-        config.serial.close()
         try:
+            config.serial = serial.Serial(self.com_list.currentText(), 9600, 8, 'E', 1, timeout=0.05)
+            config.serial.close()
             config.serial.open()
+            config.serial_check = True
             threading.Thread(target=self.serial_run).start()
-            # print(config.serial.isOpen())
             self.open_button.setText(self.com_list.currentText() + '已打开')
             self.close_button.setText('关闭')
             self.calc_len_box()
@@ -178,7 +185,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
             try:
                 all_translate(input_text)
             except Exception:
-                output('报文解析过程出现问题，请检查报文。若报文无问题请反馈665593，谢谢！')
+                output('\n\n报文解析过程出现问题，请检查报文。若报文无问题请反馈665593，谢谢！')
         else:
             all_translate(input_text)
         self.send_output_box.setText(config.output_text)
@@ -190,7 +197,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
             try:
                 all_translate(input_text)
             except Exception:
-                output('报文解析过程出现问题，请检查报文。若报文无问题请反馈665593，谢谢！')
+                output('\n\n报文解析过程出现问题，请检查报文。若报文无问题请反馈665593，谢谢！')
         else:
             all_translate(input_text)
         self.receive_output_box.setText(config.output_text)
@@ -250,7 +257,7 @@ def all_translate(input_text):
 
     if offset != len(data):
         print('offset, len(data): ', offset, len(data))
-        output('报文解析过程出现问题，请检查报文。若报文无问题请反馈665593，谢谢！')
+        output('\n\n报文解析过程出现问题，请检查报文。若报文无问题请反馈665593，谢谢！')
     return offset
 
 
@@ -259,4 +266,6 @@ if __name__ == "__main__":
     config.trans_child = TransWindow()
     config.serial_child = SerialWindow()
     config.trans_child.show()
-    sys.exit(app.exec_())
+    app.exec_()
+    # print('window close')
+    config.serial_check = False

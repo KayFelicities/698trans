@@ -8,6 +8,7 @@ line_level = 0
 serial = None
 trans_child = None
 serial_child = None
+serial_check = False
 
 pathname = ''
 if getattr(sys, 'frozen', False):
