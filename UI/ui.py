@@ -6,6 +6,7 @@ import serial.tools.list_ports
 import struct
 import threading
 import time
+import traceback
 from shared_functions import *  # NOQA
 from link_layer import *  # NOQA
 from about_window import Ui_AboutWindow
@@ -73,7 +74,8 @@ class TransWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_TransWindow):
     def calc_len_box(self):
         input_text = self.input_box.toPlainText()
         input_len = calc_len(input_text)
-        self.clear_button.setText('清空（' + input_len + '）')
+        len_message = str(input_len) + '字节(' + str(hex(input_len)) + ')'
+        self.clear_button.setText('清空（' + len_message + '）')
 
     def show_about_window(self):
         self.about_child.show()
@@ -183,25 +185,62 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
 
     def send_trans(self):
         input_text = self.send_input_box.toPlainText()
-        if 1:  # 0 for debug
-            try:
-                all_translate(input_text)
-            except Exception:
-                output('\n\n报文解析过程出现问题，请检查报文。若报文无问题请反馈665593，谢谢！')
-        else:
-            all_translate(input_text)
+        try:
+            input_type, server_addr, server_addr_len, client_addr = all_translate(input_text)
+            if input_type == 'full':
+                self.server_addr_box.setText(server_addr)
+                self.server_addr_len_box.setText(server_addr_len)
+                self.client_addr_box.setText(client_addr)
+            elif input_type == 'apdu':
+                input_text = self.add_link_layer(input_text)
+                self.send_input_box.setText(input_text)
+
+        except Exception as e:
+            print(e)
+            traceback.print_exc()
+            output('\n\n报文解析过程出现问题，请检查报文。若报文无问题请反馈665593，谢谢！')
         self.send_output_box.setText(config.output_text)
         config.output_text = ''
 
+    def add_link_layer(self, input_text):
+        apdu_start = '68 '
+        C = '43 '
+        server_addr = self.server_addr_box.text()
+        print('server_addr', server_addr)
+        server_addr_len = int(self.server_addr_len_box.text())
+        server_addr_data = data_format(server_addr)
+        for count in range(server_addr_len):
+            server_addr_data.insert(0, '00')
+        server_addr_text_list = server_addr_data[-server_addr_len:]
+        print(server_addr_text_list)
+        server_addr_text = ''
+        for server_addr_member in server_addr_text_list:
+            server_addr_text += server_addr_member + ' '
+        client_addr_text = self.client_addr_box.text() + ' '
+        apdu_len = calc_len(input_text)
+        full_len = 7 + server_addr_len + apdu_len + 2
+        print(full_len)
+        L = '{0:02X} {1:02X} '.format(full_len & 0xff, (full_len >> 8) & 0xff)  # 低位在前
+        apdu_start += L + C + '{0:02X} '.format(server_addr_len - 1) + server_addr_text + client_addr_text
+        hcs_data = data_format(apdu_start)
+        hcs = get_fcs(hcs_data[1:], len(hcs_data) - 1)
+        HCS = '{0:02X} {1:02X} '.format(full_len & 0xff, (hcs >> 8) & 0xff)  # 低位在前
+        apdu_start += HCS
+
+        fcs_data = data_format(apdu_start + input_text)
+        fcs = get_fcs(fcs_data[1:], len(fcs_data) - 1)
+        FCS = '{0:02X} {1:02X} '.format(full_len & 0xff, (fcs >> 8) & 0xff)  # 低位在前
+
+        full_text = apdu_start + '\n' + input_text + '\n' + FCS + '16'
+        return full_text
+
     def receive_trans(self):
         input_text = self.receive_input_box.toPlainText()
-        if 1:  # 0 for debug
-            try:
-                all_translate(input_text)
-            except Exception:
-                output('\n\n报文解析过程出现问题，请检查报文。若报文无问题请反馈665593，谢谢！')
-        else:
+        try:
             all_translate(input_text)
+        except Exception as e:
+            print(e)
+            output('\n\n报文解析过程出现问题，请检查报文。若报文无问题请反馈665593，谢谢！')
         self.receive_output_box.setText(config.output_text)
         config.output_text = ''
 
@@ -224,8 +263,9 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
     def calc_len_box(self):
         input_text = self.send_input_box.toPlainText()
         input_len = calc_len(input_text)
+        len_message = str(input_len) + '字节(' + str(hex(input_len)) + ')'
         if config.serial_check is True:
-            self.send_button.setText('发送（' + input_len + '）')
+            self.send_button.setText('发送（' + len_message + '）')
         else:
             self.send_button.setText('请打开串口')
 

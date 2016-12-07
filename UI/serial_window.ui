@@ -80,7 +80,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="server_addr">
+       <widget class="QLineEdit" name="server_addr_box">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>4</horstretch>
@@ -116,7 +116,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="server_addr_len">
+       <widget class="QLineEdit" name="server_addr_len_box">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>1</horstretch>
@@ -152,7 +152,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="client_addr">
+       <widget class="QLineEdit" name="client_addr_box">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>1</horstretch>
@@ -1124,9 +1124,9 @@ p, li { white-space: pre-wrap; }
   <tabstop>receive_input_box</tabstop>
   <tabstop>receive_output_box</tabstop>
   <tabstop>auto_trans</tabstop>
-  <tabstop>server_addr</tabstop>
-  <tabstop>server_addr_len</tabstop>
-  <tabstop>client_addr</tabstop>
+  <tabstop>server_addr_box</tabstop>
+  <tabstop>server_addr_len_box</tabstop>
+  <tabstop>client_addr_box</tabstop>
  </tabstops>
  <resources>
   <include location="icon.qrc"/>

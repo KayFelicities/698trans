@@ -4,38 +4,39 @@ from apdu import *  # NOQA
 
 def all_translate(input_text):
     offset = 0
+    input_type = ''
     config.line_level = 0
     if len(input_text) < 5:
         output('请输入698报文')
         return
+    server_addr = ''
+    server_addr_len = ''
+    client_addr = ''
     data = data_format(input_text)
     data_check = check_data(data)
     if data_check == 'ok':
-        offset += take_link_layer_1(data[offset:])
+        temp_offset, server_addr, server_addr_len, client_addr = take_link_layer_1(data[offset:])
+        offset += temp_offset
         offset += take_APDU(data[offset:])  # 解应用层
         offset += take_link_layer_2(data[0:], offset)  # 处理链路层末尾
+        input_type = 'full'
     elif data_check == 'format_error':  # 格式错误，尝试解apdu
         offset += take_APDU(data[offset:])  # 解应用层
+        input_type = 'apdu'
     else:
         output('报文非法')
-        return
+        return input_type, server_addr, server_addr_len, client_addr
 
     if offset != len(data):
         print('offset, len(data): ', offset, len(data))
         output('\n\n报文解析过程出现问题，请检查报文。若报文无问题请反馈665593，谢谢！')
-    return offset
+    return input_type, server_addr, server_addr_len, client_addr
 
 
 def calc_len(input_text):
     input_text = input_text.replace(' ', '').replace('\n', '').upper()  # 处理空格和换行
     data_len = int(len(input_text) / 2)
-    len_message = str(data_len) + '字节(' + str(hex(data_len)) + ')'
-    # data = []
-    # for k in range(0, data_len):
-    #     data.append(input_text[k * 2:(k + 1) * 2])
-    # fcs_calc = get_fcs(data[:], data_len)
-    # fcs_calc = ((fcs_calc << 8) | (fcs_calc >> 8)) & 0xffff  # 低位在前
-    return len_message
+    return data_len
 
 
 def data_format(input_text):
@@ -120,8 +121,9 @@ def take_link_layer_1(data):
     output(' —— 服务器地址: 逻辑地址' + str(server_logic_addr) + server_addr_type + server_addr)
     offset += server_addr_len + 1
     show_data_source(data[offset:], 1)
-    output(' —— 客户机地址: ' + data[offset])
+    client_addr = data[offset]
     offset += 1
+    output(' —— 客户机地址: ' + client_addr)
     # 帧头校验
     fcs_calc = get_fcs(data[1:offset], offset - 1)
     fcs_calc = ((fcs_calc << 8) | (fcs_calc >> 8)) & 0xffff  # 低位在前
@@ -149,7 +151,7 @@ def take_link_layer_1(data):
         show_data_source(data[offset:], 2)
         output(' —— 分帧序号:' + str(frame_separation_seq) + frame_separation_type)
         offset += 2
-    return offset
+    return offset, server_addr, str(server_addr_len), client_addr
 
 
 def take_link_layer_2(data, offset):
