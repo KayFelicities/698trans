@@ -102,6 +102,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
             self.send_input_box.textChanged.disconnect(self.send_trans)
             self.translate_button.setVisible(True)
         self.receive_input_box.textChanged.connect(self.receive_trans)
+        self.translate_button.clicked.connect(self.send_trans)
         self.send_clear_button.clicked.connect(self.send_clear_botton)
         self.open_button.clicked.connect(self.open_serial)
         self.close_button.clicked.connect(self.close_serial)
@@ -109,7 +110,8 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         self.show_level.clicked.connect(self.show_level_check_box)
         self.always_top.clicked.connect(self.always_top_check_box)
         self.auto_trans.clicked.connect(self.auto_trans_check_box)
-        self.send_input_box.textChanged.connect(self.calc_len_box)
+        self.send_input_box.textChanged.connect(self.send_box_calc_len)
+        self.receive_input_box.textChanged.connect(self.receive_box_calc_len)
         self.com_list.addItems(self.port_list())
         self.about.triggered.connect(self.show_about_window)
         self.trans_mode_button.clicked.connect(self.shift_trans_window)
@@ -194,6 +196,8 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
             elif input_type == 'apdu':
                 input_text = self.add_link_layer(input_text)
                 self.send_input_box.setText(input_text)
+                if config.auto_trans is True:
+                    all_translate(input_text)
 
         except Exception as e:
             print(e)
@@ -212,7 +216,8 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         for count in range(server_addr_len):
             server_addr_data.insert(0, '00')
         server_addr_text_list = server_addr_data[-server_addr_len:]
-        print(server_addr_text_list)
+        server_addr_text_list.reverse()
+        print('server_addr_text_list:', server_addr_text_list)
         server_addr_text = ''
         for server_addr_member in server_addr_text_list:
             server_addr_text += server_addr_member + ' '
@@ -223,13 +228,14 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         L = '{0:02X} {1:02X} '.format(full_len & 0xff, (full_len >> 8) & 0xff)  # 低位在前
         apdu_start += L + C + '{0:02X} '.format(server_addr_len - 1) + server_addr_text + client_addr_text
         hcs_data = data_format(apdu_start)
+        # print('hcd_data:', hcs_data[1:], 'len:', len(hcs_data) - 1)
         hcs = get_fcs(hcs_data[1:], len(hcs_data) - 1)
-        HCS = '{0:02X} {1:02X} '.format(full_len & 0xff, (hcs >> 8) & 0xff)  # 低位在前
+        HCS = '{0:02X} {1:02X} '.format(hcs & 0xff, (hcs >> 8) & 0xff)  # 低位在前
         apdu_start += HCS
 
         fcs_data = data_format(apdu_start + input_text)
         fcs = get_fcs(fcs_data[1:], len(fcs_data) - 1)
-        FCS = '{0:02X} {1:02X} '.format(full_len & 0xff, (fcs >> 8) & 0xff)  # 低位在前
+        FCS = '{0:02X} {1:02X} '.format(fcs & 0xff, (fcs >> 8) & 0xff)  # 低位在前
 
         full_text = apdu_start + '\n' + input_text + '\n' + FCS + '16'
         return full_text
@@ -260,7 +266,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
             self.setWindowFlags(QtCore.Qt.Widget)
             self.show()
 
-    def calc_len_box(self):
+    def send_box_calc_len(self):
         input_text = self.send_input_box.toPlainText()
         input_len = calc_len(input_text)
         len_message = str(input_len) + '字节(' + str(hex(input_len)) + ')'
@@ -268,6 +274,12 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
             self.send_button.setText('发送（' + len_message + '）')
         else:
             self.send_button.setText('请打开串口')
+
+    def receive_box_calc_len(self):
+        input_text = self.receive_input_box.toPlainText()
+        input_len = calc_len(input_text)
+        len_message = str(input_len) + '字节(' + str(hex(input_len)) + ')'
+        self.receive_clear_button.setText('清空（' + len_message + '）')
 
     def show_about_window(self):
         self.about_child.show()

@@ -49,6 +49,8 @@ def data_format(input_text):
     print('原始报文： ' + input_text + '\n')
     # 写入list
     data = []
+    if len(input_text) == 1:
+        input_text = '0' + input_text
     for k in range(0, int(len(input_text) / 2)):
         data.append(input_text[k * 2:(k + 1) * 2])
     return data
@@ -125,6 +127,7 @@ def take_link_layer_1(data):
     offset += 1
     output(' —— 客户机地址: ' + client_addr)
     # 帧头校验
+    # print('fcs_calc:', data[1:offset], 'len', offset - 1)
     fcs_calc = get_fcs(data[1:offset], offset - 1)
     fcs_calc = ((fcs_calc << 8) | (fcs_calc >> 8)) & 0xffff  # 低位在前
     # print('fcs test:', data[1:offset], 'cs:', hex(fcs_calc))
