@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>521</width>
-    <height>434</height>
+    <height>455</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,7 +25,7 @@
       <x>0</x>
       <y>90</y>
       <width>521</width>
-      <height>341</height>
+      <height>331</height>
      </rect>
     </property>
     <property name="html">
@@ -238,9 +238,37 @@ p, li { white-space: pre-wrap; }
      <bool>false</bool>
     </property>
    </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>3</x>
+      <y>430</y>
+      <width>511</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>微软雅黑</family>
+      <pointsize>11</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
+    <property name="text">
+     <string>Copyrigth(C), 2005-2020,Sanxing Medical &amp; Electric Co.,Ltd.</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
    <zorder>pushButton</zorder>
    <zorder>textBrowser</zorder>
    <zorder>about_box</zorder>
+   <zorder>label</zorder>
   </widget>
  </widget>
  <resources>

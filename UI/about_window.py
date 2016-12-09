@@ -25,7 +25,7 @@ except AttributeError:
 class Ui_AboutWindow(object):
     def setupUi(self, AboutWindow):
         AboutWindow.setObjectName(_fromUtf8("AboutWindow"))
-        AboutWindow.resize(521, 434)
+        AboutWindow.resize(521, 455)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.On)
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -33,7 +33,7 @@ class Ui_AboutWindow(object):
         self.centralwidget = QtGui.QWidget(AboutWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.about_box = QtGui.QTextEdit(self.centralwidget)
-        self.about_box.setGeometry(QtCore.QRect(0, 90, 521, 341))
+        self.about_box.setGeometry(QtCore.QRect(0, 90, 521, 331))
         self.about_box.setTextInteractionFlags(QtCore.Qt.TextSelectableByKeyboard|QtCore.Qt.TextSelectableByMouse)
         self.about_box.setObjectName(_fromUtf8("about_box"))
         self.pushButton = QtGui.QPushButton(self.centralwidget)
@@ -78,9 +78,21 @@ class Ui_AboutWindow(object):
         self.textBrowser.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
         self.textBrowser.setOpenLinks(False)
         self.textBrowser.setObjectName(_fromUtf8("textBrowser"))
+        self.label = QtGui.QLabel(self.centralwidget)
+        self.label.setGeometry(QtCore.QRect(3, 430, 511, 21))
+        font = QtGui.QFont()
+        font.setFamily(_fromUtf8("微软雅黑"))
+        font.setPointSize(11)
+        font.setBold(False)
+        font.setWeight(50)
+        self.label.setFont(font)
+        self.label.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
+        self.label.setObjectName(_fromUtf8("label"))
         self.pushButton.raise_()
         self.textBrowser.raise_()
         self.about_box.raise_()
+        self.label.raise_()
         AboutWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(AboutWindow)
@@ -160,5 +172,6 @@ class Ui_AboutWindow(object):
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">698解析软件_V3.0</span></p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">终端开发部内部测试版</span></p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">2016.12.08</span></p></body></html>", None))
+        self.label.setText(_translate("AboutWindow", "Copyrigth(C), 2005-2020,Sanxing Medical & Electric Co.,Ltd.", None))
 
 import icon_rc
