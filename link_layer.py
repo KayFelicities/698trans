@@ -8,7 +8,7 @@ def all_translate(input_text):
     config.line_level = 0
     if len(input_text) < 5:
         output('请输入698报文')
-        return
+        return '', '', '', ''
     server_addr = ''
     server_addr_len = ''
     client_addr = ''

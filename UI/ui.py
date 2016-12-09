@@ -155,6 +155,8 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
             threading.Thread(target=self.serial_run).start()
             self.open_button.setText(self.com_list.currentText() + '已打开')
             self.close_button.setText('关闭')
+            self.send_button.setEnabled(True)
+            self.send_box_calc_len()
         except Exception as e:
             print(e)
             traceback.print_exc()
@@ -167,6 +169,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         self.close_button.setText(self.com_list.currentText() + '已关闭')
         self.open_button.setText('打开')
         self.send_button.setText('请打开串口')
+        self.send_button.setEnabled(False)
 
     def send_data(self):
         input_text = self.send_input_box.toPlainText()
@@ -199,7 +202,6 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
                 self.send_input_box.setText(input_text)
                 if config.auto_trans is True:
                     all_translate(input_text)
-
         except Exception as e:
             print(e)
             traceback.print_exc()

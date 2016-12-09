@@ -356,7 +356,7 @@ def take_structure(data, add_text='', level=-1):
 def take_bool(data, add_text='', level=-1):
     offset = 0
     show_data_source(data, 1)
-    bool_value = ':False' if data[offset] == 0 else ':True'
+    bool_value = ':False' if data[offset] == '00' else ':True'
     output(' —— ' + add_text + bool_value + '(bool)')
     offset += 1
     return offset

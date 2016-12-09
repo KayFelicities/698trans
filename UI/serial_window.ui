@@ -15,7 +15,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>698解析工具_V3.0(2016.12.00)</string>
+   <string>698解析工具_V3.0(2016.12.08)</string>
   </property>
   <property name="windowIcon">
    <iconset resource="icon.qrc">
@@ -284,6 +284,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="send_button">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>2</horstretch>
