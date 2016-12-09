@@ -155,8 +155,9 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
             threading.Thread(target=self.serial_run).start()
             self.open_button.setText(self.com_list.currentText() + '已打开')
             self.close_button.setText('关闭')
-            self.calc_len_box()
-        except Exception:
+        except Exception as e:
+            print(e)
+            traceback.print_exc()
             self.open_button.setText(self.com_list.currentText() + '打开失败')
             self.close_button.setText('关闭')
 
