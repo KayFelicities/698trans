@@ -492,10 +492,16 @@ def take_long64_unsigned(data, add_text='', level=-1):
     return offset
 
 
-def take_enum(data, add_text='', level=-1):
+def take_enum(data, add_text='', level=-1, enum_dict=None):
     offset = 0
+    enum_explain = ''
+    if enum_dict is not None:
+        try:
+            enum_explain = enum_dict[data[offset]]
+        except Exception:
+            print(Exception)
     show_data_source(data, 1)
-    output(' —— ' + add_text + str(int(data[offset], 16)) + '(enum)')
+    output(' —— ' + add_text + enum_explain + '(enum)')
     offset += 1
     return offset
 
@@ -853,7 +859,25 @@ def take_SID_MAC(data, add_text='', level=-1):
 
 def take_COMDCB(data, add_text='', level=-1):
     offset = 0
-    print('未定义\n')
+    rate_dict = {
+        '00': '300bps',
+        '01': '600bps',
+        '02': '1200bps',
+        '03': '2400bps',
+        '04': '4800bps',
+        '05': '7200bps',
+        '06': '9600bps',
+        '07': '19200bps',
+        '08': '38400bps',
+        '09': '57600bps',
+        '0A': '15200bps',
+        'FF': '自适应',
+    }
+    offset += take_enum(data[offset:], add_text='波特率：', enum_dict=rate_dict)
+    offset += take_enum(data[offset:], add_text='校验位：', enum_dict={'00': '无校验', '01': '奇校验', '02': '偶校验'})
+    offset += take_enum(data[offset:], add_text='数据位：', enum_dict={'05': '5', '06': '6', '07': '7', '08': '8'})
+    offset += take_enum(data[offset:], add_text='停止位：', enum_dict={'01': '1', '02': '2'})
+    offset += take_enum(data[offset:], add_text='流控：', enum_dict={'00': '无', '01': '硬件', '02': '软件'})
     return offset
 
 
