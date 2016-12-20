@@ -4,33 +4,31 @@ from apdu import *  # NOQA
 
 def all_translate(input_text):
     offset = 0
-    input_type = ''
     config.line_level = 0
     if len(input_text) < 5:
         output('请输入698报文')
         return '', '', '', ''
-    server_addr = ''
-    server_addr_len = ''
-    client_addr = ''
     data = data_format(input_text)
     data_check = check_data(data)
+    ret_dict = {}
     if data_check == 'ok':
-        temp_offset, server_addr, server_addr_len, client_addr = take_link_layer_1(data[offset:])
-        offset += temp_offset
+        ret_dict = take_link_layer_1(data[offset:])
+        offset += ret_dict['offset']
         offset += take_APDU(data[offset:])  # 解应用层
         offset += take_link_layer_2(data[0:], offset)  # 处理链路层末尾
-        input_type = 'full'
+        ret_dict['input_type'] = 'full'
     elif data_check == 'format_error':  # 格式错误，尝试解apdu
         offset += take_APDU(data[offset:])  # 解应用层
-        input_type = 'apdu'
+        ret_dict['input_type'] = 'apdu'
     else:
         output('报文非法')
-        return input_type, server_addr, server_addr_len, client_addr
+        ret_dict['input_type'] = 'error'
+        return ret_dict
 
     if offset != len(data):
         print('offset, len(data): ', offset, len(data))
         output('\n\n报文解析过程出现问题，请检查报文。若报文无问题请反馈665593，谢谢！')
-    return input_type, server_addr, server_addr_len, client_addr
+    return ret_dict
 
 
 def calc_len(input_text):
@@ -69,6 +67,7 @@ def check_data(data_in):  # True合法
 
 def take_link_layer_1(data):
     offset = 0
+    ret_dict = {'offset': 0, 'server_addr': '', 'server_addr_len': '', 'client_addr': ''}
     # 起始符
     output('68 —— 帧起始符')
     offset += 1
@@ -116,16 +115,16 @@ def take_link_layer_1(data):
     server_logic_addr = (int(data[offset], 16) >> 4) & 0x03
     server_addr_len = (int(data[offset], 16) & 0x0f) + 1
     server_addr_reverse = data[offset + server_addr_len: offset: -1]
-    server_addr = ''
     for k in range(0, server_addr_len):
-        server_addr += server_addr_reverse[k]
+        ret_dict['server_addr'] += server_addr_reverse[k]
     show_data_source(data[offset:], server_addr_len + 1)
-    output(' —— 服务器地址: 逻辑地址' + str(server_logic_addr) + server_addr_type + server_addr)
+    output(' —— 服务器地址: 逻辑地址' + str(server_logic_addr) + server_addr_type + ret_dict['server_addr'])
     offset += server_addr_len + 1
+    ret_dict['server_addr_len'] = str(server_addr_len)
     show_data_source(data[offset:], 1)
-    client_addr = data[offset]
+    ret_dict['client_addr'] = data[offset]
     offset += 1
-    output(' —— 客户机地址: ' + client_addr)
+    output(' —— 客户机地址: ' + ret_dict['client_addr'])
     # 帧头校验
     # print('fcs_calc:', data[1:offset], 'len', offset - 1)
     fcs_calc = get_fcs(data[1:offset], offset - 1)
@@ -154,7 +153,8 @@ def take_link_layer_1(data):
         show_data_source(data[offset:], 2)
         output(' —— 分帧序号:' + str(frame_separation_seq) + frame_separation_type)
         offset += 2
-    return offset, server_addr, str(server_addr_len), client_addr
+    ret_dict['offset'] = offset
+    return ret_dict
 
 
 def take_link_layer_2(data, offset):

@@ -21,6 +21,7 @@ class TransWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_TransWindow):
         config.show_level = self.show_level.isChecked()
         config.auto_trans = self.auto_trans.isChecked()
         self.about_child = AboutWindow()
+        self.quick_fix_button.setVisible(False)
         if config.auto_trans is True:
             self.input_box.textChanged.connect(self.start_trans)
             self.translate_button.setVisible(False)
@@ -29,9 +30,9 @@ class TransWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_TransWindow):
             self.translate_button.setVisible(True)
         self.translate_button.clicked.connect(self.start_trans)
         self.clear_button.clicked.connect(self.clear_box)
-        self.show_level.clicked.connect(self.show_level_check_box)
-        self.auto_trans.clicked.connect(self.auto_trans_check_box)
-        self.always_top.clicked.connect(self.always_top_check_box)
+        self.show_level.clicked.connect(self.set_level_visible)
+        self.auto_trans.clicked.connect(self.set_auto_trans)
+        self.always_top.clicked.connect(self.set_always_top)
         self.input_box.textChanged.connect(self.calc_len_box)
         self.about.triggered.connect(self.show_about_window)
         self.serial_mode_button.clicked.connect(self.shift_serial_window)
@@ -49,11 +50,11 @@ class TransWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_TransWindow):
     def clear_box(self):
         self.input_box.setFocus()
 
-    def show_level_check_box(self):
+    def set_level_visible(self):
         config.show_level = self.show_level.isChecked()
         self.start_trans()
 
-    def auto_trans_check_box(self):
+    def set_auto_trans(self):
         config.auto_trans = self.auto_trans.isChecked()
         if config.auto_trans is True:
             self.input_box.textChanged.connect(self.start_trans)
@@ -63,7 +64,7 @@ class TransWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_TransWindow):
             self.translate_button.setVisible(True)
         self.start_trans()
 
-    def always_top_check_box(self):
+    def set_always_top(self):
         if (self.always_top.isChecked() is True):
             self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
             self.show()
@@ -108,11 +109,11 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         self.open_button.clicked.connect(self.open_serial)
         self.close_button.clicked.connect(self.close_serial)
         self.send_button.clicked.connect(self.send_data)
-        self.show_level.clicked.connect(self.show_level_check_box)
-        self.always_top.clicked.connect(self.always_top_check_box)
-        self.auto_trans.clicked.connect(self.auto_trans_check_box)
-        self.send_input_box.textChanged.connect(self.send_box_calc_len)
-        self.receive_input_box.textChanged.connect(self.receive_box_calc_len)
+        self.show_level.clicked.connect(self.set_level_visible)
+        self.always_top.clicked.connect(self.set_always_top)
+        self.auto_trans.clicked.connect(self.set_auto_trans)
+        self.send_input_box.textChanged.connect(self.calc_send_box_len)
+        self.receive_input_box.textChanged.connect(self.calc_receive_box_len)
         self.com_list.addItems(self.port_list())
         self.about.triggered.connect(self.show_about_window)
         self.trans_mode_button.clicked.connect(self.shift_trans_window)
@@ -158,7 +159,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
                 self.open_button.setText(self.com_list.currentText() + '已打开')
                 self.close_button.setText('关闭')
                 self.send_button.setEnabled(True)
-                self.send_box_calc_len()
+                self.calc_send_box_len()
             except Exception as e:
                 print(e)
                 traceback.print_exc()
@@ -185,7 +186,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
             send_d += struct.pack('B', int(char, 16))
         config.serial.write(send_d)
 
-    def auto_trans_check_box(self):
+    def set_auto_trans(self):
         config.auto_trans = self.auto_trans.isChecked()
         if config.auto_trans is True:
             self.send_input_box.textChanged.connect(self.send_trans)
@@ -198,12 +199,12 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
     def send_trans(self):
         input_text = self.send_input_box.toPlainText()
         try:
-            input_type, server_addr, server_addr_len, client_addr = all_translate(input_text)
-            if input_type == 'full':
-                self.server_addr_box.setText(server_addr)
-                self.server_addr_len_box.setText(server_addr_len)
-                self.client_addr_box.setText(client_addr)
-            elif input_type == 'apdu':
+            ret_dict = all_translate(input_text)
+            if ret_dict['input_type'] == 'full':
+                self.server_addr_box.setText(ret_dict['server_addr'])
+                self.server_addr_len_box.setText(ret_dict['server_addr_len'])
+                self.client_addr_box.setText(ret_dict['client_addr'])
+            elif ret_dict['input_type'] == 'apdu':
                 input_text = self.add_link_layer(input_text)
                 self.send_input_box.setText(input_text)
                 if config.auto_trans is True:
@@ -265,12 +266,12 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
     def receive_clear_botton(self):
         self.receive_input_box.setFocus()
 
-    def show_level_check_box(self):
+    def set_level_visible(self):
         config.show_level = self.show_level.isChecked()
         self.send_trans()
         self.receive_trans()
 
-    def always_top_check_box(self):
+    def set_always_top(self):
         if (self.always_top.isChecked() is True):
             self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
             self.show()
@@ -278,7 +279,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
             self.setWindowFlags(QtCore.Qt.Widget)
             self.show()
 
-    def send_box_calc_len(self):
+    def calc_send_box_len(self):
         input_text = self.send_input_box.toPlainText()
         input_len = calc_len(input_text)
         len_message = str(input_len) + '字节(' + str(hex(input_len)) + ')'
@@ -287,7 +288,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         else:
             self.send_button.setText('请打开串口')
 
-    def receive_box_calc_len(self):
+    def calc_receive_box_len(self):
         input_text = self.receive_input_box.toPlainText()
         input_len = calc_len(input_text)
         len_message = str(input_len) + '字节(' + str(hex(input_len)) + ')'
