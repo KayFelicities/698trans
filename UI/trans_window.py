@@ -28,14 +28,14 @@ class Ui_TransWindow(object):
         TransWindow.setWindowModality(QtCore.Qt.NonModal)
         TransWindow.resize(453, 601)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Active, QtGui.QIcon.Off)
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Active, QtGui.QIcon.On)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Active, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Selected, QtGui.QIcon.On)
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Disabled, QtGui.QIcon.On)
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.On)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Selected, QtGui.QIcon.On)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Active, QtGui.QIcon.On)
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Selected, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
         TransWindow.setWindowIcon(icon)
         TransWindow.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
         TransWindow.setAnimated(True)
@@ -302,7 +302,7 @@ class Ui_TransWindow(object):
         TransWindow.setTabOrder(self.output_box, self.clear_button)
 
     def retranslateUi(self, TransWindow):
-        TransWindow.setWindowTitle(_translate("TransWindow", "698解析工具_V3.0(2016.12.08)", None))
+        TransWindow.setWindowTitle(_translate("TransWindow", "698解析工具_V3.1(2016.12.19)", None))
         self.translate_button.setText(_translate("TransWindow", "解析", None))
         self.clear_button.setText(_translate("TransWindow", "清空", None))
         self.input_box.setHtml(_translate("TransWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"

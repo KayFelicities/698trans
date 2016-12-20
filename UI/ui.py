@@ -104,6 +104,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         self.receive_input_box.textChanged.connect(self.receive_trans)
         self.translate_button.clicked.connect(self.send_trans)
         self.send_clear_button.clicked.connect(self.send_clear_botton)
+        self.receive_clear_button.clicked.connect(self.receive_clear_botton)
         self.open_button.clicked.connect(self.open_serial)
         self.close_button.clicked.connect(self.close_serial)
         self.send_button.clicked.connect(self.send_data)
@@ -147,29 +148,34 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         return com_List
 
     def open_serial(self):
-        try:
-            config.serial = serial.Serial(self.com_list.currentText(), 9600, 8, 'E', 1, timeout=0.05)
-            config.serial.close()
-            config.serial.open()
-            config.serial_check = True
-            threading.Thread(target=self.serial_run).start()
-            self.open_button.setText(self.com_list.currentText() + '已打开')
-            self.close_button.setText('关闭')
-            self.send_button.setEnabled(True)
-            self.send_box_calc_len()
-        except Exception as e:
-            print(e)
-            traceback.print_exc()
-            self.open_button.setText(self.com_list.currentText() + '打开失败')
-            self.close_button.setText('关闭')
+        if config.serial_check is False:
+            try:
+                config.serial = serial.Serial(self.com_list.currentText(), 9600, 8, 'E', 1, timeout=0.05)
+                config.serial.close()
+                config.serial.open()
+                config.serial_check = True
+                threading.Thread(target=self.serial_run).start()
+                self.open_button.setText(self.com_list.currentText() + '已打开')
+                self.close_button.setText('关闭')
+                self.send_button.setEnabled(True)
+                self.send_box_calc_len()
+            except Exception as e:
+                print(e)
+                traceback.print_exc()
+                self.open_button.setText(self.com_list.currentText() + '打开失败')
+                self.close_button.setText('关闭')
 
     def close_serial(self):
-        config.serial.close()
-        config.serial_check = False
-        self.close_button.setText(self.com_list.currentText() + '已关闭')
-        self.open_button.setText('打开')
-        self.send_button.setText('请打开串口')
-        self.send_button.setEnabled(False)
+        if config.serial_check is True:
+            config.serial.close()
+            config.serial_check = False
+            self.open_button.setText('打开')
+            self.send_button.setText('请打开串口')
+            self.send_button.setEnabled(False)
+            self.close_button.setText('刷新')
+        else:
+            self.com_list.clear()
+            self.com_list.addItems(self.port_list())
 
     def send_data(self):
         input_text = self.send_input_box.toPlainText()
@@ -255,6 +261,9 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
 
     def send_clear_botton(self):
         self.send_input_box.setFocus()
+
+    def receive_clear_botton(self):
+        self.receive_input_box.setFocus()
 
     def show_level_check_box(self):
         config.show_level = self.show_level.isChecked()
