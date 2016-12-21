@@ -10,6 +10,10 @@ trans_child = None
 serial_child = None
 serial_check = False
 
+good_L = None
+good_HCS = None
+good_FCS = None
+
 pathname = ''
 if getattr(sys, 'frozen', False):
     pathname = sys._MEIPASS

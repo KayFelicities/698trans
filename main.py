@@ -2,7 +2,8 @@ import config
 from PyQt4 import QtGui
 import sys
 sys.path.append('UI\\')
-from ui import *   # NOQA
+from trans_ui import *   # NOQA
+from serial_ui import *   # NOQA
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)

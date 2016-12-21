@@ -11,7 +11,7 @@
     <x>0</x>
     <y>0</y>
     <width>453</width>
-    <height>601</height>
+    <height>599</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -66,13 +66,6 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="quick_fix_button">
-          <property name="text">
-           <string> </string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QPushButton" name="clear_button">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -82,6 +75,13 @@
           </property>
           <property name="text">
            <string>清空</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="quick_fix_button">
+          <property name="text">
+           <string>修正格式</string>
           </property>
          </widget>
         </item>
@@ -192,7 +192,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;4.勾选下方“显示层级结构”可启用SEQUENCE、array、structure类型的缩进显示。&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;5.勾选下方“窗口置顶”可保持本软件在其他窗口之上。&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;6.按下下方“串口模式”按钮可进入串口收发模式。&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;7.“修正”按钮将在报文长度错误或校验错误时出现，按此按钮可快速修复长度或校验。&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;7.“修正格式”可将报文格式化。当报文长度或校验出错时，按此按钮可修复长度或校验。&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;8.本软件为终端开发部内部测试软件。在软件使用过程中遇到任何问题，请向665593反馈，谢谢。&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;9.Copyrigth(C), 2005-2020,Sanxing Medical &amp;amp; Electric Co.,Ltd.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>

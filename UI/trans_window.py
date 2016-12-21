@@ -26,16 +26,16 @@ class Ui_TransWindow(object):
     def setupUi(self, TransWindow):
         TransWindow.setObjectName(_fromUtf8("TransWindow"))
         TransWindow.setWindowModality(QtCore.Qt.NonModal)
-        TransWindow.resize(453, 601)
+        TransWindow.resize(453, 599)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Disabled, QtGui.QIcon.On)
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.On)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Active, QtGui.QIcon.Off)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Selected, QtGui.QIcon.On)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Selected, QtGui.QIcon.Off)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Disabled, QtGui.QIcon.On)
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Active, QtGui.QIcon.On)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Selected, QtGui.QIcon.On)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Active, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Selected, QtGui.QIcon.Off)
         TransWindow.setWindowIcon(icon)
         TransWindow.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
         TransWindow.setAnimated(True)
@@ -59,9 +59,6 @@ class Ui_TransWindow(object):
         self.translate_button.setSizePolicy(sizePolicy)
         self.translate_button.setObjectName(_fromUtf8("translate_button"))
         self.horizontalLayout.addWidget(self.translate_button)
-        self.quick_fix_button = QtGui.QPushButton(self.centralwidget)
-        self.quick_fix_button.setObjectName(_fromUtf8("quick_fix_button"))
-        self.horizontalLayout.addWidget(self.quick_fix_button)
         self.clear_button = QtGui.QPushButton(self.centralwidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -70,6 +67,9 @@ class Ui_TransWindow(object):
         self.clear_button.setSizePolicy(sizePolicy)
         self.clear_button.setObjectName(_fromUtf8("clear_button"))
         self.horizontalLayout.addWidget(self.clear_button)
+        self.quick_fix_button = QtGui.QPushButton(self.centralwidget)
+        self.quick_fix_button.setObjectName(_fromUtf8("quick_fix_button"))
+        self.horizontalLayout.addWidget(self.quick_fix_button)
         self.verticalLayout_2.addLayout(self.horizontalLayout)
         self.verticalLayout = QtGui.QVBoxLayout()
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
@@ -307,8 +307,8 @@ class Ui_TransWindow(object):
     def retranslateUi(self, TransWindow):
         TransWindow.setWindowTitle(_translate("TransWindow", "698解析工具_V3.1(2016.12.19)", None))
         self.translate_button.setText(_translate("TransWindow", "解析", None))
-        self.quick_fix_button.setText(_translate("TransWindow", " ", None))
         self.clear_button.setText(_translate("TransWindow", "清空", None))
+        self.quick_fix_button.setText(_translate("TransWindow", "修正格式", None))
         self.input_box.setHtml(_translate("TransWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -325,7 +325,7 @@ class Ui_TransWindow(object):
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">4.勾选下方“显示层级结构”可启用SEQUENCE、array、structure类型的缩进显示。</p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">5.勾选下方“窗口置顶”可保持本软件在其他窗口之上。</p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">6.按下下方“串口模式”按钮可进入串口收发模式。</p>\n"
-"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">7.“修正”按钮将在报文长度错误或校验错误时出现，按此按钮可快速修复长度或校验。</p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">7.“修正格式”可将报文格式化。当报文长度或校验出错时，按此按钮可修复长度或校验。</p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">8.本软件为终端开发部内部测试软件。在软件使用过程中遇到任何问题，请向665593反馈，谢谢。</p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">9.Copyrigth(C), 2005-2020,Sanxing Medical &amp; Electric Co.,Ltd.</p></body></html>", None))
         self.serial_mode_button.setText(_translate("TransWindow", "串口模式", None))

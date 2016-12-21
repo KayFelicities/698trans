@@ -2,31 +2,30 @@ from shared_functions import *  # NOQA
 from apdu import *  # NOQA
 
 
-def all_translate(input_text):
+def all_translate(data_in):
     offset = 0
     config.line_level = 0
-    if len(input_text) < 5:
-        output('请输入698报文')
-        return '', '', '', ''
-    data = data_format(input_text)
-    data_check = check_data(data)
     ret_dict = {}
+    if len(data_in) < 5:
+        output('请输入698报文')
+        ret_dict['res'] = 'err'
+        return ret_dict
+    data_check = check_data(data_in)
     if data_check == 'ok':
-        ret_dict = take_link_layer_1(data[offset:])
-        offset += ret_dict['offset']
-        offset += take_APDU(data[offset:])  # 解应用层
-        offset += take_link_layer_2(data[0:], offset)  # 处理链路层末尾
+        offset += take_link_layer_1(data_in[offset:])
+        offset += take_APDU(data_in[offset:])  # 解应用层
+        offset += take_link_layer_2(data_in[0:], offset)  # 处理链路层末尾
         ret_dict['input_type'] = 'full'
-    elif data_check == 'format_error':  # 格式错误，尝试解apdu
-        offset += take_APDU(data[offset:])  # 解应用层
+        ret_dict['res'] = 'ok'
+    elif data_check == 'format_err':  # 格式错误，尝试解apdu
+        offset += take_APDU(data_in[offset:])  # 解应用层
         ret_dict['input_type'] = 'apdu'
+        ret_dict['res'] = 'ok'
     else:
         output('报文非法')
-        ret_dict['input_type'] = 'error'
-        return ret_dict
-
-    if offset != len(data):
-        print('offset, len(data): ', offset, len(data))
+        ret_dict['res'] = 'err'
+    if ret_dict['res'] != 'err' and offset != len(data_in):
+        print('offset, len(data_in): ', offset, len(data_in))
         output('\n\n报文解析过程出现问题，请检查报文。若报文无问题请反馈665593，谢谢！')
     return ret_dict
 
@@ -47,9 +46,7 @@ def data_format(input_text):
     print('原始报文： ' + input_text + '\n')
     # 写入list
     data = []
-    if len(input_text) == 1:
-        input_text = '0' + input_text
-    for k in range(0, int(len(input_text) / 2)):
+    for k in range(0, int((len(input_text) + 1) / 2)):
         data.append(input_text[k * 2:(k + 1) * 2])
     return data
 
@@ -57,17 +54,19 @@ def data_format(input_text):
 def check_data(data_in):  # True合法
     if data_in[0] != '68' or data_in[len(data_in) - 1] != '16':
         # output('报文格式错误')
-        return 'format_error'
+        return 'format_err'
     elif int(data_in[2] + data_in[1], 16) != len(data_in) - 2:
+        config.good_L = ['{0:02X}'.format((len(data_in) - 2) & 0xff), '{0:02X}'.format((len(data_in) - 2) >> 8)]
+        print(config.good_L)
         output('报文长度(0x' + data_in[2] + data_in[1] + ')错误！正确值0x{0:04X}'.format(len(data_in) - 2))
-        return 'len_error'
+        return 'len_err'
     else:
+        config.good_L = None
         return 'ok'
 
 
 def take_link_layer_1(data):
     offset = 0
-    ret_dict = {'offset': 0, 'server_addr': '', 'server_addr_len': '', 'client_addr': ''}
     # 起始符
     output('68 —— 帧起始符')
     offset += 1
@@ -115,24 +114,28 @@ def take_link_layer_1(data):
     server_logic_addr = (int(data[offset], 16) >> 4) & 0x03
     server_addr_len = (int(data[offset], 16) & 0x0f) + 1
     server_addr_reverse = data[offset + server_addr_len: offset: -1]
+    server_addr = ''
     for k in range(0, server_addr_len):
-        ret_dict['server_addr'] += server_addr_reverse[k]
+        server_addr += server_addr_reverse[k]
     show_data_source(data[offset:], server_addr_len + 1)
-    output(' —— 服务器地址: 逻辑地址' + str(server_logic_addr) + server_addr_type + ret_dict['server_addr'])
+    output(' —— 服务器地址: 逻辑地址' + str(server_logic_addr) + server_addr_type + server_addr)
     offset += server_addr_len + 1
-    ret_dict['server_addr_len'] = str(server_addr_len)
     show_data_source(data[offset:], 1)
-    ret_dict['client_addr'] = data[offset]
+    output(' —— 客户机地址: ' + data[offset])
     offset += 1
-    output(' —— 客户机地址: ' + ret_dict['client_addr'])
     # 帧头校验
-    # print('fcs_calc:', data[1:offset], 'len', offset - 1)
-    fcs_calc = get_fcs(data[1:offset], offset - 1)
-    fcs_calc = ((fcs_calc << 8) | (fcs_calc >> 8)) & 0xffff  # 低位在前
-    # print('fcs test:', data[1:offset], 'cs:', hex(fcs_calc))
+    # print('hcs_calc:', data[1:offset], 'len', offset - 1)
+    hcs_calc = get_fcs(data[1:offset], offset - 1)
+    hcs_calc = ((hcs_calc << 8) | (hcs_calc >> 8)) & 0xffff  # 低位在前
+    # print('fcs test:', data[1:offset], 'cs:', hex(hcs_calc))
     fcs_now = int(data[offset] + data[offset + 1], 16)
-    hcs_check = '(正确)' if fcs_now == fcs_calc else '(错误，正确值{0:04X})'.format(fcs_calc)
-
+    if fcs_now == hcs_calc:
+        hcs_check = '(正确)'
+        config.good_HCS = None
+    else:
+        hcs_check = '(错误，正确值{0:04X})'.format(hcs_calc)
+        config.good_HCS = ['{0:02X}'.format(hcs_calc >> 8), '{0:02X}'.format(hcs_calc & 0xff)]
+        print('good_HCS', config.good_HCS)
     show_data_source(data[offset:], 2)
     output(' —— 帧头校验:{0:04X}'.format(fcs_now) + hcs_check)
     offset += 2
@@ -153,7 +156,22 @@ def take_link_layer_1(data):
         show_data_source(data[offset:], 2)
         output(' —— 分帧序号:' + str(frame_separation_seq) + frame_separation_type)
         offset += 2
-    ret_dict['offset'] = offset
+    return offset
+
+
+def get_addr(data):
+    offset = 0
+    ret_dict = {'server_addr': ''}
+    offset += 1 + 2 + 1  # 起始符 长度 控制域
+    # 地址域
+    server_addr_len = (int(data[offset], 16) & 0x0f) + 1
+    server_addr_reverse = data[offset + server_addr_len: offset: -1]
+    for k in range(0, server_addr_len):
+        ret_dict['server_addr'] += server_addr_reverse[k]
+    offset += server_addr_len + 1
+    ret_dict['server_addr_len'] = str(server_addr_len)
+    ret_dict['client_addr'] = data[offset]
+    offset += 1
     return ret_dict
 
 
@@ -163,7 +181,13 @@ def take_link_layer_2(data, offset):
     fcs_calc = ((fcs_calc << 8) | (fcs_calc >> 8)) & 0xffff  # 低位在前
     # print('fcs test:', data[1:offset], 'cs:', hex(fcs_calc))
     fcs_now = int(data[offset] + data[offset + 1], 16)
-    hcs_check = '(正确)' if fcs_now == fcs_calc else '(错误，正确值{0:04X})'.format(fcs_calc)
+    if fcs_now == fcs_calc:
+        hcs_check = '(正确)'
+        config.good_FCS = None
+    else:
+        hcs_check = '(错误，正确值{0:04X})'.format(fcs_calc)
+        config.good_FCS = ['{0:02X}'.format(fcs_calc >> 8), '{0:02X}'.format(fcs_calc & 0xff)]
+        print('good_FCS', config.good_FCS)
     show_data_source(data[offset:], 2)
     output(' —— 帧校验:{0:04X}'.format(fcs_now) + hcs_check)
     offset += 2
