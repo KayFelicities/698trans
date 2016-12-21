@@ -198,7 +198,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="open_button">
+       <widget class="QPushButton" name="connect_button">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
           <horstretch>3</horstretch>
@@ -211,7 +211,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="close_button">
+       <widget class="QPushButton" name="disconnect_button">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
           <horstretch>3</horstretch>
@@ -1138,8 +1138,8 @@ p, li { white-space: pre-wrap; }
   <tabstop>send_output_box</tabstop>
   <tabstop>always_top</tabstop>
   <tabstop>show_level</tabstop>
-  <tabstop>open_button</tabstop>
-  <tabstop>close_button</tabstop>
+  <tabstop>connect_button</tabstop>
+  <tabstop>disconnect_button</tabstop>
   <tabstop>send_button</tabstop>
   <tabstop>receive_clear_button</tabstop>
   <tabstop>receive_input_box</tabstop>

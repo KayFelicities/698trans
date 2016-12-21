@@ -3,6 +3,7 @@ from PyQt4 import QtCore
 from PyQt4 import QtGui
 import serial
 import serial.tools.list_ports
+import socket
 import struct
 import threading
 import time
@@ -34,8 +35,8 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         self.translate_button.clicked.connect(self.send_trans)
         self.send_clear_button.clicked.connect(self.send_clear_botton)
         self.receive_clear_button.clicked.connect(self.receive_clear_botton)
-        self.open_button.clicked.connect(self.open_serial)
-        self.close_button.clicked.connect(self.close_serial)
+        self.connect_button.clicked.connect(self.connect)
+        self.disconnect_button.clicked.connect(self.disconnect)
         self.send_button.clicked.connect(self.send_data)
         self.show_level.clicked.connect(self.set_level_visible)
         self.always_top.clicked.connect(self.set_always_top)
@@ -51,35 +52,80 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         ports = list(serial.tools.list_ports.comports())
         for port in ports:
             com_List.append(port[0])
+        com_List.append('前置机')
         return com_List
 
-    def open_serial(self):
-        if config.serial_check is False:
-            try:
-                config.serial = serial.Serial(self.com_list.currentText(), 9600, 8, 'E', 1, timeout=0.05)
-                config.serial.close()
-                config.serial.open()
-                config.serial_check = True
-                threading.Thread(target=self.serial_run).start()
-                self.open_button.setText(self.com_list.currentText() + '已打开')
-                self.close_button.setText('关闭')
-                self.send_button.setEnabled(True)
-                self.calc_send_box_len()
-            except Exception as e:
-                print(e)
-                traceback.print_exc()
-                self.open_button.setText(self.com_list.currentText() + '打开失败')
-                self.close_button.setText('关闭')
+    def connect(self):
+        if config.serial_check is False and config.socket_check is False:
+            if self.com_list.currentText() == '前置机':
+                self.connect_socket()
+            else:
+                self.connect_serial()
+
+    def connect_socket(self):
+        try:
+            config.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            config.socket.connect((config.socket_param['ip'], config.socket_param['port']))
+            config.socket_check = True
+            threading.Thread(target=self.socket_run).start()
+            self.connect_button.setText(self.com_list.currentText() + '已连接')
+            self.disconnect_button.setText('断开')
+            self.send_button.setEnabled(True)
+            self.calc_send_box_len()
+        except Exception:
+            traceback.print_exc()
+            self.connect_button.setText(self.com_list.currentText() + '连接失败')
+            self.disconnect_button.setText('断开')
+
+    def connect_serial(self):
+        try:
+            config.serial = serial.Serial(
+                self.com_list.currentText(),
+                config.serial_param['baudrate'],
+                config.serial_param['bytesize'],
+                config.serial_param['parity'],
+                config.serial_param['stopbis'],
+                timeout=config.serial_param['timeout'])
+            config.serial.close()
+            config.serial.open()
+            config.serial_check = True
+            threading.Thread(target=self.serial_run).start()
+            self.connect_button.setText(self.com_list.currentText() + '已连接')
+            self.disconnect_button.setText('断开')
+            self.send_button.setEnabled(True)
+            self.calc_send_box_len()
+        except Exception:
+            traceback.print_exc()
+            self.connect_button.setText(self.com_list.currentText() + '连接失败')
+            self.disconnect_button.setText('断开')
+
+    def disconnect(self):
+        if config.serial_check is True:
+            self.close_serial()
+        elif config.socket_check is True:
+            self.close_socket()
 
     def close_serial(self):
         if config.serial_check is True:
             config.serial.close()
             config.serial_check = False
-            self.open_button.setText('打开')
-            self.send_button.setText('请打开串口')
+            self.connect_button.setText('连接')
+            self.send_button.setText('请建立连接')
             self.send_button.setEnabled(False)
-            self.close_button.setText('刷新')
-        else:
+            self.disconnect_button.setText('刷新')
+        else:  # 刷新列表
+            self.com_list.clear()
+            self.com_list.addItems(self.port_list())
+
+    def close_socket(self):
+        if config.socket_check is True:
+            config.socket.close()
+            config.socket_check = False
+            self.connect_button.setText('连接')
+            self.send_button.setText('请建立连接')
+            self.send_button.setEnabled(False)
+            self.disconnect_button.setText('刷新')
+        else:  # 刷新列表
             self.com_list.clear()
             self.com_list.addItems(self.port_list())
 
@@ -88,7 +134,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
             try:
                 data_wait = config.serial.inWaiting()
             except Exception:
-                print('serial_run quit')
+                traceback.print_exc()
                 break
             re_text = ''
             while data_wait > 0:
@@ -103,13 +149,31 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
                 print('serial_run quit')
                 break
 
+    def socket_run(self):
+        while True:
+            try:
+                re_byte = config.socket.recv(4096)
+                re_text = ''.join(['%02X ' % x for x in re_byte])
+                print(re_text)
+            except Exception:
+                traceback.print_exc()
+                break
+            if re_text != '':
+                self._receive_signal.emit(re_text)
+            if config.socket_check is False:
+                print('socket_run quit')
+                break
+
     def send_data(self):
         input_text = self.send_input_box.toPlainText()
         data = data_format(input_text)
         send_d = b''
         for char in data:
             send_d += struct.pack('B', int(char, 16))
-        config.serial.write(send_d)
+        if config.serial_check is True:
+            config.serial.write(send_d)
+        if config.socket_check is True:
+            config.socket.sendall(send_d)
 
     def take_receive_data(self, re_text):
         self.receive_input_box.setText(re_text)
@@ -143,12 +207,8 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
             data_in = data_format(input_text)
             ret_dict = all_translate(data_in)
             if ret_dict['res'] == 'ok':
+                self.quick_fix_button.setText('修正校验码' if config.good_HCS is not None or config.good_FCS is not None else '修正格式')
                 if ret_dict['input_type'] == 'full':
-                    if config.good_L is not None or config.good_HCS is not None or config.good_FCS is not None:  # 长度或校验错误
-                        fix_type = '长度域' if config.good_L is not None else '校验码'
-                        self.quick_fix_button.setText('修正' + fix_type)
-                    else:
-                        self.quick_fix_button.setText('修正格式')
                     addr_dict = get_addr(data_in)
                     self.server_addr_box.setText(addr_dict['server_addr'])
                     self.server_addr_len_box.setText(addr_dict['server_addr_len'])
@@ -159,8 +219,9 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
                     if config.auto_trans is True:
                         data_in = data_format(input_text)
                         all_translate(data_in)
-        except Exception as e:
-            print(e)
+            else:
+                self.quick_fix_button.setText('修正长度域' if config.good_L is not None else '修正格式')
+        except Exception:
             traceback.print_exc()
             output('\n\n报文解析过程出现问题，请检查报文。若报文无问题请反馈665593，谢谢！')
         self.send_output_box.setText(config.output_text)
@@ -244,7 +305,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         input_text = self.send_input_box.toPlainText()
         input_len = calc_len(input_text)
         len_message = str(input_len) + '字节(' + str(hex(input_len)) + ')'
-        if config.serial_check is True:
+        if config.serial_check is True or config.socket_check is True:
             self.send_button.setText('发送（' + len_message + '）')
         else:
             self.send_button.setText('请打开串口')

@@ -37,11 +37,9 @@ class TransWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_TransWindow):
             data_in = data_format(input_text)
             ret_dict = all_translate(data_in)
             if ret_dict['res'] == 'ok':
-                if config.good_L is not None or config.good_HCS is not None or config.good_FCS is not None:  # 长度或校验错误
-                    fix_type = '长度域' if config.good_L is not None else '校验码'
-                    self.quick_fix_button.setText('修正' + fix_type)
-                else:
-                    self.quick_fix_button.setText('修正格式')
+                self.quick_fix_button.setText('修正校验码' if config.good_HCS is not None or config.good_FCS is not None else '修正格式')
+            else:
+                self.quick_fix_button.setText('修正长度域' if config.good_L is not None else '修正格式')
         except Exception as e:
             print(e)
             traceback.print_exc()
