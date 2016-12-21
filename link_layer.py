@@ -48,6 +48,8 @@ def data_format(input_text):
     data = []
     for k in range(0, int((len(input_text) + 1) / 2)):
         data.append(input_text[k * 2:(k + 1) * 2])
+    if len(data[-1]) == 1:
+        data[-1] = '0' + data[-1]
     return data
 
 

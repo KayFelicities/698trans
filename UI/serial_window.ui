@@ -57,33 +57,47 @@
        <enum>QLayout::SetNoConstraint</enum>
       </property>
       <item>
-       <spacer name="horizontalSpacer_9">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Fixed</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>服务器地址</string>
+         <string>服务器</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="server_addr_box">
+       <widget class="QComboBox" name="SA_type_list">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-          <horstretch>4</horstretch>
+         <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+          <horstretch>3</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <item>
+         <property name="text">
+          <string>单地址</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>通配地址</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>组地址</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>广播地址</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="SA_box">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+          <horstretch>6</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
@@ -111,14 +125,14 @@
       <item>
        <widget class="QLabel" name="label_3">
         <property name="text">
-         <string>地址长度</string>
+         <string>长度</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="server_addr_len_box">
+       <widget class="QLineEdit" name="SA_len_box">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
           <horstretch>1</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -147,20 +161,33 @@
       <item>
        <widget class="QLabel" name="label_4">
         <property name="text">
-         <string>客户机地址</string>
+         <string>客户机</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="client_addr_box">
+       <widget class="QLineEdit" name="CA_box">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
           <horstretch>1</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="text">
          <string>10</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="fix_linklayer_button">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+          <horstretch>2</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>应用</string>
         </property>
        </widget>
       </item>
@@ -174,7 +201,7 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>40</width>
+          <width>50</width>
           <height>20</height>
          </size>
         </property>
@@ -190,8 +217,8 @@
       <item>
        <widget class="QComboBox" name="com_list">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-          <horstretch>1</horstretch>
+         <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+          <horstretch>3</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
@@ -200,8 +227,8 @@
       <item>
        <widget class="QPushButton" name="connect_button">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-          <horstretch>3</horstretch>
+         <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+          <horstretch>4</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
@@ -213,8 +240,8 @@
       <item>
        <widget class="QPushButton" name="disconnect_button">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-          <horstretch>3</horstretch>
+         <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+          <horstretch>4</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
@@ -233,7 +260,7 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>50</width>
+          <width>40</width>
           <height>20</height>
          </size>
         </property>
@@ -241,7 +268,7 @@
       </item>
      </layout>
     </item>
-    <item row="1" column="0">
+    <item row="2" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
        <spacer name="horizontalSpacer_7">
@@ -284,6 +311,12 @@
       </item>
       <item>
        <widget class="QPushButton" name="quick_fix_button">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>1</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string>修正格式</string>
         </property>
@@ -346,7 +379,103 @@
       </item>
      </layout>
     </item>
-    <item row="2" column="0">
+    <item row="4" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="sizeConstraint">
+       <enum>QLayout::SetNoConstraint</enum>
+      </property>
+      <item>
+       <widget class="QPushButton" name="trans_mode_button">
+        <property name="text">
+         <string>解析模式</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="auto_linklayer_cb">
+        <property name="text">
+         <string>自动修改链路层</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_4">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>15</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="auto_trans_cb">
+        <property name="text">
+         <string>自动解析</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>15</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="show_level_cb">
+        <property name="text">
+         <string>显示层级结构</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="always_top_cb">
+        <property name="text">
+         <string>窗口置顶</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="3" column="0">
      <widget class="QSplitter" name="splitter_3">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -575,99 +704,42 @@ p, li { white-space: pre-wrap; }
       </widget>
      </widget>
     </item>
-    <item row="3" column="0">
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <property name="spacing">
+    <item row="1" column="0">
+     <widget class="Line" name="line">
+      <property name="windowModality">
+       <enum>Qt::NonModal</enum>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>5</height>
+       </size>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Sunken</enum>
+      </property>
+      <property name="lineWidth">
+       <number>1</number>
+      </property>
+      <property name="midLineWidth">
        <number>0</number>
       </property>
-      <property name="sizeConstraint">
-       <enum>QLayout::SetNoConstraint</enum>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
       </property>
-      <item>
-       <widget class="QPushButton" name="trans_mode_button">
-        <property name="text">
-         <string>解析模式</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="always_top">
-        <property name="text">
-         <string>窗口置顶</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_4">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Fixed</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>15</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="auto_trans">
-        <property name="text">
-         <string>自动解析</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Fixed</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>15</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="show_level">
-        <property name="text">
-         <string>显示层级结构</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     </widget>
     </item>
    </layout>
    <zorder>splitter_3</zorder>
    <zorder></zorder>
    <zorder></zorder>
+   <zorder>line</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="enabled">
@@ -1136,18 +1208,17 @@ p, li { white-space: pre-wrap; }
   <tabstop>send_clear_button</tabstop>
   <tabstop>com_list</tabstop>
   <tabstop>send_output_box</tabstop>
-  <tabstop>always_top</tabstop>
-  <tabstop>show_level</tabstop>
+  <tabstop>show_level_cb</tabstop>
   <tabstop>connect_button</tabstop>
   <tabstop>disconnect_button</tabstop>
   <tabstop>send_button</tabstop>
   <tabstop>receive_clear_button</tabstop>
   <tabstop>receive_input_box</tabstop>
   <tabstop>receive_output_box</tabstop>
-  <tabstop>auto_trans</tabstop>
-  <tabstop>server_addr_box</tabstop>
-  <tabstop>server_addr_len_box</tabstop>
-  <tabstop>client_addr_box</tabstop>
+  <tabstop>auto_trans_cb</tabstop>
+  <tabstop>SA_box</tabstop>
+  <tabstop>SA_len_box</tabstop>
+  <tabstop>CA_box</tabstop>
  </tabstops>
  <resources>
   <include location="icon.qrc"/>

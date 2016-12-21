@@ -4,6 +4,8 @@ import sys
 output_text = ''
 show_level = True
 auto_trans = True
+auto_linklayer = False
+
 line_level = 0
 trans_child = None
 serial_child = None
@@ -19,8 +21,8 @@ serial_param = {
 }
 
 socket_param = {
-    # 'ip': '121.40.80.159',
-    'ip': '127.0.0.1',
+    'ip': '121.40.80.159',
+    # 'ip': '127.0.0.1',
     'port': 20084,
 }
 socket = None

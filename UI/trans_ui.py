@@ -12,8 +12,8 @@ class TransWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_TransWindow):
     def __init__(self):
         super(TransWindow, self).__init__()
         self.setupUi(self)
-        config.show_level = self.show_level.isChecked()
-        config.auto_trans = self.auto_trans.isChecked()
+        config.show_level = self.show_level_cb.isChecked()
+        config.auto_trans = self.auto_trans_cb.isChecked()
         self.about_child = AboutWindow()
         if config.auto_trans is True:
             self.input_box.textChanged.connect(self.start_trans)
@@ -24,9 +24,9 @@ class TransWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_TransWindow):
         self.quick_fix_button.clicked.connect(self.quick_fix)
         self.translate_button.clicked.connect(self.start_trans)
         self.clear_button.clicked.connect(self.clear_box)
-        self.show_level.clicked.connect(self.set_level_visible)
-        self.auto_trans.clicked.connect(self.set_auto_trans)
-        self.always_top.clicked.connect(self.set_always_top)
+        self.show_level_cb.clicked.connect(self.set_level_visible)
+        self.auto_trans_cb.clicked.connect(self.set_auto_trans)
+        self.always_top_cb.clicked.connect(self.set_always_top)
         self.input_box.textChanged.connect(self.calc_len_box)
         self.about.triggered.connect(self.show_about_window)
         self.serial_mode_button.clicked.connect(self.shift_serial_window)
@@ -51,7 +51,7 @@ class TransWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_TransWindow):
         self.input_box.setFocus()
 
     def set_level_visible(self):
-        config.show_level = self.show_level.isChecked()
+        config.show_level = self.show_level_cb.isChecked()
         self.start_trans()
 
     def quick_fix(self):
@@ -77,7 +77,7 @@ class TransWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_TransWindow):
         self.input_box.setText(input_text)
 
     def set_auto_trans(self):
-        config.auto_trans = self.auto_trans.isChecked()
+        config.auto_trans = self.auto_trans_cb.isChecked()
         if config.auto_trans is True:
             self.input_box.textChanged.connect(self.start_trans)
             self.translate_button.setVisible(False)
@@ -87,7 +87,7 @@ class TransWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_TransWindow):
         self.start_trans()
 
     def set_always_top(self):
-        if (self.always_top.isChecked() is True):
+        if (self.always_top_cb.isChecked() is True):
             self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
             self.show()
         else:

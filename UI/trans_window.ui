@@ -223,7 +223,7 @@ p, li { white-space: pre-wrap; }
          </spacer>
         </item>
         <item>
-         <widget class="QCheckBox" name="always_top">
+         <widget class="QCheckBox" name="always_top_cb">
           <property name="text">
            <string>窗口置顶</string>
           </property>
@@ -246,7 +246,7 @@ p, li { white-space: pre-wrap; }
          </spacer>
         </item>
         <item>
-         <widget class="QCheckBox" name="auto_trans">
+         <widget class="QCheckBox" name="auto_trans_cb">
           <property name="text">
            <string>自动解析</string>
           </property>
@@ -272,7 +272,7 @@ p, li { white-space: pre-wrap; }
          </spacer>
         </item>
         <item>
-         <widget class="QCheckBox" name="show_level">
+         <widget class="QCheckBox" name="show_level_cb">
           <property name="text">
            <string>显示层级结构</string>
           </property>
