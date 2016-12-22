@@ -7,8 +7,10 @@ auto_trans = True
 auto_linklayer = False
 
 line_level = 0
-trans_child = None
-serial_child = None
+trans_window = None
+serial_window = None
+about_window = None
+config_window = None
 
 serial = None
 serial_check = False
@@ -21,7 +23,7 @@ serial_param = {
 }
 
 socket_param = {
-    'ip': '121.40.80.159',
+    'IP': '121.40.80.159',
     # 'ip': '127.0.0.1',
     'port': 20084,
 }

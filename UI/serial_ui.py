@@ -10,7 +10,6 @@ import time
 import traceback
 from shared_functions import *  # NOQA
 from link_layer import *  # NOQA
-from trans_ui import AboutWindow
 from serial_window import Ui_SerialWindow
 
 
@@ -20,7 +19,6 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
     def __init__(self):
         super(SerialWindow, self).__init__()
         self.setupUi(self)
-        self.about_child = AboutWindow()
         config.show_level = self.show_level_cb.isChecked()
         self._receive_signal.connect(self.take_receive_data)
         config.auto_trans = self.auto_trans_cb.isChecked()
@@ -51,6 +49,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         self.receive_input_box.textChanged.connect(self.calc_receive_box_len)
         self.com_list.addItems(self.port_list())
         self.about.triggered.connect(self.show_about_window)
+        self.config.triggered.connect(self.show_config_window)
         self.trans_mode_button.clicked.connect(self.shift_trans_window)
 
     def port_list(self):
@@ -71,7 +70,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
     def connect_socket(self):
         try:
             config.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            config.socket.connect((config.socket_param['ip'], config.socket_param['port']))
+            config.socket.connect((config.socket_param['IP'], config.socket_param['port']))
             config.socket_check = True
             threading.Thread(target=self.socket_run).start()
             self.connect_button.setText(self.com_list.currentText() + '已连接')
@@ -385,8 +384,12 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         self.receive_clear_button.setText('清空（' + len_message + '）')
 
     def show_about_window(self):
-        self.about_child.show()
+        config.about_window.show()
+
+    def show_config_window(self):
+        config.config_window.read_param()
+        config.config_window.show()
 
     def shift_trans_window(self):
         self.hide()
-        config.trans_child.show()
+        config.trans_window.show()

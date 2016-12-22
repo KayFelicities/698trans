@@ -4,7 +4,6 @@ from PyQt4 import QtGui
 import traceback
 from shared_functions import *  # NOQA
 from link_layer import *  # NOQA
-from about_window import Ui_AboutWindow
 from trans_window import Ui_TransWindow
 
 
@@ -14,7 +13,6 @@ class TransWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_TransWindow):
         self.setupUi(self)
         config.show_level = self.show_level_cb.isChecked()
         config.auto_trans = self.auto_trans_cb.isChecked()
-        self.about_child = AboutWindow()
         if config.auto_trans is True:
             self.input_box.textChanged.connect(self.start_trans)
             self.translate_button.setVisible(False)
@@ -101,14 +99,8 @@ class TransWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_TransWindow):
         self.clear_button.setText('清空（' + len_message + '）')
 
     def show_about_window(self):
-        self.about_child.show()
+        config.about_window.show()
 
     def shift_serial_window(self):
         self.hide()
-        config.serial_child.show()
-
-
-class AboutWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_AboutWindow):
-    def __init__(self):
-        super(AboutWindow, self).__init__()
-        self.setupUi(self)
+        config.serial_window.show()

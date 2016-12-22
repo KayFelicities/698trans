@@ -15,7 +15,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>698解析工具_V3.1(2016.12.19)</string>
+   <string>698解析工具（后台模式）_V3.2(2016.12.21)</string>
   </property>
   <property name="windowIcon">
    <iconset resource="icon.qrc">
@@ -359,8 +359,23 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="mouseTracking">
+         <bool>false</bool>
+        </property>
+        <property name="acceptDrops">
+         <bool>false</bool>
+        </property>
         <property name="text">
          <string>清空</string>
+        </property>
+        <property name="autoDefault">
+         <bool>false</bool>
+        </property>
+        <property name="default">
+         <bool>false</bool>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -1192,7 +1207,14 @@ p, li { white-space: pre-wrap; }
     </property>
     <addaction name="about"/>
    </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>设置</string>
+    </property>
+    <addaction name="config"/>
+   </widget>
    <addaction name="menu"/>
+   <addaction name="menu_2"/>
   </widget>
   <action name="about">
    <property name="text">
@@ -1200,6 +1222,11 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="shortcutContext">
     <enum>Qt::WindowShortcut</enum>
+   </property>
+  </action>
+  <action name="config">
+   <property name="text">
+    <string>通信配置</string>
    </property>
   </action>
  </widget>
