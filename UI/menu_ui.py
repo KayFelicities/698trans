@@ -15,6 +15,7 @@ class ConfigWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ConfigWindow):
     def __init__(self):
         super(ConfigWindow, self).__init__()
         self.setupUi(self)
+        self.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint | QtCore.Qt.WindowTitleHint | QtCore.Qt.WindowStaysOnTopHint)
         self.ok_b.clicked.connect(self.ok_quit)
         self.reset_b.clicked.connect(self.reset)
         self.cancel_b.clicked.connect(self.hide)

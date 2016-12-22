@@ -80,7 +80,6 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         except Exception:
             traceback.print_exc()
             self.connect_button.setText(self.com_list.currentText() + '连接失败')
-            self.disconnect_button.setText('断开')
 
     def connect_serial(self):
         try:
@@ -89,7 +88,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
                 config.serial_param['baudrate'],
                 config.serial_param['bytesize'],
                 config.serial_param['parity'],
-                config.serial_param['stopbis'],
+                config.serial_param['stopbits'],
                 timeout=config.serial_param['timeout'])
             config.serial.close()
             config.serial.open()
@@ -102,7 +101,6 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         except Exception:
             traceback.print_exc()
             self.connect_button.setText(self.com_list.currentText() + '连接失败')
-            self.disconnect_button.setText('断开')
 
     def disconnect(self):
         if config.serial_check is True:

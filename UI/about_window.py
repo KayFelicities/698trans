@@ -25,19 +25,28 @@ except AttributeError:
 class Ui_AboutWindow(object):
     def setupUi(self, AboutWindow):
         AboutWindow.setObjectName(_fromUtf8("AboutWindow"))
-        AboutWindow.resize(521, 455)
+        AboutWindow.resize(490, 490)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.On)
         AboutWindow.setWindowIcon(icon)
         self.centralwidget = QtGui.QWidget(AboutWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
-        self.about_box = QtGui.QTextEdit(self.centralwidget)
-        self.about_box.setGeometry(QtCore.QRect(0, 90, 521, 331))
-        self.about_box.setTextInteractionFlags(QtCore.Qt.TextSelectableByKeyboard|QtCore.Qt.TextSelectableByMouse)
-        self.about_box.setObjectName(_fromUtf8("about_box"))
+        self.verticalLayout = QtGui.QVBoxLayout(self.centralwidget)
+        self.verticalLayout.setMargin(1)
+        self.verticalLayout.setSpacing(1)
+        self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
+        self.horizontalLayout = QtGui.QHBoxLayout()
+        self.horizontalLayout.setSizeConstraint(QtGui.QLayout.SetDefaultConstraint)
+        self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
+        spacerItem = QtGui.QSpacerItem(100, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem)
         self.pushButton = QtGui.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(130, 10, 71, 71))
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.pushButton.sizePolicy().hasHeightForWidth())
+        self.pushButton.setSizePolicy(sizePolicy)
         self.pushButton.setText(_fromUtf8(""))
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -46,8 +55,14 @@ class Ui_AboutWindow(object):
         self.pushButton.setAutoRepeat(False)
         self.pushButton.setFlat(True)
         self.pushButton.setObjectName(_fromUtf8("pushButton"))
+        self.horizontalLayout.addWidget(self.pushButton)
         self.textBrowser = QtGui.QTextBrowser(self.centralwidget)
-        self.textBrowser.setGeometry(QtCore.QRect(210, 10, 201, 81))
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Ignored)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.textBrowser.sizePolicy().hasHeightForWidth())
+        self.textBrowser.setSizePolicy(sizePolicy)
+        self.textBrowser.setMaximumSize(QtCore.QSize(210, 16777215))
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.SolidPattern)
@@ -78,8 +93,15 @@ class Ui_AboutWindow(object):
         self.textBrowser.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
         self.textBrowser.setOpenLinks(False)
         self.textBrowser.setObjectName(_fromUtf8("textBrowser"))
+        self.horizontalLayout.addWidget(self.textBrowser)
+        spacerItem1 = QtGui.QSpacerItem(100, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem1)
+        self.verticalLayout.addLayout(self.horizontalLayout)
+        self.about_box = QtGui.QTextEdit(self.centralwidget)
+        self.about_box.setTextInteractionFlags(QtCore.Qt.TextSelectableByKeyboard|QtCore.Qt.TextSelectableByMouse)
+        self.about_box.setObjectName(_fromUtf8("about_box"))
+        self.verticalLayout.addWidget(self.about_box)
         self.label = QtGui.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(3, 430, 511, 21))
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("微软雅黑"))
         font.setPointSize(11)
@@ -89,6 +111,7 @@ class Ui_AboutWindow(object):
         self.label.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName(_fromUtf8("label"))
+        self.verticalLayout.addWidget(self.label)
         self.pushButton.raise_()
         self.textBrowser.raise_()
         self.about_box.raise_()
@@ -100,6 +123,13 @@ class Ui_AboutWindow(object):
 
     def retranslateUi(self, AboutWindow):
         AboutWindow.setWindowTitle(_translate("AboutWindow", "关于", None))
+        self.textBrowser.setHtml(_translate("AboutWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">698解析软件_V3.2</span></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">终端开发部内部测试版</span></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">2016.12.21</span></p></body></html>", None))
         self.about_box.setHtml(_translate("AboutWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -170,14 +200,13 @@ class Ui_AboutWindow(object):
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">2016.12.19</p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">1.添加COMDCB类型的解析</p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">2.优化串口界面按钮逻辑</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">3.添加报文格式、长度域、校验快速修复功能</p></body></html>", None))
-        self.textBrowser.setHtml(_translate("AboutWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">698解析软件_V3.0</span></p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">终端开发部内部测试版</span></p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:5px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:600;\">2016.12.19</span></p></body></html>", None))
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">3.添加报文格式、长度域、校验快速修复功能</p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">V3.2</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">2016.12.21</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">1.添加tcp客户端模式，可连接前置机</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">2.去除服务器地址、地址长度、客户机地址的自动提取功能</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">3.添加报文服务器地址、地址类型、客户机地址一键修复功能</p></body></html>", None))
         self.label.setText(_translate("AboutWindow", "Copyrigth(C), 2005-2020,Sanxing Medical & Electric Co.,Ltd.", None))
 
 import icon_rc
