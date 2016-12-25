@@ -60,7 +60,7 @@ class TransWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_TransWindow):
         else:
             if config.good_HCS is not None:
                 ret_dict = get_addr(data_in)
-                hcs_pos = 6 + int(ret_dict['server_addr_len'])
+                hcs_pos = 6 + int(ret_dict['SA_len'])
                 data_in[hcs_pos], data_in[hcs_pos + 1] = config.good_HCS[0], config.good_HCS[1]
                 input_text = ''
                 for data in data_in:

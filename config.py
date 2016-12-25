@@ -4,13 +4,15 @@ import sys
 output_text = ''
 show_level = True
 auto_trans = True
-auto_linklayer = False
+auto_fix = False
 
 line_level = 0
 trans_window = None
 serial_window = None
 about_window = None
 config_window = None
+
+CA_addr = '10'
 
 serial = None
 serial_check = False

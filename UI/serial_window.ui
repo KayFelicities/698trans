@@ -66,7 +66,7 @@
        <widget class="QGroupBox" name="groupBox">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
-          <horstretch>5</horstretch>
+          <horstretch>6</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
@@ -182,43 +182,7 @@
           </widget>
          </item>
          <item>
-          <spacer name="horizontalSpacer_11">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Fixed</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>13</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_4">
-           <property name="text">
-            <string>客户机</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="CA_box">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
-             <horstretch>1</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>10</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="fix_linklayer_button">
+          <widget class="QPushButton" name="read_SA_button">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
              <horstretch>2</horstretch>
@@ -226,7 +190,7 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>应用</string>
+            <string>读取</string>
            </property>
           </widget>
          </item>
@@ -243,7 +207,7 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>50</width>
+          <width>70</width>
           <height>20</height>
          </size>
         </property>
@@ -253,7 +217,7 @@
        <widget class="QGroupBox" name="groupBox_2">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
-          <horstretch>3</horstretch>
+          <horstretch>4</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
@@ -728,9 +692,9 @@ p, li { white-space: pre-wrap; }
        </spacer>
       </item>
       <item>
-       <widget class="QCheckBox" name="auto_linklayer_cb">
+       <widget class="QCheckBox" name="auto_fix_cb">
         <property name="text">
-         <string>自动修改链路层</string>
+         <string>自动修复</string>
         </property>
        </widget>
       </item>
@@ -1289,7 +1253,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>auto_trans_cb</tabstop>
   <tabstop>SA_box</tabstop>
   <tabstop>SA_len_box</tabstop>
-  <tabstop>CA_box</tabstop>
  </tabstops>
  <resources>
   <include location="icon.qrc"/>

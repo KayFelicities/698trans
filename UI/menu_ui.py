@@ -21,11 +21,17 @@ class ConfigWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ConfigWindow):
         self.cancel_b.clicked.connect(self.hide)
 
     def read_param(self):
+        self.CA_box.setText(config.CA_addr)
         self.baud_rate_box.setText(str(config.serial_param['baudrate']))
         self.IP_box.setText(config.socket_param['IP'])
         self.port_box.setText(str(config.socket_param['port']))
 
     def ok_quit(self):
+        CA_addr = self.CA_box.text().replace(' ', '')
+        if len(CA_addr) == 1:
+            config.CA_addr = '0' + CA_addr
+        elif len(CA_addr) == 2:
+            config.CA_addr = CA_addr
         baudrate = self.baud_rate_box.text().replace(' ', '')
         if len(baudrate) > 0:
             try:

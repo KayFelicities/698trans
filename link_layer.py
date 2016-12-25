@@ -163,16 +163,16 @@ def take_link_layer_1(data):
 
 def get_addr(data):
     offset = 0
-    ret_dict = {'server_addr': ''}
+    ret_dict = {'SA': ''}
     offset += 1 + 2 + 1  # 起始符 长度 控制域
     # 地址域
     server_addr_len = (int(data[offset], 16) & 0x0f) + 1
     server_addr_reverse = data[offset + server_addr_len: offset: -1]
     for k in range(0, server_addr_len):
-        ret_dict['server_addr'] += server_addr_reverse[k]
+        ret_dict['SA'] += server_addr_reverse[k]
     offset += server_addr_len + 1
-    ret_dict['server_addr_len'] = str(server_addr_len)
-    ret_dict['client_addr'] = data[offset]
+    ret_dict['SA_len'] = str(server_addr_len)
+    ret_dict['CA'] = data[offset]
     offset += 1
     return ret_dict
 

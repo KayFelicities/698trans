@@ -28,11 +28,6 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         else:
             self.send_input_box.textChanged.disconnect(self.send_trans)
             self.translate_button.setVisible(True)
-        if config.auto_linklayer is True:
-            self.fix_linklayer_button.setVisible(False)
-        else:
-            self.fix_linklayer_button.setVisible(True)
-        self.fix_linklayer_button.clicked.connect(self.fix_linklayer)
         self.receive_input_box.textChanged.connect(self.receive_trans)
         self.quick_fix_button.clicked.connect(self.quick_fix)
         self.translate_button.clicked.connect(self.send_trans)
@@ -41,7 +36,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         self.connect_button.clicked.connect(self.connect)
         self.disconnect_button.clicked.connect(self.disconnect)
         self.send_button.clicked.connect(self.send_data)
-        self.auto_linklayer_cb.clicked.connect(self.set_auto_linklayer)
+        self.auto_fix_cb.clicked.connect(self.set_auto_fix)
         self.show_level_cb.clicked.connect(self.set_level_visible)
         self.always_top_cb.clicked.connect(self.set_always_top)
         self.auto_trans_cb.clicked.connect(self.set_auto_trans)
@@ -185,7 +180,12 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         self.send_trans()
         input_text = self.send_input_box.toPlainText()
         data_in = data_format(input_text)
-        if config.good_L is not None:
+        if self.is_good_linklayer() is False:
+            self.fix_addr()
+            input_text = self.send_input_box.toPlainText()
+            data_in = data_format(input_text)
+            all_translate(data_in)
+        elif config.good_L is not None:
             data_in[1], data_in[2] = config.good_L[0], config.good_L[1]
         else:
             if config.good_HCS is not None:
@@ -210,10 +210,14 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
             data_in = data_format(input_text)
             ret_dict = all_translate(data_in)
             if ret_dict['res'] == 'ok':
-                self.quick_fix_button.setText('修正校验码' if config.good_HCS is not None or config.good_FCS is not None else '修正格式')
-                if ret_dict['input_type'] == 'full' and config.auto_linklayer is True:
+                self.quick_fix_button.setText(
+                    '修正地址' if self.is_good_linklayer() is False
+                    else '修正校验码' if config.good_HCS is not None or config.good_FCS is not None
+                    else '修正格式'
+                )
+                if ret_dict['input_type'] == 'full' and config.auto_fix is True:
                     if self.is_good_linklayer() is False:
-                        self.fix_linklayer()
+                        self.fix_addr()
                         input_text = self.send_input_box.toPlainText()
                         data_in = data_format(input_text)
                         all_translate(data_in)
@@ -263,12 +267,12 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         if SA_data_in != SA_box_data:
             print('SA_data_in', SA_data_in, SA_box_data)
             return False
-        if data_in[5 + SA_len] != self.CA_box.text():
+        if data_in[5 + SA_len] != config.CA_addr:
             print('data_in')
             return False
         return True
 
-    def fix_linklayer(self):
+    def fix_addr(self):
         input_text = self.send_input_box.toPlainText()
         data_in = data_format(input_text)
         SA_len = int(data_in[4], 16) + 1
@@ -300,8 +304,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         SA_text = ''
         for SA_member in SA_data:
             SA_text += SA_member + ' '
-        CA = data_format(self.CA_box.text())
-        self.CA_box.setText(CA[-1])
+        CA = data_format(config.CA_addr)
         CA_text = CA[-1] + ' '
         apdu_len = calc_len(input_text)
         full_len = 7 + SA_len + apdu_len + 2
@@ -336,12 +339,8 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
     def receive_clear_botton(self):
         self.receive_input_box.setFocus()
 
-    def set_auto_linklayer(self):
-        config.auto_linklayer = self.auto_linklayer_cb.isChecked()
-        if config.auto_linklayer is True:
-            self.fix_linklayer_button.setVisible(False)
-        else:
-            self.fix_linklayer_button.setVisible(True)
+    def set_auto_fix(self):
+        config.auto_fix = self.auto_fix_cb.isChecked()
 
     def set_auto_trans(self):
         config.auto_trans = self.auto_trans_cb.isChecked()
