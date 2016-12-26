@@ -28,13 +28,13 @@ class Ui_SerialWindow(object):
         SerialWindow.setWindowModality(QtCore.Qt.NonModal)
         SerialWindow.resize(848, 669)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.On)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Active, QtGui.QIcon.On)
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Selected, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Active, QtGui.QIcon.On)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Active, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.On)
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Selected, QtGui.QIcon.On)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Disabled, QtGui.QIcon.On)
         SerialWindow.setWindowIcon(icon)
         SerialWindow.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
@@ -477,16 +477,22 @@ class Ui_SerialWindow(object):
         self.menu.setObjectName(_fromUtf8("menu"))
         self.menu_2 = QtGui.QMenu(self.menubar)
         self.menu_2.setObjectName(_fromUtf8("menu_2"))
+        self.menu_3 = QtGui.QMenu(self.menubar)
+        self.menu_3.setObjectName(_fromUtf8("menu_3"))
         SerialWindow.setMenuBar(self.menubar)
         self.about = QtGui.QAction(SerialWindow)
         self.about.setShortcutContext(QtCore.Qt.WindowShortcut)
         self.about.setObjectName(_fromUtf8("about"))
         self.config = QtGui.QAction(SerialWindow)
         self.config.setObjectName(_fromUtf8("config"))
+        self.param = QtGui.QAction(SerialWindow)
+        self.param.setObjectName(_fromUtf8("param"))
         self.menu.addAction(self.about)
         self.menu_2.addAction(self.config)
+        self.menu_3.addAction(self.param)
         self.menubar.addAction(self.menu.menuAction())
         self.menubar.addAction(self.menu_2.menuAction())
+        self.menubar.addAction(self.menu_3.menuAction())
 
         self.retranslateUi(SerialWindow)
         QtCore.QObject.connect(self.send_clear_button, QtCore.SIGNAL(_fromUtf8("clicked()")), self.send_output_box.clear)
@@ -540,7 +546,7 @@ class Ui_SerialWindow(object):
 "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">说明：</p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">1.可连接串口或前置机，具体参数可在“设置”菜单中修改。</p>\n"
-"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">2.“应用”按钮可将设置的地址应用到报文。勾选“自动修改链路曾”将在报文解析成功后自动更改报文中的地址。</p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">2.“应用”按钮可将设置的地址应用到报文。勾选“自动修正”将在报文解析成功后自动修正报文中的地址和校验码。</p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">3.在输入框内输入APDU片段，软件将根据上方地址信息框中的信息自动添加链路层报文。</p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">4.取消勾选下方“自动解析”将看到“解析”按钮。</p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">5.“清空”按钮括号中显示的是输入框内报文的总长度。</p>\n"
@@ -559,13 +565,15 @@ class Ui_SerialWindow(object):
 "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
         self.trans_mode_button.setText(_translate("SerialWindow", "解析模式", None))
-        self.auto_fix_cb.setText(_translate("SerialWindow", "自动修复", None))
+        self.auto_fix_cb.setText(_translate("SerialWindow", "自动修正", None))
         self.auto_trans_cb.setText(_translate("SerialWindow", "自动解析", None))
         self.show_level_cb.setText(_translate("SerialWindow", "显示层级结构", None))
         self.always_top_cb.setText(_translate("SerialWindow", "窗口置顶", None))
         self.menu.setTitle(_translate("SerialWindow", "帮助", None))
         self.menu_2.setTitle(_translate("SerialWindow", "设置", None))
+        self.menu_3.setTitle(_translate("SerialWindow", "常用命令", None))
         self.about.setText(_translate("SerialWindow", "关于", None))
         self.config.setText(_translate("SerialWindow", "通信配置", None))
+        self.param.setText(_translate("SerialWindow", "参数配置", None))
 
 import icon_rc

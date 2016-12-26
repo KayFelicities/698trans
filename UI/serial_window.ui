@@ -549,7 +549,7 @@ p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;说明：&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;1.可连接串口或前置机，具体参数可在“设置”菜单中修改。&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;2.“应用”按钮可将设置的地址应用到报文。勾选“自动修改链路曾”将在报文解析成功后自动更改报文中的地址。&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;2.“应用”按钮可将设置的地址应用到报文。勾选“自动修正”将在报文解析成功后自动修正报文中的地址和校验码。&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;3.在输入框内输入APDU片段，软件将根据上方地址信息框中的信息自动添加链路层报文。&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;4.取消勾选下方“自动解析”将看到“解析”按钮。&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;5.“清空”按钮括号中显示的是输入框内报文的总长度。&lt;/p&gt;
@@ -697,7 +697,7 @@ p, li { white-space: pre-wrap; }
       <item>
        <widget class="QCheckBox" name="auto_fix_cb">
         <property name="text">
-         <string>自动修复</string>
+         <string>自动修正</string>
         </property>
        </widget>
       </item>
@@ -1224,8 +1224,15 @@ p, li { white-space: pre-wrap; }
     </property>
     <addaction name="config"/>
    </widget>
+   <widget class="QMenu" name="menu_3">
+    <property name="title">
+     <string>常用命令</string>
+    </property>
+    <addaction name="param"/>
+   </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
+   <addaction name="menu_3"/>
   </widget>
   <action name="about">
    <property name="text">
@@ -1238,6 +1245,11 @@ p, li { white-space: pre-wrap; }
   <action name="config">
    <property name="text">
     <string>通信配置</string>
+   </property>
+  </action>
+  <action name="param">
+   <property name="text">
+    <string>参数配置</string>
    </property>
   </action>
  </widget>

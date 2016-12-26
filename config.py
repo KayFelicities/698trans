@@ -11,6 +11,7 @@ trans_window = None
 serial_window = None
 about_window = None
 config_window = None
+param_window = None
 
 CA_addr = '10'
 

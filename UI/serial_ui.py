@@ -47,6 +47,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         self.com_list.addItems(self.port_list())
         self.about.triggered.connect(self.show_about_window)
         self.config.triggered.connect(self.show_config_window)
+        self.param.triggered.connect(self.show_param_window)
         self.trans_mode_button.clicked.connect(self.shift_trans_window)
 
     def port_list(self):
@@ -418,6 +419,9 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
     def show_config_window(self):
         config.config_window.read_param()
         config.config_window.show()
+
+    def show_param_window(self):
+        config.param_window.show()
 
     def shift_trans_window(self):
         self.hide()
