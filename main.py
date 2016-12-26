@@ -1,6 +1,6 @@
-import config
 from PyQt4 import QtGui
 import sys
+import config
 sys.path.append('UI\\')
 from trans_ui import *   # NOQA
 from serial_ui import *   # NOQA

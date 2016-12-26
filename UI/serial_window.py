@@ -29,13 +29,13 @@ class Ui_SerialWindow(object):
         SerialWindow.resize(848, 669)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Disabled, QtGui.QIcon.On)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Active, QtGui.QIcon.On)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.On)
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Selected, QtGui.QIcon.On)
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Active, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.On)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Active, QtGui.QIcon.On)
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Selected, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Active, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Selected, QtGui.QIcon.On)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Disabled, QtGui.QIcon.On)
         SerialWindow.setWindowIcon(icon)
         SerialWindow.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
         SerialWindow.setAnimated(True)
@@ -99,6 +99,7 @@ class Ui_SerialWindow(object):
         self.SA_len_box.setObjectName(_fromUtf8("SA_len_box"))
         self.horizontalLayout.addWidget(self.SA_len_box)
         self.read_SA_button = QtGui.QPushButton(self.groupBox)
+        self.read_SA_button.setEnabled(False)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Ignored, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(2)
         sizePolicy.setVerticalStretch(0)
@@ -508,14 +509,14 @@ class Ui_SerialWindow(object):
         SerialWindow.setTabOrder(self.SA_box, self.SA_len_box)
 
     def retranslateUi(self, SerialWindow):
-        SerialWindow.setWindowTitle(_translate("SerialWindow", "698解析工具（后台模式）_V3.2(2016.12.21)", None))
+        SerialWindow.setWindowTitle(_translate("SerialWindow", "698解析工具（后台模式）_V3.3(2016.12.26)", None))
         self.groupBox.setTitle(_translate("SerialWindow", "地址信息", None))
         self.label_2.setText(_translate("SerialWindow", "服务器", None))
         self.SA_type_list.setItemText(0, _translate("SerialWindow", "单地址", None))
         self.SA_type_list.setItemText(1, _translate("SerialWindow", "通配地址", None))
         self.SA_type_list.setItemText(2, _translate("SerialWindow", "组地址", None))
         self.SA_type_list.setItemText(3, _translate("SerialWindow", "广播地址", None))
-        self.SA_box.setText(_translate("SerialWindow", "1", None))
+        self.SA_box.setText(_translate("SerialWindow", "000000000001", None))
         self.label_3.setText(_translate("SerialWindow", "长度", None))
         self.SA_len_box.setText(_translate("SerialWindow", "6", None))
         self.read_SA_button.setText(_translate("SerialWindow", "读取", None))
@@ -544,7 +545,7 @@ class Ui_SerialWindow(object):
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">4.取消勾选下方“自动解析”将看到“解析”按钮。</p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">5.“清空”按钮括号中显示的是输入框内报文的总长度。</p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">6.勾选下方“显示层级结构”可启用SEQUENCE、array、structure类型的缩进显示。</p>\n"
-"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">7.“修正格式”可将报文格式化。当报文长度或校验出错时，按此按钮可修复长度或校验。</p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">7.“修正格式”可将报文格式化。当报文地址、长度或校验出错时，按此按钮可修改这些错误。</p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">8.本软件为终端开发部内部测试软件。在软件使用过程中遇到任何问题，请向665593反馈，谢谢。</p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">9.Copyrigth(C), 2005-2020,Sanxing Medical &amp; Electric Co.,Ltd.</p></body></html>", None))
         self.receive_input_box.setHtml(_translate("SerialWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"

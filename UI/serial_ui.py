@@ -21,6 +21,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         self.setupUi(self)
         config.show_level = self.show_level_cb.isChecked()
         self._receive_signal.connect(self.take_receive_data)
+        # self._get_SA_signal.connect(self.read_SA)
         config.auto_trans = self.auto_trans_cb.isChecked()
         if config.auto_trans is True:
             self.send_input_box.textChanged.connect(self.send_trans)
@@ -29,12 +30,13 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
             self.send_input_box.textChanged.disconnect(self.send_trans)
             self.translate_button.setVisible(True)
         self.receive_input_box.textChanged.connect(self.receive_trans)
+        self.read_SA_button.clicked.connect(self.get_SA)
         self.quick_fix_button.clicked.connect(self.quick_fix)
         self.translate_button.clicked.connect(self.send_trans)
         self.send_clear_button.clicked.connect(self.send_clear_botton)
         self.receive_clear_button.clicked.connect(self.receive_clear_botton)
         self.connect_button.clicked.connect(self.connect)
-        self.disconnect_button.clicked.connect(self.disconnect)
+        self.disconnect_button.clicked.connect(self.close_connect)
         self.send_button.clicked.connect(self.send_data)
         self.auto_fix_cb.clicked.connect(self.set_auto_fix)
         self.show_level_cb.clicked.connect(self.set_level_visible)
@@ -71,6 +73,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
             self.connect_button.setText(self.com_list.currentText() + '已连接')
             self.disconnect_button.setText('断开')
             self.send_button.setEnabled(True)
+            self.read_SA_button.setEnabled(True)
             self.calc_send_box_len()
         except Exception:
             traceback.print_exc()
@@ -92,12 +95,13 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
             self.connect_button.setText(self.com_list.currentText() + '已连接')
             self.disconnect_button.setText('断开')
             self.send_button.setEnabled(True)
+            self.read_SA_button.setEnabled(True)
             self.calc_send_box_len()
         except Exception:
             traceback.print_exc()
             self.connect_button.setText(self.com_list.currentText() + '连接失败')
 
-    def disconnect(self):
+    def close_connect(self):
         if config.serial_check is True:
             self.close_serial()
         elif config.socket_check is True:
@@ -110,6 +114,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
             self.connect_button.setText('连接')
             self.send_button.setText('请建立连接')
             self.send_button.setEnabled(False)
+            self.read_SA_button.setEnabled(False)
             self.disconnect_button.setText('刷新')
         else:  # 刷新列表
             self.com_list.clear()
@@ -122,6 +127,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
             self.connect_button.setText('连接')
             self.send_button.setText('请建立连接')
             self.send_button.setEnabled(False)
+            self.read_SA_button.setEnabled(False)
             self.disconnect_button.setText('刷新')
         else:  # 刷新列表
             self.com_list.clear()
@@ -163,6 +169,8 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
                 break
 
     def send_data(self):
+        self._receive_signal.disconnect()
+        self._receive_signal.connect(self.take_receive_data)
         input_text = self.send_input_box.toPlainText()
         data = data_format(input_text)
         send_d = b''
@@ -176,38 +184,59 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
     def take_receive_data(self, re_text):
         self.receive_input_box.setText(re_text)
 
+    def get_SA(self):
+        input_text = '682100434FAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA10CC1C05010140000200007D1B16'
+        data = data_format(input_text)
+        send_d = b''
+        for char in data:
+            send_d += struct.pack('B', int(char, 16))
+        self._receive_signal.disconnect()
+        self._receive_signal.connect(self.read_SA)
+        if config.serial_check is True:
+            config.serial.write(send_d)
+        if config.socket_check is True:
+            config.socket.sendall(send_d)
+
+    def read_SA(self, re_text):
+        data = data_format(re_text)
+        ret_dict = get_addr(data)
+        self.SA_box.setText(ret_dict['SA'])
+        self.SA_len_box.setText(ret_dict['SA_len'])
+        self._receive_signal.disconnect()
+        self._receive_signal.connect(self.take_receive_data)
+
     def quick_fix(self):
-        self.send_trans()
-        input_text = self.send_input_box.toPlainText()
-        data_in = data_format(input_text)
         if self.is_good_linklayer() is False:
             self.fix_addr()
+            self.send_trans()
+        else:
             input_text = self.send_input_box.toPlainText()
             data_in = data_format(input_text)
-            all_translate(data_in)
-        elif config.good_L is not None:
-            data_in[1], data_in[2] = config.good_L[0], config.good_L[1]
-        else:
-            if config.good_HCS is not None:
-                ret_dict = get_addr(data_in)
-                hcs_pos = 6 + int(ret_dict['SA_len'])
-                data_in[hcs_pos], data_in[hcs_pos + 1] = config.good_HCS[0], config.good_HCS[1]
-                input_text = ''
-                for data in data_in:
-                    input_text += data + ' '
-                self.send_input_box.setText(input_text)
-                self.send_trans()
-            if config.good_FCS is not None:
-                data_in[-3], data_in[-2] = config.good_FCS[0], config.good_FCS[1]
-        input_text = ''
-        for data in data_in:
-            input_text += data + ' '
-        self.send_input_box.setText(input_text)
+            if config.good_L is not None:
+                data_in[1], data_in[2] = config.good_L[0], config.good_L[1]
+            else:
+                if config.good_HCS is not None:
+                    ret_dict = get_addr(data_in)
+                    hcs_pos = 6 + int(ret_dict['SA_len'])
+                    data_in[hcs_pos], data_in[hcs_pos + 1] = config.good_HCS[0], config.good_HCS[1]
+                    input_text = ''
+                    for data in data_in:
+                        input_text += data + ' '
+                    print('input_text', input_text)
+                    self.send_input_box.setText(input_text)
+                    self.send_trans()
+                if config.good_FCS is not None:
+                    data_in[-3], data_in[-2] = config.good_FCS[0], config.good_FCS[1]
+            input_text = ''
+            for data in data_in:
+                input_text += data + ' '
+            self.send_input_box.setText(input_text)
 
     def send_trans(self):
         input_text = self.send_input_box.toPlainText()
         try:
             data_in = data_format(input_text)
+            print('data_in', data_in)
             ret_dict = all_translate(data_in)
             if ret_dict['res'] == 'ok':
                 self.quick_fix_button.setText(
@@ -259,7 +288,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         if SA_len_h != ((int(data_in[4], 16) >> 4) & 0xf):
             print('SA_len_h', SA_len_h, (int(data_in[4], 16) >> 4) & 0xf)
             return False
-        SA_len = int(data_in[4], 16) + 1
+        SA_len = (int(data_in[4], 16) & 0x0f) + 1
         if SA_len != int(self.SA_len_box.text()):
             return False
         SA_data_in = data_in[4 + SA_len: 4: -1]
@@ -274,8 +303,10 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
 
     def fix_addr(self):
         input_text = self.send_input_box.toPlainText()
+        print('input_text', input_text)
         data_in = data_format(input_text)
-        SA_len = int(data_in[4], 16) + 1
+        SA_len = (int(data_in[4], 16) & 0x0f) + 1
+        print('SA_len', SA_len)
         apdu_in = data_in[5 + SA_len + 3: -3]
         apdu_text = ''
         for text in apdu_in:
@@ -331,6 +362,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         FCS = '{0:02X} {1:02X} '.format(fcs & 0xff, (fcs >> 8) & 0xff)  # 低位在前
 
         full_text = apdu_start + input_text + FCS + '16'
+        print('full_text', full_text)
         return full_text
 
     def send_clear_botton(self):
