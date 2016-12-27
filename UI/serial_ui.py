@@ -189,6 +189,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         self.receive_input_box.setText(re_text)
 
     def get_SA(self):
+        self.read_SA_button.setText('读取')
         input_text = '682100434FAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA10CC1C05010140000200007D1B16'
         self._receive_signal.disconnect()
         self._receive_signal.connect(self.read_SA)
@@ -199,6 +200,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         ret_dict = get_addr(data)
         self.SA_box.setText(ret_dict['SA'])
         self.SA_len_box.setText(ret_dict['SA_len'])
+        self.read_SA_button.setText('成功')
         self._receive_signal.disconnect()
         self._receive_signal.connect(self.take_receive_data)
 
