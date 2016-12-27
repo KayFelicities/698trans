@@ -14,7 +14,9 @@ if __name__ == "__main__":
     config.about_window = AboutWindow()
     config.config_window = ConfigWindow()
     config.param_window = ParamWindow()
-    config.trans_window.show()
+    # config.trans_window.show()
+    config.serial_window.show()
+    # config.param_window.show()
     app.exec_()
     # print('window close')
     config.serial_check = False

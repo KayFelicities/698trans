@@ -173,7 +173,10 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         self._receive_signal.disconnect()
         self._receive_signal.connect(self.take_receive_data)
         input_text = self.send_input_box.toPlainText()
-        data = data_format(input_text)
+        self.send(input_text)
+
+    def send(self, send_text):
+        data = data_format(send_text)
         send_d = b''
         for char in data:
             send_d += struct.pack('B', int(char, 16))
@@ -187,16 +190,9 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
 
     def get_SA(self):
         input_text = '682100434FAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA10CC1C05010140000200007D1B16'
-        data = data_format(input_text)
-        send_d = b''
-        for char in data:
-            send_d += struct.pack('B', int(char, 16))
         self._receive_signal.disconnect()
         self._receive_signal.connect(self.read_SA)
-        if config.serial_check is True:
-            config.serial.write(send_d)
-        if config.socket_check is True:
-            config.socket.sendall(send_d)
+        self.send(input_text)
 
     def read_SA(self, re_text):
         data = data_format(re_text)
