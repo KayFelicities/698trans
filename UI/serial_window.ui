@@ -261,7 +261,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="connect_button">
+          <widget class="QPushButton" name="link_button">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
              <horstretch>4</horstretch>
@@ -1259,7 +1259,7 @@ p, li { white-space: pre-wrap; }
   <tabstop>com_list</tabstop>
   <tabstop>send_output_box</tabstop>
   <tabstop>show_level_cb</tabstop>
-  <tabstop>connect_button</tabstop>
+  <tabstop>link_button</tabstop>
   <tabstop>disconnect_button</tabstop>
   <tabstop>send_button</tabstop>
   <tabstop>receive_clear_button</tabstop>

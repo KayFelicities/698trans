@@ -30,7 +30,7 @@ def all_translate(data_in):
     return ret_dict
 
 
-def calc_len(input_text):
+def calc_text_len(input_text):
     input_text = input_text.replace(' ', '').replace('\n', '').upper()  # 处理空格和换行
     data_len = int(len(input_text) / 2)
     return data_len
@@ -51,6 +51,14 @@ def data_format(input_text):
     if len(data) > 0 and len(data[-1]) == 1:
         data[-1] = '0' + data[-1]
     return data
+
+
+def text_format(text):
+    data_in = data_format(text)
+    text = ''
+    for data in data_in:
+        text += data + ' '
+    return text
 
 
 def check_data(data_in):  # True合法
@@ -161,22 +169,6 @@ def take_link_layer_1(data):
     return offset
 
 
-def get_addr(data):
-    offset = 0
-    ret_dict = {'SA': ''}
-    offset += 1 + 2 + 1  # 起始符 长度 控制域
-    # 地址域
-    server_addr_len = (int(data[offset], 16) & 0x0f) + 1
-    server_addr_reverse = data[offset + server_addr_len: offset: -1]
-    for k in range(0, server_addr_len):
-        ret_dict['SA'] += server_addr_reverse[k]
-    offset += server_addr_len + 1
-    ret_dict['SA_len'] = str(server_addr_len)
-    ret_dict['CA'] = data[offset]
-    offset += 1
-    return ret_dict
-
-
 def take_link_layer_2(data, offset):
     offset_temp = offset
     fcs_calc = get_fcs(data[1:offset], offset - 1)
@@ -197,6 +189,102 @@ def take_link_layer_2(data, offset):
     output(' —— 结束符')
     offset += 1
     return offset - offset_temp
+
+
+def get_addr(data):
+    offset = 0
+    ret_dict = {'SA': ''}
+    offset += 1 + 2 + 1  # 起始符 长度 控制域
+    # 地址域
+    server_addr_len = (int(data[offset], 16) & 0x0f) + 1
+    server_addr_reverse = data[offset + server_addr_len: offset: -1]
+    for k in range(0, server_addr_len):
+        ret_dict['SA'] += server_addr_reverse[k]
+    offset += server_addr_len + 1
+    ret_dict['SA_len'] = str(server_addr_len)
+    ret_dict['CA'] = data[offset]
+    offset += 1
+    return ret_dict
+
+
+def get_apdu_text(text):
+    data_in = data_format(text)
+    SA_len = (int(data_in[4], 16) & 0x0f) + 1
+    apdu_in = data_in[5 + SA_len + 3: -3]
+    apdu_text = ''
+    for text in apdu_in:
+        apdu_text += text + ' '
+    return apdu_text
+
+
+def add_link_layer(apdu_text, SA_type, SA, SA_len):
+    apdu_start = '68 '
+    C = '43 '
+    if SA_len > 16 or SA_len < 1:
+        SA_len = 6
+        config.serial_window.SA_len_box.setText('6')
+    SA_data = data_format(SA)
+    SA_content = ''
+    for count in range(SA_len):
+        SA_data.insert(0, '00')
+    SA_data = SA_data[-SA_len:]
+    for SA_member in SA_data:
+        SA_content += SA_member
+    config.serial_window.SA_box.setText(SA_content)
+    SA_data.reverse()
+    SA_text = ''
+    for SA_member in SA_data:
+        SA_text += SA_member + ' '
+    CA = data_format(config.CA_addr)
+    CA_text = CA[-1] + ' '
+    apdu_len = calc_text_len(apdu_text)
+    full_len = 7 + SA_len + apdu_len + 2
+    SA_len_h = {
+        '单地址': 0,
+        '通配地址': 1,
+        '组地址': 2,
+        '广播地址': 3,
+    }[SA_type]
+    SA_ = ((SA_len_h << 6) | ((SA_len - 1) & 0xf)) & 0xff  # 地址类型、逻辑地址、地址长度
+    # print('SA_len_h, SA_, SA_len:', SA_len_h, SA_, SA_len)
+    L = '{0:02X} {1:02X} '.format(full_len & 0xff, (full_len >> 8) & 0xff)  # 低位在前
+    apdu_start += L + C + '{0:02X} '.format(SA_) + SA_text + CA_text
+    hcs_data = data_format(apdu_start)
+    # print('hcd_data:', hcs_data[1:], 'len:', len(hcs_data) - 1)
+    hcs = get_fcs(hcs_data[1:], len(hcs_data) - 1)
+    HCS = '{0:02X} {1:02X} '.format(hcs & 0xff, (hcs >> 8) & 0xff)  # 低位在前
+    apdu_start += HCS
+
+    fcs_data = data_format(apdu_start + apdu_text)
+    fcs = get_fcs(fcs_data[1:], len(fcs_data) - 1)
+    FCS = '{0:02X} {1:02X} '.format(fcs & 0xff, (fcs >> 8) & 0xff)  # 低位在前
+    full_text = text_format(apdu_start + apdu_text + FCS + '16')
+    return full_text
+
+
+def is_same_addr(text, target_SA_type, target_SA_text, target_SA_len):
+    data_in = data_format(text)
+    SA_len_h = {
+        '单地址': 0,
+        '通配地址': 1,
+        '组地址': 2,
+        '广播地址': 3,
+    }[target_SA_type]
+    if SA_len_h != ((int(data_in[4], 16) >> 4) & 0xf):
+        print('SA_len_h', SA_len_h, (int(data_in[4], 16) >> 4) & 0xf)
+        return False
+    text_SA_len = (int(data_in[4], 16) & 0x0f) + 1
+    if text_SA_len != target_SA_len:
+        return False
+    SA_data_in = data_in[4 + text_SA_len: 4: -1]
+    SA_box_data = data_format(target_SA_text)
+    if SA_data_in != SA_box_data:
+        print('SA_data_in', SA_data_in, target_SA)
+        return False
+    if data_in[5 + text_SA_len] != config.CA_addr:
+        print('CA_addr', data_in[5 + text_SA_len], config.CA_addr)
+        return False
+    return True
 
 
 def get_fcs(cp, tlen):

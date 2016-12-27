@@ -1,16 +1,11 @@
 import config
 from PyQt4 import QtCore
 from PyQt4 import QtGui
-import serial
-import serial.tools.list_ports
-import socket
-import struct
-import threading
-import time
 import traceback
 from shared_functions import *  # NOQA
-from link_layer import *  # NOQA
 from serial_window import Ui_SerialWindow
+import link_layer
+import communication
 
 
 class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
@@ -20,7 +15,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         super(SerialWindow, self).__init__()
         self.setupUi(self)
         config.show_level = self.show_level_cb.isChecked()
-        self._receive_signal.connect(self.take_receive_data)
+        self._receive_signal.connect(self.re_text_to_box)
         # self._get_SA_signal.connect(self.read_SA)
         config.auto_trans = self.auto_trans_cb.isChecked()
         if config.auto_trans is True:
@@ -35,8 +30,8 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         self.translate_button.clicked.connect(self.send_trans)
         self.send_clear_button.clicked.connect(self.send_clear_botton)
         self.receive_clear_button.clicked.connect(self.receive_clear_botton)
-        self.connect_button.clicked.connect(self.connect)
-        self.disconnect_button.clicked.connect(self.close_connect)
+        self.link_button.clicked.connect(self.link_try)
+        self.disconnect_button.clicked.connect(self.close_link)
         self.send_button.clicked.connect(self.send_data)
         self.auto_fix_cb.clicked.connect(self.set_auto_fix)
         self.show_level_cb.clicked.connect(self.set_level_visible)
@@ -44,148 +39,54 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         self.auto_trans_cb.clicked.connect(self.set_auto_trans)
         self.send_input_box.textChanged.connect(self.calc_send_box_len)
         self.receive_input_box.textChanged.connect(self.calc_receive_box_len)
-        self.com_list.addItems(self.port_list())
+        self.com_list.addItems(communication.serial_com_scan())
         self.about.triggered.connect(self.show_about_window)
         self.config.triggered.connect(self.show_config_window)
         self.param.triggered.connect(self.show_param_window)
         self.trans_mode_button.clicked.connect(self.shift_trans_window)
 
-    def port_list(self):
-        com_List = []
-        ports = list(serial.tools.list_ports.comports())
-        for port in ports:
-            com_List.append(port[0])
-        com_List.append('前置机')
-        return com_List
-
-    def connect(self):
+    def link_try(self):
         if config.serial_check is False and config.socket_check is False:
             if self.com_list.currentText() == '前置机':
-                self.connect_socket()
+                if communication.link_socket() == 'ok':
+                    self.link_button.setText(self.com_list.currentText() + '已连接')
+                    self.disconnect_button.setText('断开')
+                    self.send_button.setEnabled(True)
+                    self.read_SA_button.setEnabled(True)
+                    self.calc_send_box_len()
+                else:
+                    self.link_button.setText(self.com_list.currentText() + '连接失败')
             else:
-                self.connect_serial()
+                serial_com = self.com_list.currentText()
+                if communication.link_serial(serial_com) == 'ok':
+                    self.link_button.setText(self.com_list.currentText() + '已连接')
+                    self.disconnect_button.setText('断开')
+                    self.send_button.setEnabled(True)
+                    self.read_SA_button.setEnabled(True)
+                    self.calc_send_box_len()
+                else:
+                    self.link_button.setText(self.com_list.currentText() + '连接失败')
 
-    def connect_socket(self):
-        try:
-            config.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            config.socket.connect((config.socket_param['IP'], config.socket_param['port']))
-            config.socket_check = True
-            threading.Thread(target=self.socket_run).start()
-            self.connect_button.setText(self.com_list.currentText() + '已连接')
-            self.disconnect_button.setText('断开')
-            self.send_button.setEnabled(True)
-            self.read_SA_button.setEnabled(True)
-            self.calc_send_box_len()
-        except Exception:
-            traceback.print_exc()
-            self.connect_button.setText(self.com_list.currentText() + '连接失败')
-
-    def connect_serial(self):
-        try:
-            config.serial = serial.Serial(
-                self.com_list.currentText(),
-                config.serial_param['baudrate'],
-                config.serial_param['bytesize'],
-                config.serial_param['parity'],
-                config.serial_param['stopbits'],
-                timeout=config.serial_param['timeout'])
-            config.serial.close()
-            config.serial.open()
-            config.serial_check = True
-            threading.Thread(target=self.serial_run).start()
-            self.connect_button.setText(self.com_list.currentText() + '已连接')
-            self.disconnect_button.setText('断开')
-            self.send_button.setEnabled(True)
-            self.read_SA_button.setEnabled(True)
-            self.calc_send_box_len()
-        except Exception:
-            traceback.print_exc()
-            self.connect_button.setText(self.com_list.currentText() + '连接失败')
-
-    def close_connect(self):
-        if config.serial_check is True:
-            self.close_serial()
-        elif config.socket_check is True:
-            self.close_socket()
-
-    def close_serial(self):
-        if config.serial_check is True:
-            config.serial.close()
-            config.serial_check = False
-            self.connect_button.setText('连接')
+    def close_link(self):
+        if config.serial_check is True or config.socket_check is True:
+            communication.close_serial()
+            communication.close_socket()
+            self.link_button.setText('连接')
             self.send_button.setText('请建立连接')
             self.send_button.setEnabled(False)
             self.read_SA_button.setEnabled(False)
             self.disconnect_button.setText('刷新')
-        else:  # 刷新列表
+        else:
             self.com_list.clear()
-            self.com_list.addItems(self.port_list())
-
-    def close_socket(self):
-        if config.socket_check is True:
-            config.socket.close()
-            config.socket_check = False
-            self.connect_button.setText('连接')
-            self.send_button.setText('请建立连接')
-            self.send_button.setEnabled(False)
-            self.read_SA_button.setEnabled(False)
-            self.disconnect_button.setText('刷新')
-        else:  # 刷新列表
-            self.com_list.clear()
-            self.com_list.addItems(self.port_list())
-
-    def serial_run(self):
-        while True:
-            try:
-                data_wait = config.serial.inWaiting()
-            except Exception:
-                traceback.print_exc()
-                break
-            re_text = ''
-            while data_wait > 0:
-                re_data = config.serial.readline()
-                for re_char in re_data:
-                    re_text += '{0:02X} '.format(re_char)
-                time.sleep(0.03)
-                data_wait = config.serial.inWaiting()
-            if re_text != '':
-                self._receive_signal.emit(re_text)
-            if config.serial_check is False:
-                print('serial_run quit')
-                break
-
-    def socket_run(self):
-        while True:
-            try:
-                re_byte = config.socket.recv(4096)
-                re_text = ''.join(['%02X ' % x for x in re_byte])
-                print(re_text)
-            except Exception:
-                traceback.print_exc()
-                break
-            if re_text != '':
-                self._receive_signal.emit(re_text)
-            if config.socket_check is False:
-                print('socket_run quit')
-                break
+            self.com_list.addItems(communication.serial_com_scan())
 
     def send_data(self):
         self._receive_signal.disconnect()
-        self._receive_signal.connect(self.take_receive_data)
+        self._receive_signal.connect(self.re_text_to_box)
         input_text = self.send_input_box.toPlainText()
-        self.send(input_text)
+        communication.send(input_text)
 
-    def send(self, send_text):
-        data = data_format(send_text)
-        send_d = b''
-        for char in data:
-            send_d += struct.pack('B', int(char, 16))
-        if config.serial_check is True:
-            config.serial.write(send_d)
-        if config.socket_check is True:
-            config.socket.sendall(send_d)
-
-    def take_receive_data(self, re_text):
+    def re_text_to_box(self, re_text):
         self.receive_input_box.setText(re_text)
 
     def get_SA(self):
@@ -193,16 +94,16 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         input_text = '682100434FAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA10CC1C05010140000200007D1B16'
         self._receive_signal.disconnect()
         self._receive_signal.connect(self.read_SA)
-        self.send(input_text)
+        communication.send(input_text)
 
     def read_SA(self, re_text):
-        data = data_format(re_text)
-        ret_dict = get_addr(data)
+        data = link_layer.data_format(re_text)
+        ret_dict = link_layer.get_addr(data)
         self.SA_box.setText(ret_dict['SA'])
         self.SA_len_box.setText(ret_dict['SA_len'])
         self.read_SA_button.setText('成功')
         self._receive_signal.disconnect()
-        self._receive_signal.connect(self.take_receive_data)
+        self._receive_signal.connect(self.re_text_to_box)
 
     def quick_fix(self):
         if self.is_good_linklayer() is False:
@@ -210,12 +111,12 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
             self.send_trans()
         else:
             input_text = self.send_input_box.toPlainText()
-            data_in = data_format(input_text)
+            data_in = link_layer.data_format(input_text)
             if config.good_L is not None:
                 data_in[1], data_in[2] = config.good_L[0], config.good_L[1]
             else:
                 if config.good_HCS is not None:
-                    ret_dict = get_addr(data_in)
+                    ret_dict = link_layer.get_addr(data_in)
                     hcs_pos = 6 + int(ret_dict['SA_len'])
                     data_in[hcs_pos], data_in[hcs_pos + 1] = config.good_HCS[0], config.good_HCS[1]
                     input_text = ''
@@ -234,9 +135,9 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
     def send_trans(self):
         input_text = self.send_input_box.toPlainText()
         try:
-            data_in = data_format(input_text)
+            data_in = link_layer.data_format(input_text)
             print('data_in', data_in)
-            ret_dict = all_translate(data_in)
+            ret_dict = link_layer.all_translate(data_in)
             if ret_dict['res'] == 'ok':
                 self.quick_fix_button.setText(
                     '修正地址' if self.is_good_linklayer() is False
@@ -247,14 +148,13 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
                     if self.is_good_linklayer() is False:
                         self.fix_addr()
                         input_text = self.send_input_box.toPlainText()
-                        data_in = data_format(input_text)
-                        all_translate(data_in)
+                        data_in = link_layer.data_format(input_text)
+                        link_layer.all_translate(data_in)
                 elif ret_dict['input_type'] == 'apdu':
                     input_text = self.add_link_layer(input_text)
                     self.send_input_box.setText(input_text)
-                    if config.auto_trans is True:
-                        data_in = data_format(input_text)
-                        all_translate(data_in)
+                    data_in = link_layer.data_format(input_text)
+                    link_layer.all_translate(data_in)
             else:
                 self.quick_fix_button.setText('修正长度域' if config.good_L is not None else '修正格式')
         except Exception:
@@ -266,103 +166,36 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
     def receive_trans(self):
         input_text = self.receive_input_box.toPlainText()
         try:
-            data_in = data_format(input_text)
-            all_translate(data_in)
+            data_in = link_layer.data_format(input_text)
+            link_layer.all_translate(data_in)
         except Exception as e:
             print(e)
             output('\n\n报文解析过程出现问题，请检查报文。若报文无问题请反馈665593，谢谢！')
         self.receive_output_box.setText(config.output_text)
         config.output_text = ''
 
-    def is_good_linklayer(self):
-        input_text = self.send_input_box.toPlainText()
-        data_in = data_format(input_text)
-        SA_type = self.SA_type_list.currentText()
-        SA_len_h = {
-            '单地址': 0,
-            '通配地址': 1,
-            '组地址': 2,
-            '广播地址': 3,
-        }[SA_type]
-        if SA_len_h != ((int(data_in[4], 16) >> 4) & 0xf):
-            print('SA_len_h', SA_len_h, (int(data_in[4], 16) >> 4) & 0xf)
-            return False
-        SA_len = (int(data_in[4], 16) & 0x0f) + 1
-        if SA_len != int(self.SA_len_box.text()):
-            return False
-        SA_data_in = data_in[4 + SA_len: 4: -1]
-        SA_box_data = data_format(self.SA_box.text())
-        if SA_data_in != SA_box_data:
-            print('SA_data_in', SA_data_in, SA_box_data)
-            return False
-        if data_in[5 + SA_len] != config.CA_addr:
-            print('data_in')
-            return False
-        return True
-
-    def fix_addr(self):
-        input_text = self.send_input_box.toPlainText()
-        print('input_text', input_text)
-        data_in = data_format(input_text)
-        SA_len = (int(data_in[4], 16) & 0x0f) + 1
-        print('SA_len', SA_len)
-        apdu_in = data_in[5 + SA_len + 3: -3]
-        apdu_text = ''
-        for text in apdu_in:
-            apdu_text += text + ' '
-        print('apdu_text:', apdu_text)
-        self.send_input_box.setText(self.add_link_layer(apdu_text))
-
-    def add_link_layer(self, input_text):
-        apdu_start = '68 '
-        C = '43 '
+    def add_link_layer(self, apdu_text):
         SA = self.SA_box.text()
         SA_len = int(self.SA_len_box.text())
-        if SA_len > 16 or SA_len < 1:
-            SA_len = 6
-            self.SA_len_box.setText('6')
-        SA_data = data_format(SA)
-        SA_content = ''
-        for count in range(SA_len):
-            SA_data.insert(0, '00')
-        SA_data = SA_data[-SA_len:]
-        for SA_member in SA_data:
-            SA_content += SA_member
-        self.SA_box.setText(SA_content)
-        SA_data.reverse()
-        print('SA_data:', SA_data)
-        SA_text = ''
-        for SA_member in SA_data:
-            SA_text += SA_member + ' '
-        CA = data_format(config.CA_addr)
-        CA_text = CA[-1] + ' '
-        apdu_len = calc_len(input_text)
-        full_len = 7 + SA_len + apdu_len + 2
-        print(full_len)
         SA_type = self.SA_type_list.currentText()
-        SA_len_h = {
-            '单地址': 0,
-            '通配地址': 1,
-            '组地址': 2,
-            '广播地址': 3,
-        }[SA_type]
-        SA_ = ((SA_len_h << 6) | ((SA_len - 1) & 0xf)) & 0xff  # 地址类型、逻辑地址、地址长度
-        # print('SA_len_h, SA_, SA_len:', SA_len_h, SA_, SA_len)
-        L = '{0:02X} {1:02X} '.format(full_len & 0xff, (full_len >> 8) & 0xff)  # 低位在前
-        apdu_start += L + C + '{0:02X} '.format(SA_) + SA_text + CA_text
-        hcs_data = data_format(apdu_start)
-        # print('hcd_data:', hcs_data[1:], 'len:', len(hcs_data) - 1)
-        hcs = get_fcs(hcs_data[1:], len(hcs_data) - 1)
-        HCS = '{0:02X} {1:02X} '.format(hcs & 0xff, (hcs >> 8) & 0xff)  # 低位在前
-        apdu_start += HCS
+        return link_layer.add_link_layer(input_text, SA_type, SA, SA_len)
 
-        fcs_data = data_format(apdu_start + input_text)
-        fcs = get_fcs(fcs_data[1:], len(fcs_data) - 1)
-        FCS = '{0:02X} {1:02X} '.format(fcs & 0xff, (fcs >> 8) & 0xff)  # 低位在前
+    def is_good_linklayer(self):
+        input_text = self.send_input_box.toPlainText()
+        box_SA_type = self.SA_type_list.currentText()
+        box_SA_len = int(self.SA_len_box.text())
+        box_SA_text = self.SA_box.text()
+        return link_layer.is_same_addr(input_text, box_SA_type, box_SA_text, box_SA_len)
 
-        full_text = apdu_start + input_text + FCS + '16'
-        print('full_text', full_text)
-        return full_text
+    def fix_addr(self):
+        apdu_text = link_layer.get_apdu_text(self.send_input_box.toPlainText())
+        self.send_input_box.setText(self.add_link_layer(apdu_text))
+
+    def add_link_layer(self, apdu_text):
+        SA = self.SA_box.text()
+        SA_len = int(self.SA_len_box.text())
+        SA_type = self.SA_type_list.currentText()
+        return link_layer.add_link_layer(apdu_text, SA_type, SA, SA_len)
 
     def send_clear_botton(self):
         self.send_input_box.setFocus()
@@ -398,7 +231,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
 
     def calc_send_box_len(self):
         input_text = self.send_input_box.toPlainText()
-        input_len = calc_len(input_text)
+        input_len = link_layer.calc_text_len(input_text)
         len_message = str(input_len) + '字节(' + str(hex(input_len)) + ')'
         if config.serial_check is True or config.socket_check is True:
             self.send_button.setText('发送（' + len_message + '）')
@@ -407,7 +240,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
 
     def calc_receive_box_len(self):
         input_text = self.receive_input_box.toPlainText()
-        input_len = calc_len(input_text)
+        input_len = link_layer.calc_text_len(input_text)
         len_message = str(input_len) + '字节(' + str(hex(input_len)) + ')'
         self.receive_clear_button.setText('清空（' + len_message + '）')
 

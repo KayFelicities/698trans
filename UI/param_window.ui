@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>564</width>
-    <height>651</height>
+    <width>546</width>
+    <height>638</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -52,10 +52,13 @@
             <property name="orientation">
              <enum>Qt::Vertical</enum>
             </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
             <property name="sizeHint" stdset="0">
              <size>
               <width>20</width>
-              <height>40</height>
+              <height>70</height>
              </size>
             </property>
            </spacer>
@@ -168,7 +171,7 @@
                       </size>
                      </property>
                      <property name="text">
-                      <string>设置</string>
+                      <string>设置上方时间</string>
                      </property>
                     </widget>
                    </item>
@@ -193,7 +196,7 @@
                       </size>
                      </property>
                      <property name="text">
-                      <string>设置当前时间</string>
+                      <string>设置正确时间</string>
                      </property>
                     </widget>
                    </item>
@@ -251,6 +254,21 @@
         <string>通信参数</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_7">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetDefaultConstraint</enum>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>5</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
         <item row="0" column="1">
          <widget class="QGroupBox" name="groupBox_7">
           <property name="title">

@@ -94,7 +94,7 @@ class TransWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_TransWindow):
 
     def calc_len_box(self):
         input_text = self.input_box.toPlainText()
-        input_len = calc_len(input_text)
+        input_len = calc_text_len(input_text)
         len_message = str(input_len) + '字节(' + str(hex(input_len)) + ')'
         self.clear_button.setText('清空（' + len_message + '）')
 

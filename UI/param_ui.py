@@ -1,8 +1,8 @@
 import config
 from shared_functions import *  # NOQA
-from take_re_data import *  # NOQA
-from link_layer import *  # NOQA
+import link_layer
 import data_translate
+import communication
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 from param_window import Ui_ParamWindow
@@ -25,7 +25,7 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         apdu_text = '0501014000020000'
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(self.read_DT)
-        config.serial_window.send(config.serial_window.add_link_layer(apdu_text))
+        communication.send(config.serial_window.add_link_layer(apdu_text))
 
     def DT_set(self):
         self.DT_set_res_t.setText('')
@@ -48,12 +48,12 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         apdu_text = '06010D40000200' + DT_text + '00'
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(self.read_res)
-        config.serial_window.send(config.serial_window.add_link_layer(apdu_text))
+        communication.send(config.serial_window.add_link_layer(apdu_text))
 
     def read_DT(self, re_text):
-        data = data_format(re_text)
+        data = link_layer.data_format(re_text)
         offset = 0
-        ret_dict = get_addr(data)
+        ret_dict = link_layer.get_addr(data)
         offset += 5 + int(ret_dict['SA_len']) + 10
         if data[offset] == '01':
             self.DT_set_res_t.setText('成功')
@@ -71,16 +71,16 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         else:
             self.DT_set_res_t.setText('失败：' + data_translate.dar_explain[data[offset + 1]])
         config.serial_window._receive_signal.disconnect()
-        config.serial_window._receive_signal.connect(config.serial_window.take_receive_data)
+        config.serial_window._receive_signal.connect(config.serial_window.re_text_to_box)
 
     def read_res(self, re_text):
-        data = data_format(re_text)
+        data = link_layer.data_format(re_text)
         offset = 0
-        ret_dict = get_addr(data)
+        ret_dict = link_layer.get_addr(data)
         offset += 5 + int(ret_dict['SA_len']) + 10
         if data[offset] == '00':
             self.DT_set_res_t.setText('成功')
         else:
             self.DT_set_res_t.setText('失败：' + data_translate.dar_explain[data[offset]])
         config.serial_window._receive_signal.disconnect()
-        config.serial_window._receive_signal.connect(config.serial_window.take_receive_data)
+        config.serial_window._receive_signal.connect(config.serial_window.re_text_to_box)
