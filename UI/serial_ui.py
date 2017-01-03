@@ -25,13 +25,13 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
             self.send_input_box.textChanged.disconnect(self.send_trans)
             self.translate_button.setVisible(True)
         self.receive_input_box.textChanged.connect(self.receive_trans)
-        self.read_SA_button.clicked.connect(self.get_SA)
+        self.read_SA_b.clicked.connect(self.get_SA)
         self.quick_fix_button.clicked.connect(self.quick_fix)
         self.translate_button.clicked.connect(self.send_trans)
         self.send_clear_button.clicked.connect(self.send_clear_botton)
         self.receive_clear_button.clicked.connect(self.receive_clear_botton)
-        self.link_button.clicked.connect(self.link_try)
-        self.disconnect_button.clicked.connect(self.close_link)
+        self.link_b.clicked.connect(self.link_try)
+        self.unlink_b.clicked.connect(self.close_link)
         self.send_button.clicked.connect(self.send_data)
         self.auto_fix_cb.clicked.connect(self.set_auto_fix)
         self.show_level_cb.clicked.connect(self.set_level_visible)
@@ -49,33 +49,33 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         if config.serial_check is False and config.socket_check is False:
             if self.com_list.currentText() == '前置机':
                 if communication.link_socket() == 'ok':
-                    self.link_button.setText(self.com_list.currentText() + '已连接')
-                    self.disconnect_button.setText('断开')
+                    self.link_b.setText(self.com_list.currentText() + '已连接')
+                    self.unlink_b.setText('断开')
                     self.send_button.setEnabled(True)
-                    self.read_SA_button.setEnabled(True)
+                    self.read_SA_b.setEnabled(True)
                     self.calc_send_box_len()
                 else:
-                    self.link_button.setText(self.com_list.currentText() + '连接失败')
+                    self.link_b.setText(self.com_list.currentText() + '连接失败')
             else:
                 serial_com = self.com_list.currentText()
                 if communication.link_serial(serial_com) == 'ok':
-                    self.link_button.setText(self.com_list.currentText() + '已连接')
-                    self.disconnect_button.setText('断开')
+                    self.link_b.setText(self.com_list.currentText() + '已连接')
+                    self.unlink_b.setText('断开')
                     self.send_button.setEnabled(True)
-                    self.read_SA_button.setEnabled(True)
+                    self.read_SA_b.setEnabled(True)
                     self.calc_send_box_len()
                 else:
-                    self.link_button.setText(self.com_list.currentText() + '连接失败')
+                    self.link_b.setText(self.com_list.currentText() + '连接失败')
 
     def close_link(self):
         if config.serial_check is True or config.socket_check is True:
             communication.close_serial()
             communication.close_socket()
-            self.link_button.setText('连接')
+            self.link_b.setText('连接')
             self.send_button.setText('请建立连接')
             self.send_button.setEnabled(False)
-            self.read_SA_button.setEnabled(False)
-            self.disconnect_button.setText('刷新')
+            self.read_SA_b.setEnabled(False)
+            self.unlink_b.setText('刷新')
         else:
             self.com_list.clear()
             self.com_list.addItems(communication.serial_com_scan())
@@ -90,7 +90,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         self.receive_input_box.setText(re_text)
 
     def get_SA(self):
-        self.read_SA_button.setText('读取')
+        self.read_SA_b.setText('读取')
         input_text = '682100434FAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA10CC1C05010140000200007D1B16'
         self._receive_signal.disconnect()
         self._receive_signal.connect(self.read_SA)
@@ -101,7 +101,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         ret_dict = link_layer.get_addr(data)
         self.SA_box.setText(ret_dict['SA'])
         self.SA_len_box.setText(ret_dict['SA_len'])
-        self.read_SA_button.setText('成功')
+        self.read_SA_b.setText('成功')
         self._receive_signal.disconnect()
         self._receive_signal.connect(self.re_text_to_box)
 

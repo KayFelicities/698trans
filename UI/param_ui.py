@@ -19,9 +19,11 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
 
     def clear_res(self):
         self.DT_set_res_t.setText('')
+        self.DT_set_fuck_t.setText('')
 
     def DT_read(self):
         self.DT_set_res_t.setText('')
+        self.DT_set_fuck_t.setText('')
         apdu_text = '0501014000020000'
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(self.read_DT)
@@ -29,11 +31,13 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
 
     def DT_set(self):
         self.DT_set_res_t.setText('')
+        self.DT_set_fuck_t.setText('')
         DT_box_content = self.DT_box.dateTime()
         self.set_DT(DT_box_content)
 
     def DT_set_now(self):
         self.DT_set_res_t.setText('')
+        self.DT_set_fuck_t.setText('')
         DT_now = QtCore.QDateTime.currentDateTime()
         # print('DT_now', DT_now)
         self.set_DT(DT_now)
@@ -57,6 +61,7 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         offset += 5 + int(ret_dict['SA_len']) + 10
         if data[offset] == '01':
             self.DT_set_res_t.setText('成功')
+            self.DT_set_fuck_t.setText('需要锲而不舍')
             offset += 2
             DT_read = QtCore.QDateTime(
                 (int(data[offset], 16) << 8) | int(data[offset + 1], 16),
@@ -80,6 +85,7 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         offset += 5 + int(ret_dict['SA_len']) + 10
         if data[offset] == '00':
             self.DT_set_res_t.setText('成功')
+            self.DT_set_fuck_t.setText('需要锲而不舍')
         else:
             self.DT_set_res_t.setText('失败：' + data_translate.dar_explain[data[offset]])
         config.serial_window._receive_signal.disconnect()
