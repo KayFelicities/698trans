@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>546</width>
-    <height>638</height>
+    <width>550</width>
+    <height>668</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,20 +20,14 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_10">
-    <property name="leftMargin">
+    <property name="horizontalSpacing">
+     <number>2</number>
+    </property>
+    <property name="verticalSpacing">
      <number>0</number>
     </property>
-    <property name="topMargin">
-     <number>3</number>
-    </property>
-    <property name="rightMargin">
-     <number>0</number>
-    </property>
-    <property name="bottomMargin">
-     <number>0</number>
-    </property>
-    <property name="spacing">
-     <number>0</number>
+    <property name="margin">
+     <number>2</number>
     </property>
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
@@ -283,128 +277,6 @@
            </layout>
           </item>
           <item>
-           <widget class="QPushButton" name="DT_set_res_t">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>200</height>
-             </size>
-            </property>
-            <property name="palette">
-             <palette>
-              <active>
-               <colorrole role="WindowText">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>255</red>
-                  <green>0</green>
-                  <blue>0</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </active>
-              <inactive>
-               <colorrole role="WindowText">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>255</red>
-                  <green>0</green>
-                  <blue>0</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </inactive>
-              <disabled>
-               <colorrole role="WindowText">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>120</red>
-                  <green>120</green>
-                  <blue>120</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </disabled>
-             </palette>
-            </property>
-            <property name="font">
-             <font>
-              <family>华文楷体</family>
-              <pointsize>150</pointsize>
-              <weight>50</weight>
-              <bold>false</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string> </string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="DT_set_fuck_t">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="palette">
-             <palette>
-              <active>
-               <colorrole role="WindowText">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>255</red>
-                  <green>0</green>
-                  <blue>0</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </active>
-              <inactive>
-               <colorrole role="WindowText">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>255</red>
-                  <green>0</green>
-                  <blue>0</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </inactive>
-              <disabled>
-               <colorrole role="WindowText">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>120</red>
-                  <green>120</green>
-                  <blue>120</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </disabled>
-             </palette>
-            </property>
-            <property name="font">
-             <font>
-              <family>华文楷体</family>
-              <pointsize>45</pointsize>
-              <weight>50</weight>
-              <bold>false</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string> </string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
            <spacer name="verticalSpacer_2">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -531,7 +403,7 @@
                     </size>
                    </property>
                    <property name="text">
-                    <string>长度</string>
+                    <string>长度(只读)</string>
                    </property>
                    <property name="alignment">
                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -540,6 +412,9 @@
                  </item>
                  <item>
                   <widget class="QLineEdit" name="SA_len_box">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                      <horstretch>0</horstretch>
@@ -685,7 +560,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLineEdit" name="S_ip_port">
+                  <widget class="QLineEdit" name="S_port_box">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                      <horstretch>0</horstretch>
@@ -790,7 +665,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QComboBox" name="local_IP_mode_l">
+                  <widget class="QComboBox" name="local_ip_mode_l">
                    <item>
                     <property name="text">
                      <string>DHCP（0）</string>
@@ -844,7 +719,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLineEdit" name="local_IP_box">
+                  <widget class="QLineEdit" name="local_ip_box">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                      <horstretch>0</horstretch>
@@ -1104,7 +979,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="locao_set_b">
+              <widget class="QPushButton" name="local_set_b">
                <property name="text">
                 <string>设置</string>
                </property>
@@ -1856,6 +1731,9 @@
             <layout class="QHBoxLayout" name="horizontalLayout_41">
              <item>
               <widget class="QPushButton" name="commu_read_b">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="text">
                 <string>读取</string>
                </property>
@@ -1863,6 +1741,9 @@
              </item>
              <item>
               <widget class="QPushButton" name="commu_set_b">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="text">
                 <string>设置</string>
                </property>
@@ -2642,6 +2523,71 @@
        </attribute>
       </widget>
      </widget>
+    </item>
+    <item row="1" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <spacer name="horizontalSpacer_5">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>操作结果：</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="res_b">
+        <property name="minimumSize">
+         <size>
+          <width>300</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>微软雅黑</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_6">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
