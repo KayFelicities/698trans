@@ -372,6 +372,9 @@
               <verstretch>1</verstretch>
              </sizepolicy>
             </property>
+            <property name="text">
+             <string>20083</string>
+            </property>
            </widget>
           </item>
           <item>
