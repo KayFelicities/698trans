@@ -27,6 +27,8 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         self.C_set_b.clicked.connect(self.communication_set)
         self.esam_r_info_b.clicked.connect(self.esam_info_read)
         self.esam_r_certi_b.clicked.connect(self.esam_certi_read)
+        self.evt_r_b.clicked.connect(self.evt_read)
+        self.evt_set_b.clicked.connect(self.evt_set)
 
     def clear_res(self):
         self.res_b.setText('')
@@ -426,9 +428,81 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
             res_sum = False
             self.esam_certi_box.setText('失败：' + data_translate.dar_explain[data[offset + 1]])
 
-        if res_sum is True:
+    def evt_read(self):
+        self.res_b.setText('')
+        apdu_text = '0501003FFF020000'
+        config.serial_window._receive_signal.disconnect()
+        config.serial_window._receive_signal.connect(self.re_evt)
+        communication.send(config.serial_window.add_link_layer(apdu_text))
+
+    def evt_set(self, DT):
+        self.res_b.setText('')
+        bit_string_text = ''
+        for byte_index in range(11):
+            for bit_index in range(8):
+                evt_no = byte_index * 8 + bit_index + 1
+                bit_val = 0
+                if evt_no <= 85:
+                    if eval('self.valid_c_' + str(evt_no) + '.isChecked()') is True:
+                        bit_val = 1
+                bit_string_text += str(bit_val)
+        bit_string_text = hex(int(bit_string_text, 2)).split('x')[1].rjust(22, '0')
+        valid_text = '0455' + bit_string_text
+        bit_string_text = ''
+        for byte_index in range(11):
+            for bit_index in range(8):
+                evt_no = byte_index * 8 + bit_index + 1
+                bit_val = 0
+                if evt_no <= 85:
+                    if eval('self.rpt_c_' + str(evt_no) + '.isChecked()') is True:
+                        bit_val = 1
+                bit_string_text += str(bit_val)
+        bit_string_text = hex(int(bit_string_text, 2)).split('x')[1].rjust(22, '0')
+        rpt_text = '0455' + bit_string_text
+        apdu_text = '060101 3FFF0200 0202' + valid_text + rpt_text + '00'
+        config.serial_window._receive_signal.disconnect()
+        config.serial_window._receive_signal.connect(self.read_res)
+        communication.send(config.serial_window.add_link_layer(apdu_text))
+
+    def re_evt(self, re_text):
+        data = link_layer.data_format(re_text)
+        offset = 0
+        ret_dict = link_layer.get_addr(data)
+        offset += 5 + int(ret_dict['SA_len']) + 10
+        if data[offset] == '01':
             self.res_b.setStyleSheet('color: green')
             self.res_b.setText('成功')
+            offset += 4
+            bit_string_len = int(data[offset], 16)
+            byte_len = bit_string_len // 8 if bit_string_len % 8 == 0 else bit_string_len // 8 + 1
+            offset += 1
+            for byte_index in range(byte_len):
+                byte_int = int(data[offset], 16)
+                offset += 1
+                for bit_index in range(8):
+                    evt_no = byte_index * 8 + bit_index + 1
+                    if evt_no <= 85:
+                        if (byte_int >> (7 - bit_index)) & 0x01 == 1:
+                            eval('self.valid_c_' + str(evt_no) + '.setChecked(True)')
+                        else:
+                            eval('self.valid_c_' + str(evt_no) + '.setChecked(False)')
+            offset += 1
+            bit_string_len = int(data[offset], 16)
+            byte_len = bit_string_len // 8 if bit_string_len % 8 == 0 else bit_string_len // 8 + 1
+            offset += 1
+            for byte_index in range(byte_len):
+                byte_int = int(data[offset], 16)
+                offset += 1
+                for bit_index in range(8):
+                    evt_no = byte_index * 8 + bit_index + 1
+                    if evt_no <= 85:
+                        if (byte_int >> (7 - bit_index)) & 0x01 == 1:
+                            eval('self.rpt_c_' + str(evt_no) + '.setChecked(True)')
+                        else:
+                            eval('self.rpt_c_' + str(evt_no) + '.setChecked(False)')
+        else:
+            self.res_b.setStyleSheet('color: red')
+            self.res_b.setText('失败：' + data_translate.dar_explain[data[offset + 1]])
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(config.serial_window.re_text_to_box)
 

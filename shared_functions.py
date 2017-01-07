@@ -373,7 +373,7 @@ def take_bit_string(data, add_text='', bit_len=None, level=-1):
     bit_string_text = ''
     for count in range(byte_len):
         bit_string_text += data[offset + count]
-    output(' —— ' + add_text + str(bin(int(bit_string_text, 16))) + '(bit-string,长度' + str(bit_len) + ')')
+    output(' —— ' + add_text + str(bin(int(bit_string_text, 16))).split('b')[1].rjust(bit_len, '0') + '(bit-string,长度' + str(bit_len) + ')')
     offset += byte_len
     return offset
 

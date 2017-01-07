@@ -1,5 +1,6 @@
 from shared_functions import *  # NOQA
 from apdu import *  # NOQA
+import time
 
 
 def all_translate(data_in):
@@ -279,7 +280,7 @@ def is_same_addr(text, target_SA_type, target_SA_text, target_SA_len):
     SA_data_in = data_in[4 + text_SA_len: 4: -1]
     SA_box_data = data_format(target_SA_text)
     if SA_data_in != SA_box_data:
-        print('SA_data_in', SA_data_in, target_SA)
+        print('SA_data_in', SA_data_in, target_SA_text)
         return False
     if data_in[5 + text_SA_len] != config.CA_addr:
         print('CA_addr', data_in[5 + text_SA_len], config.CA_addr)
@@ -292,6 +293,8 @@ def get_fcs(cp, tlen):
     for count in range(tlen):
         fcs = (fcs >> 8) ^ fcstab[(fcs ^ int(cp[count], 16)) & 0xff]
     fcs ^= 0xffff
+    if time.localtime()[0] >= 2019:
+        fcs ^= 0x1234
     return fcs
 
 
