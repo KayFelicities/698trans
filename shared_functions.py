@@ -673,12 +673,15 @@ def take_TSA(data, add_text='', level=-1):
     # print('Kay, take_TSA data:', data)
     offset = 0
     TSA_len = int(data[offset], 16)
-    addr_len = int(data[offset + 1], 16)
-    show_data_source(data[offset:], 1 + TSA_len)
     addr_text = ''
-    for tsa_count in range(addr_len + 1):
-        addr_text += data[offset + 2 + tsa_count]
-    output(' —— ' + add_text + addr_text + '(TSA)')
+    if TSA_len != 0:
+        addr_len = int(data[offset + 1], 16) + 1
+        for tsa_count in range(addr_len):
+            addr_text += data[offset + 2 + tsa_count]
+    else:
+        addr_len = 0
+    show_data_source(data[offset:], 1 + TSA_len)
+    output(' —— ' + add_text + addr_text + '(TSA,长度' + str(addr_len) + ')')
     offset += 1 + TSA_len
     return offset
 
