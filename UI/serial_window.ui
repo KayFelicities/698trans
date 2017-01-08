@@ -11,11 +11,11 @@
     <x>0</x>
     <y>0</y>
     <width>848</width>
-    <height>673</height>
+    <height>667</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>698解析工具（后台模式）_V4.0(2017.01)</string>
+   <string>698解析工具（后台模式）_V4.1(2017.01)</string>
   </property>
   <property name="windowIcon">
    <iconset resource="icon.qrc">
@@ -1373,25 +1373,26 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>帮助</string>
     </property>
-    <addaction name="about"/>
+    <addaction name="about_menu"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
      <string>设置</string>
     </property>
-    <addaction name="config"/>
+    <addaction name="config_menu"/>
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="title">
      <string>常用命令</string>
     </property>
-    <addaction name="param"/>
+    <addaction name="param_menu"/>
+    <addaction name="task_menu"/>
    </widget>
    <addaction name="menu_3"/>
    <addaction name="menu_2"/>
    <addaction name="menu"/>
   </widget>
-  <action name="about">
+  <action name="about_menu">
    <property name="text">
     <string>关于</string>
    </property>
@@ -1399,14 +1400,19 @@ p, li { white-space: pre-wrap; }
     <enum>Qt::WindowShortcut</enum>
    </property>
   </action>
-  <action name="config">
+  <action name="config_menu">
    <property name="text">
     <string>通信配置</string>
    </property>
   </action>
-  <action name="param">
+  <action name="param_menu">
    <property name="text">
     <string>参数配置</string>
+   </property>
+  </action>
+  <action name="task_menu">
+   <property name="text">
+    <string>采集监控</string>
    </property>
   </action>
  </widget>

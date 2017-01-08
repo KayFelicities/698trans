@@ -12,6 +12,7 @@ serial_window = None
 about_window = None
 config_window = None
 param_window = None
+task_window = None
 
 CA_addr = '10'
 

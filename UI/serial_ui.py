@@ -40,9 +40,10 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         self.send_input_box.textChanged.connect(self.calc_send_box_len)
         self.receive_input_box.textChanged.connect(self.calc_receive_box_len)
         self.com_list.addItems(communication.serial_com_scan())
-        self.about.triggered.connect(self.show_about_window)
-        self.config.triggered.connect(self.show_config_window)
-        self.param.triggered.connect(self.show_param_window)
+        self.about_menu.triggered.connect(self.show_about_window)
+        self.config_menu.triggered.connect(self.show_config_window)
+        self.param_menu.triggered.connect(self.show_param_window)
+        self.task_menu.triggered.connect(self.show_task_window)
         self.trans_mode_button.clicked.connect(self.shift_trans_window)
 
     def link_try(self):
@@ -253,6 +254,9 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
 
     def show_param_window(self):
         config.param_window.show()
+
+    def show_task_window(self):
+        config.task_window.show()
 
     def shift_trans_window(self):
         self.hide()
