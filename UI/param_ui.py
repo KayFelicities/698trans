@@ -13,6 +13,8 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
     def __init__(self):
         super(ParamWindow, self).__init__()
         self.setupUi(self)
+        self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+        self.always_top_cb.clicked.connect(self.set_always_top)
         self.res_b.clicked.connect(self.clear_res)
         self.DT_read_b.clicked.connect(self.DT_read)
         self.DT_set_b.clicked.connect(self.DT_set)
@@ -34,6 +36,14 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
 
     def clear_res(self):
         self.res_b.setText('')
+
+    def set_always_top(self):
+        if (self.always_top_cb.isChecked() is True):
+            self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+            self.show()
+        else:
+            self.setWindowFlags(QtCore.Qt.Widget)
+            self.show()
 
     def DT_read(self):
         self.res_b.setText('')

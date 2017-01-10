@@ -746,6 +746,9 @@
                  </item>
                  <item>
                   <widget class="QComboBox" name="local_ip_mode_l">
+                   <property name="currentIndex">
+                    <number>-1</number>
+                   </property>
                    <item>
                     <property name="text">
                      <string>DHCP（0）</string>
@@ -1437,6 +1440,9 @@
                  </item>
                  <item>
                   <widget class="QComboBox" name="C_work_mode_l">
+                   <property name="currentIndex">
+                    <number>-1</number>
+                   </property>
                    <item>
                     <property name="text">
                      <string>混合模式（0）</string>
@@ -1491,6 +1497,9 @@
                  </item>
                  <item>
                   <widget class="QComboBox" name="C_online_mode_l">
+                   <property name="currentIndex">
+                    <number>-1</number>
+                   </property>
                    <item>
                     <property name="text">
                      <string>永久在线（0）</string>
@@ -1540,6 +1549,9 @@
                  </item>
                  <item>
                   <widget class="QComboBox" name="C_connect_mode_l">
+                   <property name="currentIndex">
+                    <number>-1</number>
+                   </property>
                    <item>
                     <property name="text">
                      <string>TCP（0）</string>
@@ -1589,6 +1601,9 @@
                  </item>
                  <item>
                   <widget class="QComboBox" name="C_connect_app_mode_l">
+                   <property name="currentIndex">
+                    <number>-1</number>
+                   </property>
                    <item>
                     <property name="text">
                      <string>主备模式（0）</string>

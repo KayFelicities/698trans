@@ -27,8 +27,8 @@ class Ui_TaskWindow(object):
         TaskWindow.setObjectName(_fromUtf8("TaskWindow"))
         TaskWindow.resize(539, 674)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.On)
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/698/698.ico")), QtGui.QIcon.Normal, QtGui.QIcon.On)
         TaskWindow.setWindowIcon(icon)
         self.centralwidget = QtGui.QWidget(TaskWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
@@ -1406,6 +1406,11 @@ class Ui_TaskWindow(object):
         self.horizontalLayout_3.addWidget(self.res_b)
         spacerItem23 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem23)
+        self.always_top_cb = QtGui.QCheckBox(self.centralwidget)
+        self.always_top_cb.setMinimumSize(QtCore.QSize(0, 1))
+        self.always_top_cb.setChecked(True)
+        self.always_top_cb.setObjectName(_fromUtf8("always_top_cb"))
+        self.horizontalLayout_3.addWidget(self.always_top_cb)
         self.gridLayout_11.addLayout(self.horizontalLayout_3, 1, 0, 1, 1)
         self.tabWidget.raise_()
         self.meter_cfg_no_l.raise_()
@@ -1451,6 +1456,16 @@ class Ui_TaskWindow(object):
 
         self.retranslateUi(TaskWindow)
         self.tabWidget.setCurrentIndex(0)
+        self.meter_baudrate_l.setCurrentIndex(-1)
+        self.meter_protocol_mode_l.setCurrentIndex(-1)
+        self.meter_line_mode_l.setCurrentIndex(-1)
+        self.meter_port_l.setCurrentIndex(-1)
+        self.task_period_mode_l.setCurrentIndex(-1)
+        self.task_status_l.setCurrentIndex(-1)
+        self.task_mode_l.setCurrentIndex(-1)
+        self.task_rate_unit_l.setCurrentIndex(-1)
+        self.task_dly_unit_l.setCurrentIndex(-1)
+        self.task_priority_l.setCurrentIndex(-1)
         QtCore.QMetaObject.connectSlotsByName(TaskWindow)
 
     def retranslateUi(self, TaskWindow):
@@ -1651,5 +1666,6 @@ class Ui_TaskWindow(object):
         self.task_del_b.setText(_translate("TaskWindow", "删除当前", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("TaskWindow", "任务配置", None))
         self.label.setText(_translate("TaskWindow", "操作结果：", None))
+        self.always_top_cb.setText(_translate("TaskWindow", "置顶", None))
 
 import icon_rc

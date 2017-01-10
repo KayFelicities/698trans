@@ -385,6 +385,9 @@
              </item>
              <item row="1" column="1">
               <widget class="QComboBox" name="meter_baudrate_l">
+               <property name="currentIndex">
+                <number>-1</number>
+               </property>
                <item>
                 <property name="text">
                  <string>300</string>
@@ -527,6 +530,9 @@
              </item>
              <item row="2" column="1">
               <widget class="QComboBox" name="meter_protocol_mode_l">
+               <property name="currentIndex">
+                <number>-1</number>
+               </property>
                <item>
                 <property name="text">
                  <string>未知</string>
@@ -587,6 +593,9 @@
              </item>
              <item row="2" column="3">
               <widget class="QComboBox" name="meter_line_mode_l">
+               <property name="currentIndex">
+                <number>-1</number>
+               </property>
                <item>
                 <property name="text">
                  <string>未知</string>
@@ -642,6 +651,9 @@
              </item>
              <item row="3" column="1">
               <widget class="QComboBox" name="meter_port_l">
+               <property name="currentIndex">
+                <number>-1</number>
+               </property>
                <item>
                 <property name="text">
                  <string>RS485-1</string>
@@ -2189,6 +2201,9 @@
              </item>
              <item>
               <widget class="QComboBox" name="task_period_mode_l">
+               <property name="currentIndex">
+                <number>-1</number>
+               </property>
                <item>
                 <property name="text">
                  <string>前闭后开</string>
@@ -2731,6 +2746,9 @@
              </item>
              <item row="2" column="3">
               <widget class="QComboBox" name="task_status_l">
+               <property name="currentIndex">
+                <number>-1</number>
+               </property>
                <item>
                 <property name="text">
                  <string>正常</string>
@@ -2812,6 +2830,9 @@
              </item>
              <item row="1" column="1">
               <widget class="QComboBox" name="task_mode_l">
+               <property name="currentIndex">
+                <number>-1</number>
+               </property>
                <item>
                 <property name="text">
                  <string>普通采集方案</string>
@@ -2921,6 +2942,9 @@
                    <width>40</width>
                    <height>16777215</height>
                   </size>
+                 </property>
+                 <property name="currentIndex">
+                  <number>-1</number>
                  </property>
                  <item>
                   <property name="text">
@@ -3158,6 +3182,9 @@
                    <height>16777215</height>
                   </size>
                  </property>
+                 <property name="currentIndex">
+                  <number>-1</number>
+                 </property>
                  <item>
                   <property name="text">
                    <string>秒</string>
@@ -3194,6 +3221,9 @@
              </item>
              <item row="1" column="3">
               <widget class="QComboBox" name="task_priority_l">
+               <property name="currentIndex">
+                <number>-1</number>
+               </property>
                <item>
                 <property name="text">
                  <string>首要</string>

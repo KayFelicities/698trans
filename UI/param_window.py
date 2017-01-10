@@ -5846,6 +5846,11 @@ class Ui_ParamWindow(object):
         self.retranslateUi(ParamWindow)
         self.tabWidget.setCurrentIndex(0)
         self.DT_mode_l.setCurrentIndex(-1)
+        self.local_ip_mode_l.setCurrentIndex(-1)
+        self.C_work_mode_l.setCurrentIndex(-1)
+        self.C_online_mode_l.setCurrentIndex(-1)
+        self.C_connect_mode_l.setCurrentIndex(-1)
+        self.C_connect_app_mode_l.setCurrentIndex(-1)
         QtCore.QMetaObject.connectSlotsByName(ParamWindow)
 
     def retranslateUi(self, ParamWindow):
