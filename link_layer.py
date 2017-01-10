@@ -37,7 +37,7 @@ def calc_text_len(input_text):
     return data_len
 
 
-def data_format(input_text):
+def data_format(input_text, auto_add_0=True):
     input_text = input_text.replace(' ', '').replace('\n', '').upper()  # 处理空格和换行
     # 处理FE前缀
     k = 0
@@ -50,7 +50,10 @@ def data_format(input_text):
     for k in range(0, int((len(input_text) + 1) / 2)):
         data.append(input_text[k * 2:(k + 1) * 2])
     if len(data) > 0 and len(data[-1]) == 1:
-        data[-1] = '0' + data[-1]
+        if auto_add_0 is True:
+            data[-1] = '0' + data[-1]
+        else:
+            data.pop()
     return data
 
 

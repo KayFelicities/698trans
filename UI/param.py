@@ -6,11 +6,23 @@ def read_set_dar(re_text):
     data = link_layer.data_format(re_text)
     offset = 0
     ret_dict = link_layer.get_addr(data)
-    offset += 5 + int(ret_dict['SA_len']) + 10
-    if data[offset] == '00':
+    offset += 5 + int(ret_dict['SA_len']) + 3
+    if data[offset] == '85':
+        offset += 7
+        if data[offset] == '00':
+            return 'ok'
+        else:
+            return data_translate.dar_explain[data[offset]]
+    if data[offset] == '86':
+        offset += 3
+        dar_sum = int(data[offset], 16)
+        offset += 5
+        for dar in range(dar_sum):
+            if data[offset] != '00':
+                return data_translate.dar_explain[data[offset]]
+            else:
+                offset += 5
         return 'ok'
-    else:
-        return data_translate.dar_explain[data[offset]]
 
 
 def get_long_unsigned(data, with_type=True):

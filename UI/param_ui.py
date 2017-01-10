@@ -17,6 +17,8 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         self.DT_read_b.clicked.connect(self.DT_read)
         self.DT_set_b.clicked.connect(self.DT_set)
         self.DT_set_now_b.clicked.connect(self.DT_set_now)
+        self.DT_param_r_b.clicked.connect(self.DT_param_read)
+        self.DT_param_set_b.clicked.connect(self.DT_param_set)
         self.SA_read_b.clicked.connect(self.SA_read)
         self.SA_set_b.clicked.connect(self.SA_set)
         self.S_ip_read_b.clicked.connect(self.ip_read)
@@ -123,6 +125,53 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
             for d in data[offset + 1: offset + 1 + SA_len]:
                 SA_text += d
             self.SA_box.setText(SA_text)
+        else:
+            self.res_b.setStyleSheet('color: red')
+            self.res_b.setText('失败：' + data_translate.dar_explain[data[offset + 1]])
+        config.serial_window._receive_signal.disconnect()
+        config.serial_window._receive_signal.connect(config.serial_window.re_text_to_box)
+
+    def DT_param_read(self):
+        self.res_b.setText('')
+        apdu_text = '0502 0102 40000300 40000400 00'
+        config.serial_window._receive_signal.disconnect()
+        config.serial_window._receive_signal.connect(self.re_DT_param)
+        communication.send(config.serial_window.add_link_layer(apdu_text))
+
+    def DT_param_set(self, DT):
+        self.res_b.setText('')
+        mode_text = '16' + {0: '00', 1: '01', 2: '02', 3: '03', 4: 'FF'}[self.DT_mode_l.currentIndex()]
+        tot_num_text = '11' + '%02X' % int(self.DT_tot_num_box.text().replace(' ', ''))
+        biggest_num_text = '11' + '%02X' % int(self.DT_biggest_num_box.text().replace(' ', ''))
+        smallest_num_text = '11' + '%02X' % int(self.DT_smallest_num_box.text().replace(' ', ''))
+        dly_max_text = '11' + '%02X' % int(self.DT_dly_max_box.text().replace(' ', ''))
+        valid_num_min_text = '11' + '%02X' % int(self.DT_valid_num_min_box.text().replace(' ', ''))
+        apdu_text = '060200 02 40000300' + mode_text + '40000400 0205' + tot_num_text + biggest_num_text + smallest_num_text + dly_max_text + valid_num_min_text + '00'
+        config.serial_window._receive_signal.disconnect()
+        config.serial_window._receive_signal.connect(self.read_res)
+        communication.send(config.serial_window.add_link_layer(apdu_text))
+
+    def re_DT_param(self, re_text):
+        data = link_layer.data_format(re_text)
+        offset = 0
+        ret_dict = link_layer.get_addr(data)
+        offset += 5 + int(ret_dict['SA_len']) + 11
+        if data[offset] == '01':
+            self.res_b.setStyleSheet('color: green')
+            self.res_b.setText('成功')
+            offset += 2
+            self.DT_mode_l.setCurrentIndex({'00': 0, '01': 1, '02': 2, 'FF': 3}[data[offset]])
+            offset += 9
+            self.DT_tot_num_box.setText(str(int(data[offset], 16)))
+            offset += 2
+            self.DT_biggest_num_box.setText(str(int(data[offset], 16)))
+            offset += 2
+            self.DT_smallest_num_box.setText(str(int(data[offset], 16)))
+            offset += 2
+            self.DT_dly_max_box.setText(str(int(data[offset], 16)))
+            offset += 2
+            self.DT_valid_num_min_box.setText(str(int(data[offset], 16)))
+            offset += 2
         else:
             self.res_b.setStyleSheet('color: red')
             self.res_b.setText('失败：' + data_translate.dar_explain[data[offset + 1]])

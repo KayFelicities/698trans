@@ -136,7 +136,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
     def send_trans(self):
         input_text = self.send_input_box.toPlainText()
         try:
-            data_in = link_layer.data_format(input_text)
+            data_in = link_layer.data_format(input_text, auto_add_0=False)
             print('data_in', data_in)
             ret_dict = link_layer.all_translate(data_in)
             if ret_dict['res'] == 'ok':

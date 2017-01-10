@@ -588,7 +588,7 @@ def take_date_time_s(data, add_text='', level=-1):
 
 def take_OI(data, add_text='', level=-1):
     offset = 0
-    OI_explain = data_translate.data_translate[data[offset] + data[offset + 1] + '01'].split('，')[0]
+    OI_explain = data_translate.oad_explain[data[offset] + data[offset + 1] + '01'].split('，')[0]
     # print('OI_explain:', OI_explain, 'over')
     show_data_source(data, 2)
     output(' —— ' + add_text + OI_explain + '(OI)')
