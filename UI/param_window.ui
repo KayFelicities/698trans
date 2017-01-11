@@ -41,7 +41,7 @@
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -3127,6 +3127,56 @@
            <widget class="QPushButton" name="evt_r_b">
             <property name="text">
              <string>读取有效、上报标识</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="evt_clr_all_b">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>35</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>35</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>清空</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="evt_select_all_b">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>35</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>35</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>全选</string>
             </property>
            </widget>
           </item>
@@ -13864,5 +13914,598 @@
  <resources>
   <include location="icon.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>DT_param_r_b</sender>
+   <signal>clicked()</signal>
+   <receiver>DT_tot_num_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>251</x>
+     <y>486</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>290</x>
+     <y>356</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>DT_param_r_b</sender>
+   <signal>clicked()</signal>
+   <receiver>DT_biggest_num_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>258</x>
+     <y>481</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>298</x>
+     <y>384</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>DT_param_r_b</sender>
+   <signal>clicked()</signal>
+   <receiver>DT_smallest_num_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>266</x>
+     <y>489</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>305</x>
+     <y>410</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>DT_param_r_b</sender>
+   <signal>clicked()</signal>
+   <receiver>DT_dly_max_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>263</x>
+     <y>485</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>313</x>
+     <y>434</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>DT_param_r_b</sender>
+   <signal>clicked()</signal>
+   <receiver>DT_valid_num_min_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>267</x>
+     <y>487</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>320</x>
+     <y>462</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>DT_read_b</sender>
+   <signal>clicked()</signal>
+   <receiver>DT_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>173</x>
+     <y>194</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>187</x>
+     <y>174</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>SA_read_b</sender>
+   <signal>clicked()</signal>
+   <receiver>SA_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>222</x>
+     <y>87</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>226</x>
+     <y>67</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>SA_read_b</sender>
+   <signal>clicked()</signal>
+   <receiver>SA_len_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>249</x>
+     <y>87</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>391</x>
+     <y>62</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>S_ip_read_b</sender>
+   <signal>clicked()</signal>
+   <receiver>S_ip_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>180</x>
+     <y>185</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>189</x>
+     <y>165</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>S_ip_read_b</sender>
+   <signal>clicked()</signal>
+   <receiver>S_port_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>245</x>
+     <y>186</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>400</x>
+     <y>158</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>local_read_b</sender>
+   <signal>clicked()</signal>
+   <receiver>local_ip_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>127</x>
+     <y>337</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>126</x>
+     <y>288</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>local_read_b</sender>
+   <signal>clicked()</signal>
+   <receiver>local_mask_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>151</x>
+     <y>334</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>146</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>local_read_b</sender>
+   <signal>clicked()</signal>
+   <receiver>local_gate_addr_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>232</x>
+     <y>340</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>386</x>
+     <y>256</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>local_read_b</sender>
+   <signal>clicked()</signal>
+   <receiver>ppp_usr_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>263</x>
+     <y>339</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>382</x>
+     <y>282</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>local_read_b</sender>
+   <signal>clicked()</signal>
+   <receiver>ppp_pw_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>268</x>
+     <y>336</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>381</x>
+     <y>308</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>C_read_b</sender>
+   <signal>clicked()</signal>
+   <receiver>C_listen_port_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>184</x>
+     <y>600</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>163</x>
+     <y>517</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>C_read_b</sender>
+   <signal>clicked()</signal>
+   <receiver>C_APN_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>173</x>
+     <y>602</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>174</x>
+     <y>544</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>C_read_b</sender>
+   <signal>clicked()</signal>
+   <receiver>C_usr_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>189</x>
+     <y>602</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>186</x>
+     <y>578</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>C_read_b</sender>
+   <signal>clicked()</signal>
+   <receiver>C_pw_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>196</x>
+     <y>598</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>390</x>
+     <y>404</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>C_read_b</sender>
+   <signal>clicked()</signal>
+   <receiver>C_proxy_addr_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>207</x>
+     <y>600</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>386</x>
+     <y>434</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>C_read_b</sender>
+   <signal>clicked()</signal>
+   <receiver>C_proxy_prot_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>219</x>
+     <y>597</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>406</x>
+     <y>456</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>C_read_b</sender>
+   <signal>clicked()</signal>
+   <receiver>C_over_tm_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>227</x>
+     <y>598</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>389</x>
+     <y>489</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>C_read_b</sender>
+   <signal>clicked()</signal>
+   <receiver>C_retry_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>239</x>
+     <y>597</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>388</x>
+     <y>518</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>C_read_b</sender>
+   <signal>clicked()</signal>
+   <receiver>C_heart_tm_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>251</x>
+     <y>601</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>391</x>
+     <y>540</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>esam_r_info_b</sender>
+   <signal>clicked()</signal>
+   <receiver>esam_no_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>115</x>
+     <y>202</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>142</x>
+     <y>65</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>esam_r_info_b</sender>
+   <signal>clicked()</signal>
+   <receiver>esam_key_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>132</x>
+     <y>207</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>144</x>
+     <y>96</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>esam_r_info_b</sender>
+   <signal>clicked()</signal>
+   <receiver>esam_dialog_remain_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>160</x>
+     <y>207</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>160</x>
+     <y>119</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>esam_r_info_b</sender>
+   <signal>clicked()</signal>
+   <receiver>esam_rpt_ctr_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>169</x>
+     <y>215</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>170</x>
+     <y>152</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>esam_r_info_b</sender>
+   <signal>clicked()</signal>
+   <receiver>esam_terminal_ver_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>178</x>
+     <y>211</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>183</x>
+     <y>173</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>esam_r_info_b</sender>
+   <signal>clicked()</signal>
+   <receiver>esam_ver_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>194</x>
+     <y>207</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>397</x>
+     <y>59</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>esam_r_info_b</sender>
+   <signal>clicked()</signal>
+   <receiver>esam_dialog_tm_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>204</x>
+     <y>211</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>429</x>
+     <y>96</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>esam_r_info_b</sender>
+   <signal>clicked()</signal>
+   <receiver>esam_addr_ctr_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>219</x>
+     <y>207</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>435</x>
+     <y>122</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>esam_r_info_b</sender>
+   <signal>clicked()</signal>
+   <receiver>esam_app_radio_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>237</x>
+     <y>212</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>432</x>
+     <y>153</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>esam_r_info_b</sender>
+   <signal>clicked()</signal>
+   <receiver>esam_host_ver_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>254</x>
+     <y>206</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>420</x>
+     <y>185</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>esam_r_certi_b</sender>
+   <signal>clicked()</signal>
+   <receiver>esam_certi_ver_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>366</x>
+     <y>288</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>366</x>
+     <y>303</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>esam_r_certi_b</sender>
+   <signal>clicked()</signal>
+   <receiver>esam_certi_len_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>442</x>
+     <y>283</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>184</x>
+     <y>338</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>esam_r_certi_b</sender>
+   <signal>clicked()</signal>
+   <receiver>esam_certi_box</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>472</x>
+     <y>282</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>474</x>
+     <y>400</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

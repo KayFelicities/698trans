@@ -486,6 +486,9 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
             offset += 1
             res_sum = False
             self.esam_certi_box.setText('失败：' + data_translate.dar_explain[data[offset + 1]])
+        if res_sum is True:
+            self.res_b.setStyleSheet('color: green')
+            self.res_b.setText('成功')
 
     def evt_read(self):
         self.res_b.setText('')
