@@ -33,6 +33,10 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         self.esam_r_certi_b.clicked.connect(self.esam_certi_read)
         self.evt_r_b.clicked.connect(self.evt_read)
         self.evt_set_b.clicked.connect(self.evt_set)
+        self.evt_valid_all_left_cb.clicked.connect(self.evt_select_all_left_valid)
+        self.evt_rpt_all_left_cb.clicked.connect(self.evt_select_all_left_rpt)
+        self.evt_valid_all_right_cb.clicked.connect(self.evt_select_all_right_valid)
+        self.evt_rpt_all_right_cb.clicked.connect(self.evt_select_all_right_rpt)
 
     def clear_res(self):
         self.res_b.setText('')
@@ -492,6 +496,7 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
 
     def evt_read(self):
         self.res_b.setText('')
+        self.clr_all_cb()
         apdu_text = '0501003FFF020000'
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(self.re_evt)
@@ -567,6 +572,47 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
             self.res_b.setText('失败：' + data_translate.dar_explain[data[offset + 1]])
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(config.serial_window.re_text_to_box)
+
+    def clr_all_cb(self):
+        for count in range(1, 86):
+            self.evt_valid_all_left_cb.setChecked(False)
+            self.evt_rpt_all_left_cb.setChecked(False)
+            self.evt_valid_all_right_cb.setChecked(False)
+            self.evt_rpt_all_right_cb.setChecked(False)
+            eval('self.valid_c_' + str(count) + '.setChecked(False)')
+            eval('self.rpt_c_' + str(count) + '.setChecked(False)')
+
+    def evt_select_all_left_valid(self):
+        if self.evt_valid_all_left_cb.isChecked() is True:
+            for count in range(1, 49):
+                eval('self.valid_c_' + str(count) + '.setChecked(True)')
+        else:
+            for count in range(1, 49):
+                eval('self.valid_c_' + str(count) + '.setChecked(False)')
+
+    def evt_select_all_left_rpt(self):
+        if self.evt_rpt_all_left_cb.isChecked() is True:
+            for count in range(1, 49):
+                eval('self.rpt_c_' + str(count) + '.setChecked(True)')
+        else:
+            for count in range(1, 49):
+                eval('self.rpt_c_' + str(count) + '.setChecked(False)')
+
+    def evt_select_all_right_valid(self):
+        if self.evt_valid_all_right_cb.isChecked() is True:
+            for count in range(49, 86):
+                eval('self.valid_c_' + str(count) + '.setChecked(True)')
+        else:
+            for count in range(49, 86):
+                eval('self.valid_c_' + str(count) + '.setChecked(False)')
+
+    def evt_select_all_right_rpt(self):
+        if self.evt_rpt_all_right_cb.isChecked() is True:
+            for count in range(49, 86):
+                eval('self.rpt_c_' + str(count) + '.setChecked(True)')
+        else:
+            for count in range(49, 86):
+                eval('self.rpt_c_' + str(count) + '.setChecked(False)')
 
     def read_res(self, re_text):
         res = param.read_set_dar(re_text)
