@@ -54,7 +54,7 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         apdu_text = '0501014000020000'
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(self.re_DT)
-        communication.send(config.serial_window.add_link_layer(apdu_text))
+        communication.send(link_layer.add_link_layer(apdu_text))
 
     def DT_set(self):
         self.res_b.setText('')
@@ -77,12 +77,12 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         apdu_text = '06010D40000200' + DT_text + '00'
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(self.read_res)
-        communication.send(config.serial_window.add_link_layer(apdu_text))
+        communication.send(link_layer.add_link_layer(apdu_text))
 
     def re_DT(self, re_text):
         data = link_layer.data_format(re_text)
         offset = 0
-        ret_dict = link_layer.get_addr(data)
+        ret_dict = link_layer.get_SA_CA(data)
         offset += 5 + int(ret_dict['SA_len']) + 10
         if data[offset] == '01':
             self.res_b.setStyleSheet('color: green')
@@ -109,7 +109,7 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         apdu_text = '0501004001020000'
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(self.re_SA)
-        communication.send(config.serial_window.add_link_layer(apdu_text))
+        communication.send(link_layer.add_link_layer(apdu_text))
 
     def SA_set(self, DT):
         self.res_b.setText('')
@@ -122,12 +122,12 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         apdu_text = '06010D4001020009' + '%02X' % (SA_len) + SA_text + '00'
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(self.read_res_SA)
-        communication.send(config.serial_window.add_link_layer(apdu_text))
+        communication.send(link_layer.add_link_layer(apdu_text))
 
     def re_SA(self, re_text):
         data = link_layer.data_format(re_text)
         offset = 0
-        ret_dict = link_layer.get_addr(data)
+        ret_dict = link_layer.get_SA_CA(data)
         offset += 5 + int(ret_dict['SA_len']) + 10
         if data[offset] == '01':
             self.res_b.setStyleSheet('color: green')
@@ -150,7 +150,7 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         apdu_text = '0502 0102 40000300 40000400 00'
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(self.re_DT_param)
-        communication.send(config.serial_window.add_link_layer(apdu_text))
+        communication.send(link_layer.add_link_layer(apdu_text))
 
     def DT_param_set(self, DT):
         self.res_b.setText('')
@@ -163,12 +163,12 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         apdu_text = '060200 02 40000300' + mode_text + '40000400 0205' + tot_num_text + biggest_num_text + smallest_num_text + dly_max_text + valid_num_min_text + '00'
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(self.read_res)
-        communication.send(config.serial_window.add_link_layer(apdu_text))
+        communication.send(link_layer.add_link_layer(apdu_text))
 
     def re_DT_param(self, re_text):
         data = link_layer.data_format(re_text)
         offset = 0
-        ret_dict = link_layer.get_addr(data)
+        ret_dict = link_layer.get_SA_CA(data)
         offset += 5 + int(ret_dict['SA_len']) + 11
         if data[offset] == '01':
             self.res_b.setStyleSheet('color: green')
@@ -197,7 +197,7 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         apdu_text = '0501004500030000'
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(self.re_ip)
-        communication.send(config.serial_window.add_link_layer(apdu_text))
+        communication.send(link_layer.add_link_layer(apdu_text))
 
     def ip_set(self, DT):
         self.res_b.setText('')
@@ -206,12 +206,12 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         apdu_text = '06010D45000300010102020904' + ip_text + '12' + port_text + '00'
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(self.read_res)
-        communication.send(config.serial_window.add_link_layer(apdu_text))
+        communication.send(link_layer.add_link_layer(apdu_text))
 
     def re_ip(self, re_text):
         data = link_layer.data_format(re_text)
         offset = 0
-        ret_dict = link_layer.get_addr(data)
+        ret_dict = link_layer.get_SA_CA(data)
         offset += 5 + int(ret_dict['SA_len']) + 10
         if data[offset] == '01':
             self.res_b.setStyleSheet('color: green')
@@ -232,7 +232,7 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         apdu_text = '0501004510040000'
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(self.re_local_net)
-        communication.send(config.serial_window.add_link_layer(apdu_text))
+        communication.send(link_layer.add_link_layer(apdu_text))
 
     def local_net_set(self, DT):
         self.res_b.setText('')
@@ -245,12 +245,12 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         apdu_text = '06010D45100400 0206 16' + ip_mode + '0904' + ip_text + '0904' + ip_mask + '0904' + gate + ppp_usr + ppp_pw + '00'
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(self.read_res)
-        communication.send(config.serial_window.add_link_layer(apdu_text))
+        communication.send(link_layer.add_link_layer(apdu_text))
 
     def re_local_net(self, re_text):
         data = link_layer.data_format(re_text)
         offset = 0
-        ret_dict = link_layer.get_addr(data)
+        ret_dict = link_layer.get_SA_CA(data)
         offset += 5 + int(ret_dict['SA_len']) + 10
         if data[offset] == '01':
             self.res_b.setStyleSheet('color: green')
@@ -281,7 +281,7 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         apdu_text = '0501004500020000'
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(self.re_communication)
-        communication.send(config.serial_window.add_link_layer(apdu_text))
+        communication.send(link_layer.add_link_layer(apdu_text))
 
     def communication_set(self, DT):
         self.res_b.setText('')
@@ -302,12 +302,12 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
             usr_text + pw_text + proxy_addr_text + proxy_port_text + overtm_retry_num_text + heart_tm_text + '00'
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(self.read_res)
-        communication.send(config.serial_window.add_link_layer(apdu_text))
+        communication.send(link_layer.add_link_layer(apdu_text))
 
     def re_communication(self, re_text):
         data = link_layer.data_format(re_text)
         offset = 0
-        ret_dict = link_layer.get_addr(data)
+        ret_dict = link_layer.get_SA_CA(data)
         offset += 5 + int(ret_dict['SA_len']) + 10
         if data[offset] == '01':
             self.res_b.setStyleSheet('color: green')
@@ -361,12 +361,12 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         apdu_text = '0502 0107 F1000200 F1000300 F1000400 F1000500 F1000600 F1000700 F1000800 00'
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(self.re_esam_info)
-        communication.send(config.serial_window.add_link_layer(apdu_text))
+        communication.send(link_layer.add_link_layer(apdu_text))
 
     def re_esam_info(self, re_text):
         data = link_layer.data_format(re_text)
         offset = 0
-        ret_dict = link_layer.get_addr(data)
+        ret_dict = link_layer.get_SA_CA(data)
         offset += 5 + int(ret_dict['SA_len']) + 7
         res_sum = True
         offset += 4
@@ -461,12 +461,12 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
             apdu_text = '0502 0102 F1000B00 F1000C00 00'
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(self.re_esam_certi)
-        communication.send(config.serial_window.add_link_layer(apdu_text))
+        communication.send(link_layer.add_link_layer(apdu_text))
 
     def re_esam_certi(self, re_text):
         data = link_layer.data_format(re_text)
         offset = 0
-        ret_dict = link_layer.get_addr(data)
+        ret_dict = link_layer.get_SA_CA(data)
         offset += 5 + int(ret_dict['SA_len']) + 7
         res_sum = True
         offset += 4
@@ -500,7 +500,7 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         apdu_text = '0501003FFF020000'
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(self.re_evt)
-        communication.send(config.serial_window.add_link_layer(apdu_text))
+        communication.send(link_layer.add_link_layer(apdu_text))
 
     def evt_set(self, DT):
         self.res_b.setText('')
@@ -529,12 +529,12 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         apdu_text = '060101 3FFF0200 0202' + valid_text + rpt_text + '00'
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(self.read_res)
-        communication.send(config.serial_window.add_link_layer(apdu_text))
+        communication.send(link_layer.add_link_layer(apdu_text))
 
     def re_evt(self, re_text):
         data = link_layer.data_format(re_text)
         offset = 0
-        ret_dict = link_layer.get_addr(data)
+        ret_dict = link_layer.get_SA_CA(data)
         offset += 5 + int(ret_dict['SA_len']) + 10
         if data[offset] == '01':
             self.res_b.setStyleSheet('color: green')

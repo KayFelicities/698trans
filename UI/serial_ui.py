@@ -32,6 +32,8 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         self.receive_clear_button.clicked.connect(self.receive_clear_botton)
         self.link_b.clicked.connect(self.link_try)
         self.unlink_b.clicked.connect(self.close_link)
+        self.server_start_b.clicked.connect(self.start_server)
+        self.server_stop_b.clicked.connect(self.stop_server)
         self.send_button.clicked.connect(self.send_data)
         self.auto_fix_cb.clicked.connect(self.set_auto_fix)
         self.show_level_cb.clicked.connect(self.set_level_visible)
@@ -45,6 +47,23 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         self.param_menu.triggered.connect(self.show_param_window)
         self.task_menu.triggered.connect(self.show_task_window)
         self.trans_mode_button.clicked.connect(self.shift_trans_window)
+
+    def start_server(self):
+        server_port = int(self.server_port_box.text())
+        if config.server_check is False:
+            if communication.start_server(server_port) == 'ok':
+                self.server_start_b.setText('成功')
+                self.read_SA_b.setText('等待登录')
+            else:
+                self.server_start_b.setText('失败')
+
+    def stop_server(self):
+        communication.close_server()
+        self.server_start_b.setText('启动')
+        self.read_SA_b.setText('读取')
+        if config.serial_check is False and config.socket_check is False:
+            self.send_button.setEnabled(False)
+            self.read_SA_b.setEnabled(False)
 
     def link_try(self):
         if config.serial_check is False and config.socket_check is False:
@@ -74,8 +93,9 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
             communication.close_socket()
             self.link_b.setText('连接')
             self.send_button.setText('请建立连接')
-            self.send_button.setEnabled(False)
-            self.read_SA_b.setEnabled(False)
+            if config.server_check is False:
+                self.send_button.setEnabled(False)
+                self.read_SA_b.setEnabled(False)
             self.unlink_b.setText('刷新')
         else:
             self.com_list.clear()
@@ -99,7 +119,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
 
     def read_SA(self, re_text):
         data = link_layer.data_format(re_text)
-        ret_dict = link_layer.get_addr(data)
+        ret_dict = link_layer.get_SA_CA(data)
         self.SA_box.setText(ret_dict['SA'])
         self.SA_len_box.setText(ret_dict['SA_len'])
         self.read_SA_b.setText('成功')
@@ -117,7 +137,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
                 data_in[1], data_in[2] = config.good_L[0], config.good_L[1]
             else:
                 if config.good_HCS is not None:
-                    ret_dict = link_layer.get_addr(data_in)
+                    ret_dict = link_layer.get_SA_CA(data_in)
                     hcs_pos = 6 + int(ret_dict['SA_len'])
                     data_in[hcs_pos], data_in[hcs_pos + 1] = config.good_HCS[0], config.good_HCS[1]
                     input_text = ''
@@ -152,7 +172,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
                         data_in = link_layer.data_format(input_text)
                         link_layer.all_translate(data_in)
                 elif ret_dict['input_type'] == 'apdu':
-                    input_text = self.add_link_layer(input_text)
+                    input_text = link_layer.add_link_layer(input_text)
                     self.send_input_box.setText(input_text)
                     data_in = link_layer.data_format(input_text)
                     link_layer.all_translate(data_in)
@@ -175,12 +195,6 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         self.receive_output_box.setText(config.output_text)
         config.output_text = ''
 
-    def add_link_layer(self, apdu_text):
-        SA = self.SA_box.text()
-        SA_len = int(self.SA_len_box.text())
-        SA_type = self.SA_type_list.currentText()
-        return link_layer.add_link_layer(input_text, SA_type, SA, SA_len)
-
     def is_good_linklayer(self):
         input_text = self.send_input_box.toPlainText()
         box_SA_type = self.SA_type_list.currentText()
@@ -190,13 +204,7 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
 
     def fix_addr(self):
         apdu_text = link_layer.get_apdu_text(self.send_input_box.toPlainText())
-        self.send_input_box.setText(self.add_link_layer(apdu_text))
-
-    def add_link_layer(self, apdu_text):
-        SA = self.SA_box.text()
-        SA_len = int(self.SA_len_box.text())
-        SA_type = self.SA_type_list.currentText()
-        return link_layer.add_link_layer(apdu_text, SA_type, SA, SA_len)
+        self.send_input_box.setText(link_layer.add_link_layer(apdu_text))
 
     def send_clear_botton(self):
         self.send_input_box.setFocus()
@@ -234,10 +242,10 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         input_text = self.send_input_box.toPlainText()
         input_len = link_layer.calc_text_len(input_text)
         len_message = str(input_len) + '字节(' + str(hex(input_len)) + ')'
-        if config.serial_check is True or config.socket_check is True:
+        if config.serial_check is True or config.socket_check is True or config.server_check is True:
             self.send_button.setText('发送（' + len_message + '）')
         else:
-            self.send_button.setText('请打开串口')
+            self.send_button.setText('请建立连接')
 
     def calc_receive_box_len(self):
         input_text = self.receive_input_box.toPlainText()

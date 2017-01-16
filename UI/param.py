@@ -5,7 +5,7 @@ import data_translate
 def read_set_dar(re_text):
     data = link_layer.data_format(re_text)
     offset = 0
-    ret_dict = link_layer.get_addr(data)
+    ret_dict = link_layer.get_SA_CA(data)
     offset += 5 + int(ret_dict['SA_len']) + 4
     if data[offset] == '01':
         offset += 6

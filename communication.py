@@ -9,6 +9,77 @@ import link_layer
 import struct
 
 
+def start_server(server_port):
+    try:
+        config.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        config.server.bind(('0.0.0.0', server_port))
+        config.server_check = True
+        threading.Thread(target=server_listen).start()
+        return 'ok'
+    except Exception:
+        traceback.print_exc()
+        return 'err'
+
+
+def server_listen():
+    while True:
+        try:
+            config.server.listen(1)
+            config.server_connection, addr = config.server.accept()
+            threading.Thread(target=server_run).start()
+        except Exception:
+            break
+
+
+def is_link_request(re_text):
+    if link_layer.get_service_type(re_text) == '01':
+        return True
+    else:
+        return False
+
+
+def reply_link_request(re_text):
+    data = link_layer.data_format(re_text)
+    SA_dict = link_layer.get_SA_CA(data)
+    config.serial_window.SA_box.setText(SA_dict['SA'])
+    config.serial_window.SA_len_box.setText(SA_dict['SA_len'])
+    config.serial_window.read_SA_b.setText('已登录')
+    config.serial_window.send_button.setEnabled(True)
+    config.serial_window.read_SA_b.setEnabled(True)
+    config.serial_window.calc_send_box_len()
+    reply_text = link_layer.reply_link(data)
+    return reply_text
+
+
+def server_run():
+    while True:
+        try:
+            re_byte = config.server_connection.recv(4096)
+            re_text = ''.join(['%02X ' % x for x in re_byte])
+            print(re_text)
+        except Exception:
+            traceback.print_exc()
+            break
+        if re_text != '':
+            if is_link_request(re_text) is False:
+                config.serial_window._receive_signal.emit(re_text)
+            else:
+                reply_link_text = reply_link_request(re_text)
+                data = link_layer.data_format(reply_link_text)
+                send_d = b''
+                for char in data:
+                    send_d += struct.pack('B', int(char, 16))
+                config.server_connection.sendall(send_d)
+        if config.server_check is False:
+            print('server_run quit')
+            break
+
+
+def close_server():
+    config.server_check = False
+    config.server.close()
+
+
 def serial_com_scan():
     com_list = []
     ports = list(serial.tools.list_ports.comports())
@@ -81,6 +152,8 @@ def send(send_text):
         config.serial.write(send_d)
     if config.socket_check is True:
         config.socket.sendall(send_d)
+    if config.server_check is True:
+        config.server_connection.sendall(send_d)
 
 
 def serial_run():

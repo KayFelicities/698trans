@@ -1489,7 +1489,7 @@ class Ui_ParamWindow(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollArea_2.setObjectName(_fromUtf8("scrollArea_2"))
         self.scrollAreaWidgetContents_2 = QtGui.QWidget()
-        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 528, 1105))
+        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, -506, 528, 1105))
         self.scrollAreaWidgetContents_2.setObjectName(_fromUtf8("scrollAreaWidgetContents_2"))
         self.gridLayout_11 = QtGui.QGridLayout(self.scrollAreaWidgetContents_2)
         self.gridLayout_11.setContentsMargins(0, 2, 0, 0)
@@ -5944,7 +5944,7 @@ class Ui_ParamWindow(object):
         ParamWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(ParamWindow)
-        self.tabWidget.setCurrentIndex(3)
+        self.tabWidget.setCurrentIndex(0)
         self.DT_mode_l.setCurrentIndex(-1)
         self.local_ip_mode_l.setCurrentIndex(-1)
         self.C_work_mode_l.setCurrentIndex(-1)

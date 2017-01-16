@@ -15,7 +15,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>698解析工具（后台模式）_V4.1(2017.01)</string>
+   <string>698解析工具（后台模式）_V4.2(2017.01)</string>
   </property>
   <property name="windowIcon">
    <iconset resource="icon.qrc">
@@ -107,7 +107,7 @@
          <item>
           <widget class="QLabel" name="label_2">
            <property name="text">
-            <string>服务器</string>
+            <string>终端</string>
            </property>
           </widget>
          </item>
@@ -365,7 +365,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="port_box">
+           <widget class="QLineEdit" name="server_port_box">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -378,9 +378,9 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="start_b">
+           <widget class="QPushButton" name="server_start_b">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -389,12 +389,12 @@
              </sizepolicy>
             </property>
             <property name="text">
-             <string>暂不支持</string>
+             <string>启动</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="stop_b">
+           <widget class="QPushButton" name="server_stop_b">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -682,7 +682,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;5.“清空”按钮括号中显示的是输入框内报文的总长度。&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;6.勾选下方“显示层级结构”可启用SEQUENCE、array、structure类型的缩进显示。&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;7.“常用命令”菜单可打开交互面板，但&lt;span style=&quot; font-weight:600; color:#ff0000;&quot;&gt;请先建立连接并获取正确的通讯地址&lt;/span&gt;。&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;8.本软件为终端开发部内部测试软件。在软件使用过程中遇到任何问题，请向665593反馈，谢谢。&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;8.本软件为终端通信部内部测试软件。在软件使用过程中遇到任何问题，请向665593反馈，谢谢。&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;9.Copyrigth(C), 2005-2020,Sanxing Medical &amp;amp; Electric Co.,Ltd.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
        </widget>

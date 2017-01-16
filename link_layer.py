@@ -195,7 +195,7 @@ def take_link_layer_2(data, offset):
     return offset - offset_temp
 
 
-def get_addr(data):
+def get_SA_CA(data):
     offset = 0
     ret_dict = {'SA': ''}
     offset += 1 + 2 + 1  # 起始符 长度 控制域
@@ -211,6 +211,32 @@ def get_addr(data):
     return ret_dict
 
 
+def get_service_type(text):
+    offset = 0
+    data = data_format(text)
+    ret_dict = get_SA_CA(data)
+    offset += 5 + int(ret_dict['SA_len']) + 3
+    if data[offset] in ['01', '02', '03', '10', '81', '82', '83', '90']:
+        return data[offset]
+    else:
+        return data[offset] + data[offset + 1]
+
+
+def reply_link(data):
+    offset = 0
+    ret_dict = get_SA_CA(data)
+    offset += 5 + int(ret_dict['SA_len']) + 8
+    tm1_text = ''
+    for count in range(10):
+        tm1_text += data[offset + count]
+    tm = time.localtime()
+    tm2_text = '%04X %02X %02X %02X %02X %02X %02X 0000' % (tm[0], tm[1], tm[2], tm[7], tm[3], tm[4], tm[5])
+    print('tm2_text', tm2_text)
+    reply_apdu_text = '81 00 00' + tm1_text + tm2_text + tm2_text
+    reply_text = add_link_layer(reply_apdu_text, C_in='01')
+    return reply_text
+
+
 def get_apdu_text(text):
     data_in = data_format(text)
     SA_len = (int(data_in[4], 16) & 0x0f) + 1
@@ -221,9 +247,15 @@ def get_apdu_text(text):
     return apdu_text
 
 
-def add_link_layer(apdu_text, SA_type, SA, SA_len):
+def add_link_layer(apdu_text, C_in=None):
+    SA = config.serial_window.SA_box.text()
+    SA_len = int(config.serial_window.SA_len_box.text())
+    SA_type = config.serial_window.SA_type_list.currentText()
     apdu_start = '68 '
-    C = '43 '
+    if C_in is not None:
+        C = C_in
+    else:
+        C = '43 '
     if SA_len > 16 or SA_len < 1:
         SA_len = 6
         config.serial_window.SA_len_box.setText('6')

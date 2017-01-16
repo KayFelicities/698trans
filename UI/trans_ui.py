@@ -59,7 +59,7 @@ class TransWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_TransWindow):
             data_in[1], data_in[2] = config.good_L[0], config.good_L[1]
         else:
             if config.good_HCS is not None:
-                ret_dict = get_addr(data_in)
+                ret_dict = link_layer.get_SA_CA(data_in)
                 hcs_pos = 6 + int(ret_dict['SA_len'])
                 data_in[hcs_pos], data_in[hcs_pos + 1] = config.good_HCS[0], config.good_HCS[1]
                 input_text = ''

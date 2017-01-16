@@ -34,6 +34,10 @@ socket_param = {
 socket = None
 socket_check = False
 
+server = None
+server_connection = None
+server_check = False
+
 good_L = None
 good_HCS = None
 good_FCS = None
