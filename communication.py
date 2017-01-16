@@ -13,22 +13,13 @@ def start_server(server_port):
     try:
         config.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         config.server.bind(('0.0.0.0', server_port))
+        config.server.listen(1)
         config.server_check = True
-        threading.Thread(target=server_listen).start()
+        threading.Thread(target=server_accept).start()
         return 'ok'
     except Exception:
         traceback.print_exc()
         return 'err'
-
-
-def server_listen():
-    while True:
-        try:
-            config.server.listen(1)
-            config.server_connection, addr = config.server.accept()
-            threading.Thread(target=server_run).start()
-        except Exception:
-            break
 
 
 def is_link_request(re_text):
@@ -51,6 +42,19 @@ def reply_link_request(re_text):
     return reply_text
 
 
+def server_accept():
+    while True:
+        try:
+            config.server_connection, addr = config.server.accept()
+            print(addr, "connected")
+            threading.Thread(target=server_run).start()
+        except Exception:
+            break
+        if config.server_check is False:
+            print('server_run quit')
+            break
+
+
 def server_run():
     while True:
         try:
@@ -71,6 +75,7 @@ def server_run():
                     send_d += struct.pack('B', int(char, 16))
                 config.server_connection.sendall(send_d)
         if config.server_check is False:
+            stop_thread(config.server_accept_thread)
             print('server_run quit')
             break
 

@@ -1,6 +1,7 @@
 from PyQt4 import QtGui
 import sys
 import config
+import os
 sys.path.append('UI\\')
 from trans_ui import *   # NOQA
 from serial_ui import *   # NOQA
@@ -22,4 +23,7 @@ if __name__ == "__main__":
     # config.task_window.show()
     app.exec_()
     # print('window close')
-    config.serial_check = False
+    # config.serial_check = False
+    # config.socket_check = False
+    # config.server_check = False
+    os._exit(0)

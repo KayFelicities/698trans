@@ -231,12 +231,14 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         self.receive_trans()
 
     def set_always_top(self):
+        window_pos = self.pos()
         if (self.always_top_cb.isChecked() is True):
             self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
             self.show()
         else:
             self.setWindowFlags(QtCore.Qt.Widget)
             self.show()
+        self.move(window_pos)
 
     def calc_send_box_len(self):
         input_text = self.send_input_box.toPlainText()

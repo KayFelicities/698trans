@@ -913,7 +913,7 @@ p, li { white-space: pre-wrap; }
          </size>
         </property>
         <property name="text">
-         <string>窗口置顶</string>
+         <string>置顶</string>
         </property>
        </widget>
       </item>

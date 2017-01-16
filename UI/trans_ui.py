@@ -85,12 +85,14 @@ class TransWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_TransWindow):
         self.start_trans()
 
     def set_always_top(self):
+        window_pos = self.pos()
         if (self.always_top_cb.isChecked() is True):
             self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
             self.show()
         else:
             self.setWindowFlags(QtCore.Qt.Widget)
             self.show()
+        self.move(window_pos)
 
     def calc_len_box(self):
         input_text = self.input_box.toPlainText()

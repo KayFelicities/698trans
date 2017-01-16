@@ -42,12 +42,14 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         self.res_b.setText('')
 
     def set_always_top(self):
+        window_pos = self.pos()
         if (self.always_top_cb.isChecked() is True):
             self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
             self.show()
         else:
             self.setWindowFlags(QtCore.Qt.Widget)
             self.show()
+        self.move(window_pos)
 
     def DT_read(self):
         self.res_b.setText('')
