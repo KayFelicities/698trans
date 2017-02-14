@@ -382,7 +382,7 @@ def take_double_long(data, add_text='', level=-1):
     offset = 0
     show_data_source(data, 4)
     if int(data[offset], 16) >> 7 == 1:  # 负数
-        value = int(str(int(data[offset]) & 0x7f) + data[offset + 1] +
+        value = int(str(int(data[offset], 16) & 0x7f) + data[offset + 1] +
                     data[offset + 2] + data[offset + 3], 16) * (-1)
     else:
         value = int(data[offset] + data[offset + 1] + data[offset + 2] + data[offset + 3], 16)
@@ -434,7 +434,7 @@ def take_integer(data, add_text='', level=-1):
     offset = 0
     show_data_source(data, 1)
     if int(data[offset], 16) >> 7 == 1:  # 负数
-        value = int(str(int(data[offset]) & 0x7f), 16) * (-1)
+        value = int(str(int(data[offset], 16) & 0x7f), 16) * (-1)
     else:
         value = int(data[offset], 16)
     output(' —— ' + add_text + str(value) + '(integer)')
@@ -446,7 +446,7 @@ def take_long(data, add_text='', level=-1):
     offset = 0
     show_data_source(data, 2)
     if int(data[offset], 16) >> 7 == 1:  # 负数
-        value = int(str(int(data[offset]) & 0x7f) + data[offset + 1], 16) * (-1)
+        value = int(str(int(data[offset], 16) & 0x7f) + data[offset + 1], 16) * (-1)
     else:
         value = int(data[offset] + data[offset + 1], 16)
     output(' —— ' + add_text + str(value) + '(long)')
@@ -474,7 +474,7 @@ def take_long64(data, add_text='', level=-1):
     offset = 0
     show_data_source(data, 8)
     if int(data[offset], 16) >> 7 == 1:  # 负数
-        value = int(str(int(data[offset]) & 0x7f) + data[offset + 1] +
+        value = int(str(int(data[offset], 16) & 0x7f) + data[offset + 1] +
                     data[offset + 2] + data[offset + 3] + data[offset + 4] + data[offset + 5] + data[offset + 6] + data[offset + 7], 16) * (-1)
     else:
         value = int(data[offset] + data[offset + 1] + data[offset + 2] + data[offset + 3] + data[offset + 4] + data[offset + 5] + data[offset + 6] + data[offset + 7], 16)
@@ -510,7 +510,7 @@ def take_float32(data, add_text='', level=-1):
     offset = 0
     show_data_source(data, 4)
     if int(data[offset], 16) >> 7 == 1:  # 负数
-        value = int(str(int(data[offset]) & 0x7f) + data[offset + 1] +
+        value = int(str(int(data[offset], 16) & 0x7f) + data[offset + 1] +
                     data[offset + 2] + data[offset + 3], 16) * (-1)
     else:
         value = int(data[offset] + data[offset + 1] + data[offset + 2] + data[offset + 3], 16)
@@ -523,7 +523,7 @@ def take_float64(data, add_text='', level=-1):
     offset = 0
     show_data_source(data, 8)
     if int(data[offset], 16) >> 7 == 1:  # 负数
-        value = int(str(int(data[offset]) & 0x7f) + data[offset + 1] +
+        value = int(str(int(data[offset], 16) & 0x7f) + data[offset + 1] +
                     data[offset + 2] + data[offset + 3] + data[offset + 4] + data[offset + 5] + data[offset + 6] + data[offset + 7], 16) * (-1)
     else:
         value = int(data[offset] + data[offset + 1] + data[offset + 2] + data[offset + 3] + data[offset + 4] + data[offset + 5] + data[offset + 6] + data[offset + 7], 16)

@@ -297,7 +297,7 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         pw_text = param.format_visible_string(self.C_pw_box.text())
         proxy_addr_text = param.format_octet(self.C_proxy_addr_box.text())
         proxy_port_text = param.format_long_unsigned(self.C_proxy_prot_box.text())
-        overtm_retry_num_text = '0401' + '%02X' % ((int(self.C_retry_box.text()) << 6) | int(self.C_over_tm_box.text()))
+        overtm_retry_num_text = '11' + '%02X' % ((int(self.C_retry_box.text()) << 6) | int(self.C_over_tm_box.text()))
         heart_tm_text = param.format_long_unsigned(self.C_heart_tm_box.text())
         apdu_text = '06010D45000200 020C' + work_mode_text + online_mode_text + \
             connect_mode_text + connect_app_mode_text + listen_port_text + APN_text + \
@@ -344,7 +344,7 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
             offset += ret['offset']
             self.C_proxy_prot_box.setText(str(param.get_long_unsigned(data[offset:])))
             offset += 3
-            offset += 2
+            offset += 1
             overtm_retry_num_byte = int(data[offset], 16)
             self.C_retry_box.setText(str(overtm_retry_num_byte >> 6))
             self.C_over_tm_box.setText(str(overtm_retry_num_byte & 0x3f))
