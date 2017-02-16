@@ -1,10 +1,13 @@
 import os
 import sys
-import inspect
-import ctypes
 
+
+version = 'V4.3'
+DT = '2017.02'
 
 output_text = ''
+is_auto_se_heartbeat = True
+is_auto_se_confirm = True
 show_level = True
 auto_trans = True
 auto_fix = False

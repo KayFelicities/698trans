@@ -14,10 +14,13 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
     def __init__(self):
         super(SerialWindow, self).__init__()
         self.setupUi(self)
+        self.setWindowTitle('698解析工具（后台模式）_' + config.version + '(' + config.DT + ')')
         config.show_level = self.show_level_cb.isChecked()
         self._receive_signal.connect(self.re_text_to_box)
         # self._get_SA_signal.connect(self.read_SA)
         config.auto_trans = self.auto_trans_cb.isChecked()
+        self.auto_se_heartbeat.setVisible(False)
+        self.auto_se_confirm.setVisible(False)
         if config.auto_trans is True:
             self.send_input_box.textChanged.connect(self.send_trans)
             self.translate_button.setVisible(False)
@@ -35,6 +38,8 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         self.server_start_b.clicked.connect(self.start_server)
         self.server_stop_b.clicked.connect(self.stop_server)
         self.send_button.clicked.connect(self.send_data)
+        self.auto_se_heartbeat.clicked.connect(self.set_auto_se_heartbeat)
+        self.auto_se_confirm.clicked.connect(self.set_auto_se_confirm)
         self.auto_fix_cb.clicked.connect(self.set_auto_fix)
         self.show_level_cb.clicked.connect(self.set_level_visible)
         self.always_top_cb.clicked.connect(self.set_always_top)
@@ -54,6 +59,8 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
             if communication.start_server(server_port) == 'ok':
                 self.server_start_b.setText('成功')
                 self.read_SA_b.setText('等待登录')
+                self.auto_se_heartbeat.setVisible(True)
+                self.auto_se_confirm.setVisible(True)
             else:
                 self.server_start_b.setText('失败')
 
@@ -64,6 +71,8 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         if config.serial_check is False and config.socket_check is False:
             self.send_button.setEnabled(False)
             self.read_SA_b.setEnabled(False)
+            self.auto_se_heartbeat.setVisible(False)
+            self.auto_se_confirm.setVisible(False)
 
     def link_try(self):
         if config.serial_check is False and config.socket_check is False:
@@ -215,6 +224,12 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
     def set_auto_fix(self):
         config.auto_fix = self.auto_fix_cb.isChecked()
 
+    def set_auto_se_heartbeat(self):
+        config.is_auto_se_heartbeat = self.auto_se_heartbeat.isChecked()
+
+    def set_auto_se_confirm(self):
+        config.is_auto_se_confirm = self.auto_se_confirm.isChecked()
+
     def set_auto_trans(self):
         config.auto_trans = self.auto_trans_cb.isChecked()
         if config.auto_trans is True:
@@ -257,16 +272,20 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
 
     def show_about_window(self):
         config.about_window.show()
+        config.about_window.activateWindow()
 
     def show_config_window(self):
         config.config_window.read_param()
         config.config_window.show()
+        config.config_window.activateWindow()
 
     def show_param_window(self):
         config.param_window.show()
+        config.param_window.activateWindow()
 
     def show_task_window(self):
         config.task_window.show()
+        config.task_window.activateWindow()
 
     def shift_trans_window(self):
         self.hide()

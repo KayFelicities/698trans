@@ -73,7 +73,7 @@
             </property>
             <property name="sizeHint" stdset="0">
              <size>
-              <width>40</width>
+              <width>60</width>
               <height>20</height>
              </size>
             </property>
@@ -275,7 +275,7 @@
             </property>
             <property name="sizeHint" stdset="0">
              <size>
-              <width>40</width>
+              <width>60</width>
               <height>20</height>
              </size>
             </property>
@@ -3164,7 +3164,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>-506</y>
+             <y>0</y>
              <width>528</width>
              <height>1105</height>
             </rect>
@@ -14079,20 +14079,6 @@
    </layout>
    <zorder>tabWidget</zorder>
    <zorder></zorder>
-   <zorder>label_124</zorder>
-   <zorder>DT_mode_l</zorder>
-   <zorder>label_125</zorder>
-   <zorder>label_126</zorder>
-   <zorder>label_127</zorder>
-   <zorder>label_128</zorder>
-   <zorder>label_129</zorder>
-   <zorder>DT_tot_num_box</zorder>
-   <zorder>DT_biggest_num_box</zorder>
-   <zorder>DT_smallest_num_box</zorder>
-   <zorder>DT_dly_max_box</zorder>
-   <zorder>DT_valid_num_min_box</zorder>
-   <zorder>DT_param_r_b</zorder>
-   <zorder>DT_param_set_b</zorder>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="2"/>

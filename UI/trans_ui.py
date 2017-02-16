@@ -11,6 +11,7 @@ class TransWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_TransWindow):
     def __init__(self):
         super(TransWindow, self).__init__()
         self.setupUi(self)
+        self.setWindowTitle('698解析工具_' + config.version + '(' + config.DT + ')')
         config.show_level = self.show_level_cb.isChecked()
         config.auto_trans = self.auto_trans_cb.isChecked()
         if config.auto_trans is True:

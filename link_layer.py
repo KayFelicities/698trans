@@ -237,6 +237,20 @@ def reply_link(data):
     return reply_text
 
 
+def reply_rpt(data):
+    offset = 0
+    ret_dict = get_SA_CA(data)
+    offset += 5 + int(ret_dict['SA_len']) + 4
+    ret_service_choice = data[offset]
+    offset += 1
+    ret_piid = data[offset]
+    offset += 2
+    rpt_oad = data[offset] + data[offset + 1] + data[offset + 2] + data[offset + 3]
+    reply_apdu_text = '08' + ret_service_choice + ret_piid + '01' + rpt_oad + '00'
+    reply_test = add_link_layer(reply_apdu_text, C_in='03')
+    return reply_test
+
+
 def get_apdu_text(text):
     data_in = data_format(text)
     SA_len = (int(data_in[4], 16) & 0x0f) + 1

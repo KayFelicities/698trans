@@ -29,6 +29,14 @@ def is_link_request(re_text):
         return False
 
 
+def is_rpt_notification(re_text):
+    if link_layer.get_service_type(re_text) in ['8801', '8802']:
+        return True
+    else:
+        print('Kay:', link_layer.get_service_type(re_text))
+        return False
+
+
 def reply_link_request(re_text):
     data = link_layer.data_format(re_text)
     SA_dict = link_layer.get_SA_CA(data)
@@ -39,6 +47,12 @@ def reply_link_request(re_text):
     config.serial_window.read_SA_b.setEnabled(True)
     config.serial_window.calc_send_box_len()
     reply_text = link_layer.reply_link(data)
+    return reply_text
+
+
+def reply_rpt_request(re_text):
+    data = link_layer.data_format(re_text)
+    reply_text = link_layer.reply_rpt(data)
     return reply_text
 
 
@@ -65,15 +79,22 @@ def server_run():
             traceback.print_exc()
             break
         if re_text != '':
-            if is_link_request(re_text) is False:
-                config.serial_window._receive_signal.emit(re_text)
-            else:
+            if config.is_auto_se_heartbeat is True and is_link_request(re_text) is True:
                 reply_link_text = reply_link_request(re_text)
                 data = link_layer.data_format(reply_link_text)
                 send_d = b''
                 for char in data:
                     send_d += struct.pack('B', int(char, 16))
                 config.server_connection.sendall(send_d)
+            elif config.is_auto_se_confirm is True and is_rpt_notification(re_text) is True:
+                reply_link_text = reply_rpt_request(re_text)
+                data = link_layer.data_format(reply_link_text)
+                send_d = b''
+                for char in data:
+                    send_d += struct.pack('B', int(char, 16))
+                config.server_connection.sendall(send_d)
+            else:
+                config.serial_window._receive_signal.emit(re_text)
         if config.server_check is False:
             stop_thread(config.server_accept_thread)
             print('server_run quit')

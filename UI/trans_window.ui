@@ -15,7 +15,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>698解析工具_V4.2(2017.01)</string>
+   <string>698解析工具</string>
   </property>
   <property name="windowIcon">
    <iconset resource="icon.qrc">

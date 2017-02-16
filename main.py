@@ -8,6 +8,7 @@ from serial_ui import *   # NOQA
 from menu_ui import *   # NOQA
 from param_ui import *   # NOQA
 from task_ui import *   # NOQA
+from about_ui import *  # NOQA
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
