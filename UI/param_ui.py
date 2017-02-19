@@ -37,6 +37,8 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         self.evt_rpt_all_left_cb.clicked.connect(self.evt_select_all_left_rpt)
         self.evt_valid_all_right_cb.clicked.connect(self.evt_select_all_right_valid)
         self.evt_rpt_all_right_cb.clicked.connect(self.evt_select_all_right_rpt)
+        self.rpt_r_b.clicked.connect(self.rpt_read)
+        self.rpt_set_b.clicked.connect(self.rpt_set)
 
     def clear_res(self):
         self.res_b.setText('')
@@ -615,6 +617,93 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         else:
             for count in range(49, 86):
                 eval('self.rpt_c_' + str(count) + '.setChecked(False)')
+
+    def rpt_read(self):
+        self.clear_res()
+        apdu_text = '0502 0104 43000700 43000800 43000900 43000A00 00'
+        self.rpt_follow_cb.setCurrentIndex(-1)
+        self.rpt_cb.setCurrentIndex(-1)
+        self.conn_sever_cb.setCurrentIndex(-1)
+        config.serial_window._receive_signal.disconnect()
+        config.serial_window._receive_signal.connect(self.re_rpt)
+        communication.send(link_layer.add_link_layer(apdu_text))
+
+    def rpt_set(self, DT):
+        self.res_b.setText('')
+        rpt_follow_text = '03' + '%02X' % self.rpt_follow_cb.currentIndex()
+        rpt_text = '03' + '%02X' % self.rpt_cb.currentIndex()
+        conn_sever_text = '03' + '%02X' % self.conn_sever_cb.currentIndex()
+        rpt_channel_text = self.rpt_channel_box.text()
+        rpt_channel_text = list(filter(str.isdigit, rpt_channel_text))
+        rpt_channel_text = ''.join(rpt_channel_text)
+        print('Kay', rpt_channel_text)
+        array_sum = len(rpt_channel_text) // 8
+        rpt_channel_array_text = '01' + '%02X' % array_sum
+        offset = 0
+        for _ in range(array_sum):
+            rpt_channel_array_text += '51' + rpt_channel_text[offset:offset + 8]
+            offset += 8
+        apdu_text = '060200 04 43000700' + rpt_follow_text + '43000800' + rpt_text + '43000900' + conn_sever_text + '43000A00' + rpt_channel_array_text + '00'
+        config.serial_window._receive_signal.disconnect()
+        config.serial_window._receive_signal.connect(self.read_res)
+        communication.send(link_layer.add_link_layer(apdu_text))
+
+    def re_rpt(self, re_text):
+        data = link_layer.data_format(re_text)
+        offset = 0
+        ret_dict = link_layer.get_SA_CA(data)
+        offset += 5 + int(ret_dict['SA_len']) + 7
+        res_sum = True
+        offset += 4
+        if data[offset] == '01':
+            offset += 2
+            self.rpt_follow_cb.setCurrentIndex(1 if data[offset] == '01' else 0)
+            offset += 1
+        else:
+            offset += 1
+            res_sum = False
+            self.esam_no_box.setText('失败：' + data_translate.dar_explain[data[offset + 1]])
+        offset += 4
+        if data[offset] == '01':
+            offset += 2
+            self.rpt_cb.setCurrentIndex(1 if data[offset] == '01' else 0)
+            offset += 1
+        else:
+            offset += 1
+            res_sum = False
+            self.esam_ver_box.setText('失败：' + data_translate.dar_explain[data[offset + 1]])
+        offset += 4
+        if data[offset] == '01':
+            offset += 2
+            self.conn_sever_cb.setCurrentIndex(1 if data[offset] == '01' else 0)
+            offset += 1
+        else:
+            offset += 1
+            res_sum = False
+            self.esam_key_box.setText('失败：' + data_translate.dar_explain[data[offset + 1]])
+        offset += 4
+        if data[offset] == '01':
+            offset += 2
+            array_sum = int(data[offset], 16)
+            offset += 1
+            channel = ''
+            for array_count in range(array_sum):
+                offset += 1
+                channel += data[offset] + data[offset + 1] + data[offset + 2] + data[offset + 3]
+                if (array_count < array_sum - 1):
+                    channel += ','
+                offset += 4
+            self.rpt_channel_box.setText(channel)
+        else:
+            offset += 1
+            res_sum = False
+            self.esam_dialog_tm_box.setText('失败：' + data_translate.dar_explain[data[offset + 1]])
+
+        if res_sum is True:
+            self.res_b.setStyleSheet('color: green')
+            self.res_b.setText('成功')
+        config.serial_window._receive_signal.disconnect()
+        config.serial_window._receive_signal.connect(config.serial_window.re_text_to_box)
 
     def read_res(self, re_text):
         res = param.read_set_dar(re_text)

@@ -1,3 +1,3 @@
 @echo off
-start pythonw main.py
-exit
+::start pythonw main.py
+start python main.py
