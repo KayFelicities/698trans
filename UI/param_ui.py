@@ -1,3 +1,4 @@
+'''param ui'''
 import config
 from shared_functions import *  # NOQA
 import link_layer
@@ -246,7 +247,8 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         gate = param.format_ip(self.local_gate_addr_box.text())
         ppp_usr = param.format_octet(self.ppp_usr_box.text())
         ppp_pw = param.format_octet(self.ppp_pw_box.text())
-        apdu_text = '06010D45100400 0206 16' + ip_mode + '0904' + ip_text + '0904' + ip_mask + '0904' + gate + ppp_usr + ppp_pw + '00'
+        apdu_text = '06010D45100400 0206 16' + ip_mode + '0904' + ip_text + '0904' + ip_mask + '0904'\
+                    + gate + ppp_usr + ppp_pw + '00'
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(self.read_res)
         communication.send(link_layer.add_link_layer(apdu_text))
@@ -299,11 +301,13 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         pw_text = param.format_visible_string(self.C_pw_box.text())
         proxy_addr_text = param.format_octet(self.C_proxy_addr_box.text())
         proxy_port_text = param.format_long_unsigned(self.C_proxy_prot_box.text())
-        overtm_retry_num_text = '11' + '%02X' % ((int(self.C_retry_box.text()) << 6) | int(self.C_over_tm_box.text()))
+        overtm_retry_num_text = '11' + '%02X' % ((int(self.C_retry_box.text()) << 6)
+                                                 | int(self.C_over_tm_box.text()))
         heart_tm_text = param.format_long_unsigned(self.C_heart_tm_box.text())
         apdu_text = '06010D45000200 020C' + work_mode_text + online_mode_text + \
-            connect_mode_text + connect_app_mode_text + listen_port_text + APN_text + \
-            usr_text + pw_text + proxy_addr_text + proxy_port_text + overtm_retry_num_text + heart_tm_text + '00'
+                    connect_mode_text + connect_app_mode_text + listen_port_text + APN_text + \
+                    usr_text + pw_text + proxy_addr_text + proxy_port_text +\
+                    overtm_retry_num_text + heart_tm_text + '00'
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(self.read_res)
         communication.send(link_layer.add_link_layer(apdu_text))
@@ -643,7 +647,8 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         for _ in range(array_sum):
             rpt_channel_array_text += '51' + rpt_channel_text[offset:offset + 8]
             offset += 8
-        apdu_text = '060200 04 43000700' + rpt_follow_text + '43000800' + rpt_text + '43000900' + conn_sever_text + '43000A00' + rpt_channel_array_text + '00'
+        apdu_text = '060200 04 43000700' + rpt_follow_text + '43000800' + rpt_text +\
+                    '43000900' + conn_sever_text + '43000A00' + rpt_channel_array_text + '00'
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(self.read_res)
         communication.send(link_layer.add_link_layer(apdu_text))
@@ -690,7 +695,7 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
             for array_count in range(array_sum):
                 offset += 1
                 channel += data[offset] + data[offset + 1] + data[offset + 2] + data[offset + 3]
-                if (array_count < array_sum - 1):
+                if array_count < array_sum - 1:
                     channel += ','
                 offset += 4
             self.rpt_channel_box.setText(channel)

@@ -1,17 +1,18 @@
-from PyQt4 import QtGui
+'''main'''
 import sys
-import config
 import os
+import config
+from PyQt4 import QtGui
 sys.path.append('UI\\')
-from trans_ui import *   # NOQA
-from serial_ui import *   # NOQA
-from menu_ui import *   # NOQA
-from param_ui import *   # NOQA
-from task_ui import *   # NOQA
-from about_ui import *  # NOQA
+from trans_ui import TransWindow
+from serial_ui import SerialWindow
+from menu_ui import ConfigWindow
+from param_ui import ParamWindow
+from task_ui import TaskWindow
+from about_ui import AboutWindow
 
 if __name__ == "__main__":
-    app = QtGui.QApplication(sys.argv)
+    APP = QtGui.QApplication(sys.argv)
     config.trans_window = TransWindow()
     config.serial_window = SerialWindow()
     config.about_window = AboutWindow()
@@ -22,7 +23,7 @@ if __name__ == "__main__":
     config.serial_window.show()
     # config.param_window.show()
     # config.task_window.show()
-    app.exec_()
+    APP.exec_()
     # print('window close')
     # config.serial_check = False
     # config.socket_check = False

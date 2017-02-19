@@ -1,3 +1,4 @@
+'''security service'''
 from shared_functions import *  # NOQA
 from get_service import *  # NOQA
 from set_service import *  # NOQA
@@ -97,7 +98,7 @@ def take_security_APDU(data, add_text=''):
         '0802': ReportResponseRecordList,
         '8801': ReportNotificationList,
         '8802': ReportNotificationRecordList,
-        '0901': ProxyGetRequestList,
+        '0901': proxy_get_request_list,
         '0902': ProxyGetRequestRecord,
         '0903': ProxySetRequestList,
         '0904': ProxySetThenGetRequestList,

@@ -1,3 +1,4 @@
+'''about ui'''
 from PyQt4 import QtGui
 from about_window import Ui_AboutWindow
 import config

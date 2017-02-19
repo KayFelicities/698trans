@@ -1,3 +1,4 @@
+'''param'''
 import link_layer
 import data_translate
 
@@ -17,7 +18,7 @@ def read_set_dar(re_text):
         offset += 2
         dar_sum = int(data[offset], 16)
         offset += 5
-        for dar in range(dar_sum):
+        for _ in range(dar_sum):
             if data[offset] != '00':
                 return data_translate.dar_explain[data[offset]]
             else:
@@ -56,7 +57,7 @@ def get_ip(data):
 def format_ip(ip_text):
     ip_list = ip_text.replace(' ', '').split('.')
     text = ''
-    for ip in ip_list:
+    for _ in ip_list:
         text += str('%02X' % int(ip))
     return text
 

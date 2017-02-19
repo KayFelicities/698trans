@@ -1,3 +1,4 @@
+'''trans ui'''
 import config
 from PyQt4 import QtCore
 from PyQt4 import QtGui

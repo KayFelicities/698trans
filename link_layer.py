@@ -1,3 +1,4 @@
+'''link layer'''
 from shared_functions import *  # NOQA
 from apdu import *  # NOQA
 import time
@@ -230,7 +231,8 @@ def reply_link(data):
     for count in range(10):
         tm1_text += data[offset + count]
     tm = time.localtime()
-    tm2_text = '%04X %02X %02X %02X %02X %02X %02X 0000' % (tm[0], tm[1], tm[2], tm[7], tm[3], tm[4], tm[5])
+    tm2_text = '%04X %02X %02X %02X %02X %02X %02X 0000'\
+                    % (tm[0], tm[1], tm[2], tm[7], tm[3], tm[4], tm[5])
     print('tm2_text', tm2_text)
     reply_apdu_text = '81 00 00' + tm1_text + tm2_text + tm2_text
     reply_text = add_link_layer(reply_apdu_text, C_in='01')

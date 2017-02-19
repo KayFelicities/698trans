@@ -1,4 +1,5 @@
-﻿from shared_functions import *  # NOQA
+﻿'''connect service'''
+from shared_functions import *  # NOQA
 
 
 def link_request(data):

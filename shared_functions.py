@@ -1,3 +1,4 @@
+'''shared functions'''
 import config
 import data_translate
 
@@ -373,7 +374,8 @@ def take_bit_string(data, add_text='', bit_len=None, level=-1):
     bit_string_text = ''
     for count in range(byte_len):
         bit_string_text += data[offset + count]
-    output(' —— ' + add_text + str(bin(int(bit_string_text, 16))).split('b')[1].rjust(bit_len, '0') + '(bit-string,长度' + str(bit_len) + ')')
+    output(' —— ' + add_text + str(bin(int(bit_string_text, 16))).split('b')[1].rjust(bit_len, '0')
+           + '(bit-string,长度' + str(bit_len) + ')')
     offset += byte_len
     return offset
 
@@ -394,7 +396,9 @@ def take_double_long(data, add_text='', level=-1):
 def take_double_long_unsigned(data, add_text='', level=-1):
     offset = 0
     show_data_source(data, 4)
-    output(' —— ' + add_text + str(int(data[offset] + data[offset + 1] + data[offset + 2] + data[offset + 3], 16)) + '(double_long_unsigned)')
+    output(' —— ' + add_text +
+           str(int(data[offset] + data[offset + 1] + data[offset + 2] + data[offset + 3], 16))
+           + '(double_long_unsigned)')
     offset += 4
     return offset
 
@@ -475,9 +479,11 @@ def take_long64(data, add_text='', level=-1):
     show_data_source(data, 8)
     if int(data[offset], 16) >> 7 == 1:  # 负数
         value = int(str(int(data[offset], 16) & 0x7f) + data[offset + 1] +
-                    data[offset + 2] + data[offset + 3] + data[offset + 4] + data[offset + 5] + data[offset + 6] + data[offset + 7], 16) * (-1)
+                    data[offset + 2] + data[offset + 3] + data[offset + 4] +
+                    data[offset + 5] + data[offset + 6] + data[offset + 7], 16) * (-1)
     else:
-        value = int(data[offset] + data[offset + 1] + data[offset + 2] + data[offset + 3] + data[offset + 4] + data[offset + 5] + data[offset + 6] + data[offset + 7], 16)
+        value = int(data[offset] + data[offset + 1] + data[offset + 2] + data[offset + 3] +
+                    data[offset + 4] + data[offset + 5] + data[offset + 6] + data[offset + 7], 16)
     output(' —— ' + add_text + str(value) + '(long64)')
     offset += 8
     return offset
@@ -486,7 +492,8 @@ def take_long64(data, add_text='', level=-1):
 def take_long64_unsigned(data, add_text='', level=-1):
     offset = 0
     show_data_source(data, 8)
-    value = int(data[offset] + data[offset + 1] + data[offset + 2] + data[offset + 3] + data[offset + 4] + data[offset + 5] + data[offset + 6] + data[offset + 7], 16)
+    value = int(data[offset] + data[offset + 1] + data[offset + 2] + data[offset + 3] +
+                data[offset + 4] + data[offset + 5] + data[offset + 6] + data[offset + 7], 16)
     output(' —— ' + add_text + str(value) + '(long64_unsigned)')
     offset += 8
     return offset
@@ -524,9 +531,11 @@ def take_float64(data, add_text='', level=-1):
     show_data_source(data, 8)
     if int(data[offset], 16) >> 7 == 1:  # 负数
         value = int(str(int(data[offset], 16) & 0x7f) + data[offset + 1] +
-                    data[offset + 2] + data[offset + 3] + data[offset + 4] + data[offset + 5] + data[offset + 6] + data[offset + 7], 16) * (-1)
+                    data[offset + 2] + data[offset + 3] + data[offset + 4] +
+                    data[offset + 5] + data[offset + 6] + data[offset + 7], 16) * (-1)
     else:
-        value = int(data[offset] + data[offset + 1] + data[offset + 2] + data[offset + 3] + data[offset + 4] + data[offset + 5] + data[offset + 6] + data[offset + 7], 16)
+        value = int(data[offset] + data[offset + 1] + data[offset + 2] + data[offset + 3]
+                    + data[offset + 4] + data[offset + 5] + data[offset + 6] + data[offset + 7], 16)
     output(' —— ' + add_text + str(value) + '(float64)')
     offset += 8
     return offset

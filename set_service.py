@@ -1,3 +1,4 @@
+'''set service'''
 from shared_functions import *  # NOQA
 
 

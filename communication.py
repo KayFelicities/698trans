@@ -1,3 +1,4 @@
+'''communication'''
 import config
 import serial
 import serial.tools.list_ports
