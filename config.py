@@ -3,7 +3,7 @@ import os
 import sys
 
 
-version = 'V4.3'
+version = 'V4.4'
 DT = '2017.02'
 
 output_text = ''

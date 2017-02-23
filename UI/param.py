@@ -57,7 +57,7 @@ def get_ip(data):
 def format_ip(ip_text):
     ip_list = ip_text.replace(' ', '').split('.')
     text = ''
-    for _ in ip_list:
+    for ip in ip_list:
         text += str('%02X' % int(ip))
     return text
 
