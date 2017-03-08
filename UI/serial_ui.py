@@ -20,8 +20,6 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         self._receive_signal.connect(self.re_text_to_box)
         # self._get_SA_signal.connect(self.read_SA)
         config.auto_trans = self.auto_trans_cb.isChecked()
-        self.auto_se_heartbeat.setVisible(False)
-        self.auto_se_confirm.setVisible(False)
         if config.auto_trans is True:
             self.send_input_box.textChanged.connect(self.send_trans)
             self.translate_button.setVisible(False)
@@ -60,8 +58,6 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
             if communication.start_server(server_port) == 'ok':
                 self.server_start_b.setText('成功')
                 self.read_SA_b.setText('等待登录')
-                self.auto_se_heartbeat.setVisible(True)
-                self.auto_se_confirm.setVisible(True)
             else:
                 self.server_start_b.setText('失败')
 
@@ -72,8 +68,6 @@ class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
         if config.serial_check is False and config.socket_check is False:
             self.send_button.setEnabled(False)
             self.read_SA_b.setEnabled(False)
-            self.auto_se_heartbeat.setVisible(False)
-            self.auto_se_confirm.setVisible(False)
 
     def link_try(self):
         if config.serial_check is False and config.socket_check is False:
