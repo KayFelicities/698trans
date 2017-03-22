@@ -1,4 +1,4 @@
-'''communication'''
+'''communication by Kay'''
 import config
 import serial
 import serial.tools.list_ports

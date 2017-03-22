@@ -10,6 +10,7 @@ import communication
 
 
 class SerialWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_SerialWindow):
+    '''serial window'''
     _receive_signal = QtCore.pyqtSignal(str)
 
     def __init__(self):
