@@ -35,7 +35,7 @@ def ActionThenGetRequestNormalList(data):
         offset += take_OMD(data[offset:], '设置的对象方法:')
         offset += take_Data(data[offset:], '方法参数:')
         offset += take_OMD(data[offset:], '读取的对象属性:')
-        offset += take_Data(data[offset:], '读取延时:', end_flag=end_flag)
+        offset += take_unsigned(data[offset:], '读取延时:')
     config.line_level -= 1
     return offset
 

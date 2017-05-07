@@ -35,7 +35,7 @@ def SetThenGetRequestNormalList(data):
         offset += take_OAD(data[offset:], '设置的对象属性:')
         offset += take_Data(data[offset:], '数据:')
         offset += take_OAD(data[offset:], '读取的对象属性:')
-        offset += take_Data(data[offset:], '延时读取时间:', end_flag=end_flag)
+        offset += take_unsigned(data[offset:], '延时读取时间:')
     config.line_level -= 1
     return offset
 
