@@ -147,7 +147,7 @@ def take_DAR(data, add_text='', level=0, end_flag=0):
     offset = 0
     show_data_source(data[offset:], 1, level=level)
     try:
-        explain = data_translate.dar_explain[data[0]]
+        explain = data_translate.dar_explain[str(int(data[0], 16))]
     except Exception:
         explain = '未知DAR'
     output(' —— ' + add_text + ':' + explain)
