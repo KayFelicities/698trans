@@ -236,7 +236,7 @@ p, li { white-space: pre-wrap; }
        <enum>Qt::LeftToRight</enum>
       </property>
       <property name="text">
-       <string>Copyrigth(C), 2005-2020,Sanxing Medical &amp; Electric Co.,Ltd.</string>
+       <string>Copyright(C), 2005-2020,Sanxing Medical &amp; Electric Co.,Ltd.</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>

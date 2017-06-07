@@ -129,6 +129,6 @@ class Ui_AboutWindow(object):
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
-        self.label.setText(_translate("AboutWindow", "Copyrigth(C), 2005-2020,Sanxing Medical & Electric Co.,Ltd.", None))
+        self.label.setText(_translate("AboutWindow", "Copyright(C), 2005-2020,Sanxing Medical & Electric Co.,Ltd.", None))
 
 import icon_rc

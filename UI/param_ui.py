@@ -208,7 +208,10 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         self.res_b.setText('')
         ip_text = param.format_ip(self.S_ip_box.text())
         port_text = '%04X' % int(self.S_port_box.text().replace(' ', ''))
-        apdu_text = '06010D45000300010102020904' + ip_text + '12' + port_text + '00'
+        apdu_text = '06010D45000300010202020904' + ip_text + '12' + port_text
+        ip_text = param.format_ip(self.S_ip_box_2.text())
+        port_text = '%04X' % int(self.S_port_box_2.text().replace(' ', ''))
+        apdu_text += '02020904' + ip_text + '12' + port_text + '00'
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(self.read_res)
         communication.send(link_layer.add_link_layer(apdu_text))
@@ -226,6 +229,13 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
             self.S_ip_box.setText(ip_text)
             port_text = str(int(data[offset + 5] + data[offset + 6], 16))
             self.S_port_box.setText(port_text)
+
+            if int(data[offset + 2], 16) > 1:
+                offset += 11
+                ip_text = param.get_ip(data[offset:])
+                self.S_ip_box_2.setText(ip_text)
+                port_text = str(int(data[offset + 5] + data[offset + 6], 16))
+                self.S_port_box_2.setText(port_text)
         else:
             self.res_b.setStyleSheet('color: red')
             self.res_b.setText('失败：' + data_translate.dar_explain[data[offset + 1]])
