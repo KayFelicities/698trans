@@ -147,7 +147,7 @@ def take_DAR(data, add_text='', level=0, end_flag=0):
     offset = 0
     show_data_source(data[offset:], 1, level=level)
     try:
-        explain = data_translate.dar_explain[str(int(data[0], 16))]
+        explain = data_translate.dar_explain[int(data[0], 16)]
     except Exception:
         explain = '未知DAR'
     output(' —— ' + add_text + ':' + explain)
@@ -384,10 +384,9 @@ def take_double_long(data, add_text='', level=-1):
     offset = 0
     show_data_source(data, 4)
     if int(data[offset], 16) >> 7 == 1:  # 负数
-        value = int(str(int(data[offset], 16) & 0x7f) + data[offset + 1] +
-                    data[offset + 2] + data[offset + 3], 16) * (-1)
+        value = -(0x100000000 - int(''.join(data[offset : offset + 4]), 16))
     else:
-        value = int(data[offset] + data[offset + 1] + data[offset + 2] + data[offset + 3], 16)
+        value = int(''.join(data[offset: offset + 4]), 16)
     output(' —— ' + add_text + str(value) + '(double_long)')
     offset += 4
     return offset
@@ -438,7 +437,7 @@ def take_integer(data, add_text='', level=-1):
     offset = 0
     show_data_source(data, 1)
     if int(data[offset], 16) >> 7 == 1:  # 负数
-        value = int(str(int(data[offset], 16) & 0x7f), 16) * (-1)
+        value = -(0x100 - int(data[offset], 16))
     else:
         value = int(data[offset], 16)
     output(' —— ' + add_text + str(value) + '(integer)')
@@ -450,7 +449,7 @@ def take_long(data, add_text='', level=-1):
     offset = 0
     show_data_source(data, 2)
     if int(data[offset], 16) >> 7 == 1:  # 负数
-        value = int(str(int(data[offset], 16) & 0x7f) + data[offset + 1], 16) * (-1)
+        value = -(0x10000 - int(data[offset] + data[offset + 1], 16))
     else:
         value = int(data[offset] + data[offset + 1], 16)
     output(' —— ' + add_text + str(value) + '(long)')
@@ -478,12 +477,9 @@ def take_long64(data, add_text='', level=-1):
     offset = 0
     show_data_source(data, 8)
     if int(data[offset], 16) >> 7 == 1:  # 负数
-        value = int(str(int(data[offset], 16) & 0x7f) + data[offset + 1] +
-                    data[offset + 2] + data[offset + 3] + data[offset + 4] +
-                    data[offset + 5] + data[offset + 6] + data[offset + 7], 16) * (-1)
+        value = -(0x10000000000000000 - int(''.join(data[offset : offset + 8]), 16))
     else:
-        value = int(data[offset] + data[offset + 1] + data[offset + 2] + data[offset + 3] +
-                    data[offset + 4] + data[offset + 5] + data[offset + 6] + data[offset + 7], 16)
+        value = int(''.join(data[offset : offset + 8]), 16)
     output(' —— ' + add_text + str(value) + '(long64)')
     offset += 8
     return offset
@@ -517,10 +513,9 @@ def take_float32(data, add_text='', level=-1):
     offset = 0
     show_data_source(data, 4)
     if int(data[offset], 16) >> 7 == 1:  # 负数
-        value = int(str(int(data[offset], 16) & 0x7f) + data[offset + 1] +
-                    data[offset + 2] + data[offset + 3], 16) * (-1)
+        value = -(0x100000000 - int(''.join(data[offset : offset + 4]), 16))
     else:
-        value = int(data[offset] + data[offset + 1] + data[offset + 2] + data[offset + 3], 16)
+        value = int(''.join(data[offset : offset + 4]), 16)
     output(' —— ' + add_text + str(value) + '(float32)')
     offset += 4
     return offset
@@ -530,12 +525,9 @@ def take_float64(data, add_text='', level=-1):
     offset = 0
     show_data_source(data, 8)
     if int(data[offset], 16) >> 7 == 1:  # 负数
-        value = int(str(int(data[offset], 16) & 0x7f) + data[offset + 1] +
-                    data[offset + 2] + data[offset + 3] + data[offset + 4] +
-                    data[offset + 5] + data[offset + 6] + data[offset + 7], 16) * (-1)
+        value = -(0x10000000000000000 - int(''.join(data[offset : offset + 8]), 16))
     else:
-        value = int(data[offset] + data[offset + 1] + data[offset + 2] + data[offset + 3]
-                    + data[offset + 4] + data[offset + 5] + data[offset + 6] + data[offset + 7], 16)
+        value = int(''.join(data[offset : offset + 8]), 16)
     output(' —— ' + add_text + str(value) + '(float64)')
     offset += 8
     return offset
