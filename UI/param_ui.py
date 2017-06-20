@@ -208,10 +208,15 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
         self.res_b.setText('')
         ip_text = param.format_ip(self.S_ip_box.text())
         port_text = '%04X' % int(self.S_port_box.text().replace(' ', ''))
-        apdu_text = '06010D45000300010202020904' + ip_text + '12' + port_text
-        ip_text = param.format_ip(self.S_ip_box_2.text())
-        port_text = '%04X' % int(self.S_port_box_2.text().replace(' ', ''))
-        apdu_text += '02020904' + ip_text + '12' + port_text + '00'
+
+        if self.S_ip_box_2.text() and self.S_port_box_2.text():
+            apdu_text = '06010D45000300010202020904' + ip_text + '12' + port_text
+            ip_text = param.format_ip(self.S_ip_box_2.text())
+            port_text = '%04X' % int(self.S_port_box_2.text().replace(' ', ''))
+            apdu_text += '02020904' + ip_text + '12' + port_text + '00'
+        else:
+            apdu_text = '06010D45000300010102020904' + ip_text + '12' + port_text
+
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(self.read_res)
         communication.send(link_layer.add_link_layer(apdu_text))
@@ -230,7 +235,7 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
             port_text = str(int(data[offset + 5] + data[offset + 6], 16))
             self.S_port_box.setText(port_text)
 
-            if int(data[offset + 2], 16) > 1:
+            if int(data[offset + 2 - 7], 16) > 1:
                 offset += 11
                 ip_text = param.get_ip(data[offset:])
                 self.S_ip_box_2.setText(ip_text)
