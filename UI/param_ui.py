@@ -215,7 +215,7 @@ class ParamWindow(QtGui.QMainWindow, QtGui.QWidget, Ui_ParamWindow):
             port_text = '%04X' % int(self.S_port_box_2.text().replace(' ', ''))
             apdu_text += '02020904' + ip_text + '12' + port_text + '00'
         else:
-            apdu_text = '06010D45000300010102020904' + ip_text + '12' + port_text
+            apdu_text = '06010D45000300010102020904' + ip_text + '12' + port_text + '00'
 
         config.serial_window._receive_signal.disconnect()
         config.serial_window._receive_signal.connect(self.read_res)
