@@ -46,7 +46,7 @@ def take_FollowReport(data, add_text='', end_flag=0):
     offset += take_OPTIONAL(data[offset:], '跟随上报信息域')
     if follow_report_option == '01':
         follow_report_choice = data[offset]
-        show_data_source(data[offset:], 1)
+        offset += take_CHOICE(data[offset:], '', choice_dict={'01': '对象属性及其数据', '02': '记录型对象属性及其数据'})
         if follow_report_choice == '01':
             result_normal_num = get_num_of_SEQUENCE(data[offset:], '对象属性及其数据')
             offset += 1
@@ -56,7 +56,7 @@ def take_FollowReport(data, add_text='', end_flag=0):
                 offset += take_A_ResultNormal(data[offset:], end_flag=end_flag)
             config.line_level -= 1
         elif follow_report_choice == '02':
-            result_record_num = get_num_of_SEQUENCE(data[offset:], '对象属性及其数据')
+            result_record_num = get_num_of_SEQUENCE(data[offset:], '记录型对象属性及其数据')
             offset += 1
             config.line_level += 1
             for result_record_count in range(result_record_num):
@@ -114,8 +114,9 @@ def take_CHOICE(data, add_text='', choice_dict=None, end_flag=0):
     show_data_source(data[offset:], 1)
     if choice_dict is not None:
         choice_explain = choice_dict[choice]
-        output(' —— ' + add_text + '(CHOICE' + choice + ':' + choice_explain + ')')
-    output(' —— ' + add_text + '(CHOICE)')
+        output(' —— ' + add_text + '(CHOICE ' + choice + ':' + choice_explain + ')')
+    else:
+        output(' —— ' + add_text + '(CHOICE)')
     offset += 1
     return offset
 
