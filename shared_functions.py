@@ -622,7 +622,7 @@ def take_OAD(data, add_text='', level=-1, end_flag=0):
 def take_ROAD(data, add_text='', level=-1, end_flag=0):
     offset = 0
     config.line_level += 1
-    offset += take_OAD(data[offset:], level=0)
+    offset += take_OAD(data[offset:], level=config.line_level)
     oad_num = int(data[offset], 16)
     show_data_source(data[offset:], 1, level=config.line_level, end_flag=end_flag)
     output(' —— 关联OAD*' + str(oad_num))
@@ -715,11 +715,11 @@ def take_Region(data, add_text='', level=-1):
         '02': '前闭后闭',
         '03': '前开后开',
     }[data[offset]]
-    show_data_source(data[offset:], 1)
+    show_data_source(data[offset:], 1, level=config.line_level)
     output(' —— ' + uint)
     offset += 1
-    offset += take_Data(data, add_text='起始值')
-    offset += take_Data(data, add_text='结束值')
+    offset += take_Data(data[offset:], add_text='起始值')
+    offset += take_Data(data[offset:], add_text='结束值')
     return offset
 
 
@@ -821,7 +821,6 @@ def take_MS(data, add_text='', level=-1):
         for count in range(num):
             offset += take_long_unsigned(data[offset:], '配置序号:')
     elif MS_choice == '05':  # 一组用户类型区间
-        offset = 0
         num = int(data[1], 16)
         show_data_source(data, 2)
         offset += 2
@@ -829,7 +828,6 @@ def take_MS(data, add_text='', level=-1):
         for count in range(num):
             offset += take_Region(data[offset:], '用户类型区间:')
     elif MS_choice == '06':  # 一组用户地址区间
-        offset = 0
         num = int(data[1], 16)
         show_data_source(data, 2)
         offset += 2
@@ -837,7 +835,6 @@ def take_MS(data, add_text='', level=-1):
         for count in range(num):
             offset += take_Region(data[offset:], '用户地址区间:')
     elif MS_choice == '07':  # 一组配置序号区间
-        offset = 0
         num = int(data[1], 16)
         show_data_source(data, 2)
         offset += 2
