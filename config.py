@@ -3,8 +3,8 @@ import os
 import sys
 
 
-version = 'V4.42'
-DT = '2017.09'
+version = 'V4.43'
+DT = '2017.10'
 
 output_text = ''
 is_auto_se_heartbeat = True
